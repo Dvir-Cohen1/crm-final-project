@@ -12,8 +12,18 @@ npm install
 ```
 
 ## Usage
+*make sure to set env file - env.example invcudes in root folders*
+
+**backend API**
+```sh
+cd server
+npm run dev
+```
+
+**nextjs frontend**
 
 ```sh
+cd client
 npm run dev
 ```
 
