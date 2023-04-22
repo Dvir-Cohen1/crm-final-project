@@ -30,16 +30,19 @@ const LoginForm = () => {
 
      const onSubmitLogin = (data: FormLoginInputs) => {
           dispatch(loginByPayload(data))
+          // console.log(first)
      }
+
+     
 
      return (
           <form onSubmit={handleSubmit(onSubmitLogin)}>
                <h2 className='text-2xl lg:text-3xl text-center my-10'>
                     <span className='font-bold'>Sign</span> In
                </h2>
-               <Input type='email' placeholder='Email' register={{ ...register('email') }} />
+               <Input id='loginEmailInput' type='email' placeholder='Email' register={{ ...register('email') }} />
                {errors.email && <span className='mx-5'>{errors.email.message}</span>}
-               <Input type='password' placeholder='Password' register={{ ...register('password') }} />
+               <Input id='loginPasswordInput' type='password' placeholder='Password' register={{ ...register('password') }} />
                {errors.password && <span className='mx-5'>{errors.password.message}</span>}
 
                <div className='my-5'>

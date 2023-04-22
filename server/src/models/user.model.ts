@@ -9,10 +9,11 @@ interface IUser extends Document {
   lastName: string;
   password: string;
   role?: string[];
+  imgSRC?: string;
   jwt_ac_token?: Secret;
   jwt_rf_token?: Secret;
-  comparePassword: Function
-  setJwtTokens: Function
+  comparePassword: Function;
+  setJwtTokens: Function;
 }
 
 const userSchema: Schema<IUser> = new Schema({
@@ -38,6 +39,9 @@ const userSchema: Schema<IUser> = new Schema({
     type: [String],
     required: false,
     default: "Member",
+  },
+  imgSRC: {
+    type: String,
   },
   jwt_ac_token: {
     type: String,

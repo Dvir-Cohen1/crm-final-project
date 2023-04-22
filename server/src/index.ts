@@ -15,6 +15,8 @@ app.get("/", (req, res) => {
 });
 app.use(appRoutes);
 app.use(errorHandler);
+
+
 initialMongoConnection()
   .then(() => {
     app.listen(PORT, () => {

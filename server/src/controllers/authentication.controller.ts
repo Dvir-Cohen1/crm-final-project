@@ -6,7 +6,13 @@ import {
   ServerError,
   UnauthorizeError,
 } from "../errors/Errors.js";
-import { createAccessToken,createRefreshToken } from "../services/jwt.services.js";
+import {
+  createAccessToken,
+  createRefreshToken,
+  verifyAccessToken,
+} from "../services/jwt.services.js";
+import { JwtPayload } from "jsonwebtoken";
+import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
 
 export async function register(
   req: Request,
@@ -45,10 +51,20 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   const jwt_rf_token = createRefreshToken(user._id);
 
   user.setJwtTokens(jwt_ac_token, jwt_rf_token);
-
-  res.status(200).send({ error: false, data: user });
+  res.status(200).send({ error: false, data: user, token: jwt_ac_token });
 }
 
-export async function logout(req: Request, res: Response) {
+export async function logout(req: Request, res: Response, next: NextFunction) {
   res.send("from logout controller");
+}
+
+export async function isLogin(req: Request, res: Response, next: NextFunction) {
+  const { token } = req.body;
+  if (!token) return next(new UnauthorizeError());
+
+  const decoded = verifyAccessToken(token) as JwtPayload;
+  const { userId } = decoded;
+  const user = await User.findById(userId).select(SELECTED_USER_FIELDS);
+
+  res.status(200).send({ isAuthenticated: true, user: user });
 }

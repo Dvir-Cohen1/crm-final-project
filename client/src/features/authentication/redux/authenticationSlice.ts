@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { register, login } from "../services/authentication.service";
-import { FormRegisterInputs, FormLoginInputs } from "@/types/global";
-import { AuthState } from "@/types/global";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { FormRegisterInputs, FormLoginInputs, AuthState } from "@/types/global";
+import { getCookie, setCookie } from "@/utils/cookies";
+import { register, login, isLogin } from "../services/authentication.service";
 
 export const registerByPayload = createAsyncThunk(
-  "register/registerByPayload",
+  "authentication/registerByPayload",
   async (values: FormRegisterInputs) => {
     const data = await register(values);
     return data;
@@ -12,16 +12,23 @@ export const registerByPayload = createAsyncThunk(
 );
 
 export const loginByPayload = createAsyncThunk(
-  "login/loginByPayload",
+  "authentication/loginByPayload",
   async (values: FormLoginInputs) => {
     const data = await login(values);
     return data;
   }
 );
 
+export const isLoginByToken = createAsyncThunk(
+  "auth/isLoginByToken",
+  async () => {
+    const data = await isLogin();
+    return data;
+  }
+);
+
 const initialState: AuthState = {
-  isAuthenticated: false,
-  token: null,
+  isAuthenticated: null,
   isLoading: false,
   isRegister: false,
   isError: null,
@@ -33,23 +40,19 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // register: (state, action: PayloadAction<string>) => {
-    //   state.isAuthenticated = true;
-    // },
-    // login: (state, action: PayloadAction<string>) => {
-    //   state.isAuthenticated = true;
-    //   state.token = action.payload;
-    // },
-    // logout: (state) => {
-    //   state.isAuthenticated = false;
-    //   state.token = null;
-    // },
+    resetErrors: (state) => {
+      setTimeout(() => {
+        state.isError = false;
+        state.error = "";
+      }, 6000);
+    },
+    setIsLogin: (state, { payload }) => {
+      state.isAuthenticated = payload.isAuthenticated;
+    },
   },
   extraReducers: (builder) => {
     builder
-      //
-      // Register
-      //
+      // Handle Register
       .addCase(registerByPayload.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -62,11 +65,8 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = "";
         state.isError = false;
-        state.user = payload.data;
       })
-      //
-      // Login
-      //
+      // Handle Login
       .addCase(loginByPayload.pending, (state, action) => {
         state.isLoading = true;
         state.error = "";
@@ -79,14 +79,35 @@ export const authSlice = createSlice({
       })
       .addCase(loginByPayload.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;
+        state.isRegister = true;
         state.error = "";
         state.isError = false;
         state.user = payload.data;
         state.isAuthenticated = true;
+        setCookie("ac-token", payload.token);
+      })
+      // Handle isLogin?
+      .addCase(isLoginByToken.pending, (state, action) => {
+        state.isLoading = true;
+        state.isError = null;
+        state.error = "";
+      })
+      .addCase(isLoginByToken.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+      .addCase(isLoginByToken.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        state.isRegister = true;
+        state.error = "";
+        state.user = payload.user;
+        state.isAuthenticated = payload.isAuthenticated;
       });
   },
 });
-
-// export const { login, logout } = authSlice.actions;
 
 export default authSlice.reducer;
