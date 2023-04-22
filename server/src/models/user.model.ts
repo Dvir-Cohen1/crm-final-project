@@ -14,6 +14,7 @@ interface IUser extends Document {
   jwt_rf_token?: Secret;
   comparePassword: Function;
   setJwtTokens: Function;
+  deleteAcToken: Function;
 }
 
 const userSchema: Schema<IUser> = new Schema({
@@ -68,6 +69,10 @@ userSchema.methods.setJwtTokens = function (
 ) {
   this.jwt_ac_token = accessToken;
   this.jwt_rf_token = refreshToken;
+  this.save();
+};
+userSchema.methods.deleteAcToken = function () {
+  this.jwt_ac_token = null;
   this.save();
 };
 

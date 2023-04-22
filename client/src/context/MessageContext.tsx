@@ -29,7 +29,7 @@ export const MessageProvider = ({ children }: MessageProviderProps) => {
                     message.error(error);
                     break;
                case false:
-                    message.success("Success");
+                    message.success(error || "Success");
                     router.push('/authentication/login')
                     break;
 

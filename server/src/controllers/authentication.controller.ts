@@ -46,16 +46,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   const isPasswordMatch = await user.comparePassword(password);
   if (!isPasswordMatch)
     return next(new UnauthorizeError("email / password incorrect"));
-
+ 
   const jwt_ac_token = createAccessToken(user._id);
   const jwt_rf_token = createRefreshToken(user._id);
 
   user.setJwtTokens(jwt_ac_token, jwt_rf_token);
   res.status(200).send({ error: false, data: user, token: jwt_ac_token });
-}
-
-export async function logout(req: Request, res: Response, next: NextFunction) {
-  res.send("from logout controller");
 }
 
 export async function isLogin(req: Request, res: Response, next: NextFunction) {
@@ -67,4 +63,17 @@ export async function isLogin(req: Request, res: Response, next: NextFunction) {
   const user = await User.findById(userId).select(SELECTED_USER_FIELDS);
 
   res.status(200).send({ isAuthenticated: true, user: user });
+}
+
+export async function logout(req: Request, res: Response, next: NextFunction) {
+  const { token } = req.body;
+  const { userId } = req.params;
+
+  // return next(new UnauthorizeError());
+  if (!token && !userId) return next(new BadRequestError());
+
+  const user = await User.findOne({ _id: userId });
+
+  user?.deleteAcToken();
+  res.status(200).end();
 }

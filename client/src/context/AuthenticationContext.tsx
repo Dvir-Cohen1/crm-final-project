@@ -13,7 +13,6 @@ type AuthContextProps = {
 };
 
 
-
 const AuthContext = createContext({});
 
 export function useAuthContext() {
@@ -27,11 +26,11 @@ export function AuthProvider({ children }: AuthContextProps) {
 
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
   const router = useRouter();
-  const { isAuthenticated } = store.getState().auth
+  const { isAuthenticated, isLoading, isRegister, isError } = store.getState().auth
 
   useEffect(() => {
     dispatch(isLoginByToken())
-  })
+  }, [isAuthenticated, isRegister, isError, dispatch])
 
 
   useEffect(() => {
@@ -39,7 +38,7 @@ export function AuthProvider({ children }: AuthContextProps) {
       // Redirect the user to the login page if they are not authenticated
       router.replace('/authentication/login');
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, isRegister, router])
 
 
   return (

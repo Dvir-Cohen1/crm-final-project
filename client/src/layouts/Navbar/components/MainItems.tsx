@@ -90,7 +90,7 @@ const items: MenuProps['items'] = [
 const MainItems = () => {
      const [current, setCurrent] = useState('mail');
      const onClick: MenuProps['onClick'] = (e) => {
-          console.log('click ', e);
+          // console.log('click ', e);
           setCurrent(e.key);
      };
      return (

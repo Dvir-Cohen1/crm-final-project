@@ -30,7 +30,13 @@ export interface AuthState {
   isRegister: boolean;
   isError: boolean | null;
   error: any;
-  user: object | null;
+  user?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: [];
+  } | null;
 }
 
 export type FormRegisterInputs = {

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getUser } from "../services/users.service";
 
 interface UserState {
   username: string;
@@ -6,12 +7,20 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  username: '',
-  email: '',
+  username: "",
+  email: "",
 };
 
+export const getUserById = createAsyncThunk(
+  "user/getUserById",
+  async (values: string) => {
+    const data = await getUser(values);
+    return data;
+  }
+);
+
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => {
@@ -19,9 +28,16 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
     },
     clearUser: (state) => {
-      state.username = '';
-      state.email = '';
+      state.username = "";
+      state.email = "";
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Handle Register
+      .addCase(getUserById.pending, (state, action) => {})
+      .addCase(getUserById.rejected, (state, action) => {})
+      .addCase(getUserById.fulfilled, (state, { payload }: any) => {});
   },
 });
 

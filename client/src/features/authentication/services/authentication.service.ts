@@ -21,7 +21,9 @@ export async function login(formValue: object) {
     );
     return response.data;
   } catch (error: any) {
-    return Promise.reject(error.response?.data?.message);
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
   }
 }
 
@@ -34,6 +36,22 @@ export async function isLogin() {
 
     return response.data;
   } catch (error: any) {
-    return Promise.reject(error.response?.data?.message || "Error");
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+
+export async function logout(userId: string) {
+  try {
+    const token = getCookie("ac-token");
+    if (!token) Promise.reject();
+    const response = await api.post(`auth/logout/${userId}`, { token });
+
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
   }
 }

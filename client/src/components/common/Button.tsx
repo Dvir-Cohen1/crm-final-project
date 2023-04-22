@@ -74,7 +74,6 @@ export const Button = ({ type = "submit", children, className, label = "", onCli
      return (
           <button type={type} className={`
           flex 
-          gap-2 
           justify-center 
           place-items-center 
           mx-auto 

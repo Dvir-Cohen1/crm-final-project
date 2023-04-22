@@ -8,13 +8,14 @@ type InputProps = {
      id?: string,
      inputClassName?: string,
      labelClassName?: string,
-     placeholder?: string,
+     placeholder?: string | [],
+     disabled?: boolean,
      required?: boolean,
      showLabel?: boolean
 
 }
 
-const Input = ({ register, labelClassName, label = "label", showLabel = false, type = "text", id = "input", inputClassName, placeholder = "", required = true }: InputProps) => {
+const Input = ({ register, labelClassName,disabled, label = "label", showLabel = false, type = "text", id = "input", inputClassName, placeholder = "", required = true }: InputProps) => {
      return (
           <div className='my-4'>
 
@@ -22,15 +23,18 @@ const Input = ({ register, labelClassName, label = "label", showLabel = false, t
                     showLabel &&
                     <label
                          htmlFor={id}
-                         className={`block mb-2 text-sm font-medium text-gray-900 dark:text-white ${labelClassName}`}>
+                         className={`block mb-2 text-sm  min-w-fit font-medium text-gray-900 dark:text-white ${labelClassName}`}>
                          {label}
                     </label>
                }
 
                <input
+                    autoComplete="false"
+                    autoCorrect="false"
                     {...register}
                     type={type}
                     id={id}
+                    disabled={disabled}
                     className={`
                     block 
                     w-full 
