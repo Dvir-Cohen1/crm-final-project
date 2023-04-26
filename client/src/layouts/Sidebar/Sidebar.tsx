@@ -4,7 +4,7 @@ import { getItem } from '@/utils/general';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Menu } from 'antd';
 import { MenuProps } from 'antd/lib/menu';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { json } from 'stream/consumers';
 
 
@@ -12,25 +12,26 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
      getItem('Projects', 'sub1', <MailOutlined />, [
-          getItem((<Link href={"/projects/project"}>All Projects</Link>), '1'),
+          getItem((<NextLink href={"/projects/project"}>All Projects</NextLink>), '1'),
           // getItem((<Link href={"/projects/project"}>Projects</Link>), null, null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group'),
      ]),
 
      getItem('Tasks', 'sub2', <AppstoreOutlined />, [
-          getItem((<Link href={"/tasks"}>All Tasks</Link>), '2'),
-          getItem((<Link href={"/tasks/task"}>Kanban</Link>), '3'),
+          getItem((<NextLink href={"/tasks"}>All Tasks</NextLink>), '2'),
+          getItem((<NextLink href={"/tasks/task"}>Kanban</NextLink>), '3'),
      ]),
 
      getItem('Users', 'sub4', <SettingOutlined />, [
-          getItem((<Link href={"/users"}>All Users</Link>), '4'),
-          getItem((<Link href={"/users"}>Departments</Link>), '5'),
+          getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
+          getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
+          getItem((<NextLink href={"/users"}>Departments</NextLink>), '6'),
 
      ]),
      getItem('Customers', 'sub5', <SettingOutlined />, [
           getItem('Option 94', '94'),
 
      ]),
-     getItem((<Link href={"/Departments"}>Setting</Link>), 'sub6', <SettingOutlined />),
+     getItem((<NextLink href={"/Departments"}>Setting</NextLink>), 'sub6', <SettingOutlined />),
 ];
 
 

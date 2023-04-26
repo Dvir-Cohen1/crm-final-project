@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllUsers, getUser } from "../services/users.service";
+import { addNewUser, getAllUsers, getUser } from "../services/users.service";
 import { UserState } from "@/types/global";
 
 // interface UserState {
@@ -11,7 +11,7 @@ const initialState: UserState = {
   isError: null,
   error: "",
   users: [],
-  user: {},
+  user: null,
 };
 
 export const getUserById = createAsyncThunk(
@@ -24,6 +24,11 @@ export const getUserById = createAsyncThunk(
 
 export const allUsers = createAsyncThunk("user/allUsers", async () => {
   const data = await getAllUsers();
+  return data;
+});
+
+export const addUser = createAsyncThunk("user/addUser", async (values: {}) => {
+  const data = await addNewUser(values);
   return data;
 });
 
@@ -68,6 +73,20 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.error = "";
+        state.user = payload;
+      })
+      .addCase(addUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(addUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(addUser.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "user Created";
         state.user = payload;
       });
   },

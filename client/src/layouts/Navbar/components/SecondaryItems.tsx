@@ -6,11 +6,12 @@ import Tooltip from '@/components/common/Tooltip';
 
 import Link from 'next/link';
 import { JsxElement } from 'typescript';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import store from '@/redux/store';
 import CustomEmpty from '@/components/common/CustomEmpty';
+import { RootState } from '@/types/global';
 
 // const profileDropDownContent = (
 //      <div>
@@ -53,7 +54,9 @@ function SecondaryItems() {
 
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
-     const { user } = store.getState().auth
+     // const { user } = store.getState().auth
+     const { user } = useSelector((state: RootState) => state.auth);
+
      const handleLogout = () => {
           dispatch(logoutByToken(user?._id))
      }
@@ -61,7 +64,7 @@ function SecondaryItems() {
 
      const [current, setCurrent] = useState('mail');
      const onClick: MenuProps['onClick'] = (e) => {
-          console.log('click ', e);
+          // console.log('click ', e);
           setCurrent(e.key);
      };
 

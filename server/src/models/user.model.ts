@@ -8,6 +8,7 @@ interface IUser extends Document {
   firstName: string;
   lastName: string;
   password: string;
+  phoneNumber?: Number;
   role?: string[];
   imgSRC?: string;
   jwt_ac_token?: Secret;
@@ -35,6 +36,10 @@ const userSchema: Schema<IUser> = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  phoneNumber: {
+    type: Number,
+    required: false,
   },
   role: {
     type: [String],

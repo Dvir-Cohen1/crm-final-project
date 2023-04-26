@@ -7,6 +7,7 @@ import store from "@/redux/store";
 import { getCookie } from "@/utils/cookies";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "@/types/global";
 
 type AuthContextProps = {
   children?: ReactNode;
@@ -26,7 +27,7 @@ export function AuthProvider({ children }: AuthContextProps) {
 
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
   const router = useRouter();
-  const { isAuthenticated, isLoading, isRegister, isError } = store.getState().auth
+  const { isAuthenticated, isLoading, isRegister, isError } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     dispatch(isLoginByToken())

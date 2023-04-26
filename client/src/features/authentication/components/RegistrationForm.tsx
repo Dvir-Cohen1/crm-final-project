@@ -12,9 +12,7 @@ import { FormRegisterInputs } from '@/types/global';
 import { useMessage } from '@/context/MessageContext';
 
 
-
 const RegistrationForm = () => {
-
      const {
           register,
           handleSubmit,

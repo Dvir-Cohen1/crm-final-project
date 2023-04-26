@@ -6,6 +6,8 @@ import { Card } from 'antd';
 import Image from "next/image";
 import useLoader from "@/hooks/useLoader";
 import store from "@/redux/store";
+import { RootState } from "@/types/global";
+import { useSelector } from "react-redux";
 
 const { Meta } = Card;
 
@@ -18,7 +20,8 @@ const cardData = [
 
 
 export default function Home(): JSX.Element {
-  const { user } = store.getState().auth
+  // const { user } = store.getState().auth
+  const {user} = useSelector((state: RootState) => state.auth);
   const isLoading = useLoader()
 
   return (

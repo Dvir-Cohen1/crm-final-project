@@ -2,26 +2,23 @@ import React, { useEffect } from 'react'
 import Layout from '@/layouts/Layout'
 import { AntDesignOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserById } from '@/features/users/redux/userSlice';
 import store from '@/redux/store';
 import { Avatar, Switch, Tabs, TabsProps } from 'antd';
 import Input from '@/components/common/Input';
 import { Button } from '@/components/common/Button';
+import { RootState } from '@/redux/reducers';
 
 const User = () => {
-
      const router = useRouter();
      const { id }: any = router.query;
-     const { user } = store.getState().auth
+     const user = useSelector((state: RootState) => state.user.user);
      const dispatch = useDispatch()
-
 
      useEffect(() => {
           dispatch<any>(getUserById(id))
-
      }, [dispatch])
-
 
      const items: TabsProps['items'] = [
           {

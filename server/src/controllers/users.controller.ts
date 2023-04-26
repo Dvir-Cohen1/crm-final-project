@@ -21,12 +21,31 @@ export const allUsers = async (
 export const getUserById = async (
   req: Request,
   res: Response,
+
   next: NextFunction
 ) => {
   const { id } = req.params;
-
   const user = await User.findById(id).select(SELECTED_USER_FIELDS);
-  console.log(user);
+
   if (!user) return next(new NotFoundError("User not found"));
   res.status(200).send(user);
+};
+
+export const addUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log("from add user controller");
+  const { firstName, lastName, email, password } = req.body;
+  const role = String(req.body.role).toLocaleUpperCase();
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+  });
+
+  res.status(201).send({ error: false, data: user });
 };

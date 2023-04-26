@@ -37,16 +37,21 @@ export async function register(
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body;
-  if (!email && !password)
+
+  if (!email && !password) {
     return new BadRequestError("email / password not provided");
+  }
 
   const user = await User.findOne({ email });
-  if (!user) return next(new NotFoundError('User not found'));
+  if (!user) {
+    return next(new NotFoundError("User not found"));
+  }
 
   const isPasswordMatch = await user.comparePassword(password);
-  if (!isPasswordMatch)
+  if (!isPasswordMatch) {
     return next(new UnauthorizeError("Password incorrect"));
- 
+  }
+
   const jwt_ac_token = createAccessToken(user._id);
   const jwt_rf_token = createRefreshToken(user._id);
 
@@ -56,10 +61,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
 export async function isLogin(req: Request, res: Response, next: NextFunction) {
   const { token } = req.body;
-  if (!token) return next(new UnauthorizeError());
+  if (!token) {
+    return next(new UnauthorizeError());
+  }
 
-  const decoded = verifyAccessToken(token) as JwtPayload;
-  const { userId } = decoded;
+  const { userId } = verifyAccessToken(token) as JwtPayload;
+  // const { userId } = decodedUserId;
   const user = await User.findById(userId).select(SELECTED_USER_FIELDS);
 
   res.status(200).send({ isAuthenticated: true, user: user });
@@ -70,7 +77,9 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
   const { userId } = req.params;
 
   // return next(new UnauthorizeError());
-  if (!token && !userId) return next(new BadRequestError());
+  if (!token && !userId) {
+    return next(new BadRequestError());
+  }
 
   const user = await User.findOne({ _id: userId });
 

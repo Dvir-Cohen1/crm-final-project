@@ -15,14 +15,14 @@ const authJwtTokenVerify = (
     const token = Array.isArray(req.headers["access-token"])
       ? req.headers["access-token"][0]
       : req.headers["access-token"];
-    if (!token) return next(new UnauthorizeError());
-    const decodedToken = verifyAccessToken(token);
+    // if (!token) return next(new UnauthorizeError());
+    // const decodedToken = verifyAccessToken(token);
 
-    if (typeof decodedToken === "string") {
-      req.userId = decodedToken;
-    } else {
-      req.userId = decodedToken.sub as string;
-    }
+    // if (typeof decodedToken === "string") {
+    //   req.userId = decodedToken;
+    // } else {
+    //   req.userId = decodedToken.sub as string;
+    // }
     next()
   } catch (error) {
     next(new UnauthorizeError());

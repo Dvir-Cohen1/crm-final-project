@@ -43,7 +43,7 @@ const usersColumns: ColumnsType<DataType> = [
                     {role.map((item) => {
                          // let color = item.length > 5 ? 'geekblue' : 'green';
                          let color = item.toLocaleLowerCase() === "member" ? 'geekblue' : 'green';
-                         console.log(item)
+                         // console.log(item)
                          if (item === 'loser') {
                               color = 'volcano';
                          }

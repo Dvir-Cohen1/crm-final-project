@@ -5,7 +5,8 @@ import { allUsers } from '@/features/users/redux/userSlice'
 import { User } from '@/types/global'
 import CustomTable from '@/components/common/CustomTable'
 import { Button } from '@/components/common/Button'
-
+import AddUserModal from '@/features/users/components/AddUserModal'
+import Link from 'next/link'
 
 const Users = () => {
      const [users, setUsers] = useState<User[]>([]);
@@ -17,28 +18,13 @@ const Users = () => {
 
      }, [dispatch])
 
-
      return (
           <Layout>
                <div className='flex justify-between place-items-center mb-5'>
-
                     <div className='text-3xl font-semibold'>Users</div>
-                    <div><Button className='px-5' fontSize='sm' label='New' /></div>
+                    <div><Link href={'/users/newUser'}><Button className='px-5' fontSize='sm' >New</Button></Link></div>
                </div>
                <CustomTable data={users} dataSource={users} />
-
-
-               {/* {users.length > 0 && users.map((item, indexId) => {
-                    return (
-                         <div key={indexId}>
-                              <div >{item.firstName} {item.lastName}</div>
-                              <div >{item.email} {item.role[0]}</div>
-                              <br />
-                         </div>
-                    )
-               })} */}
-
-
           </Layout>
      )
 }

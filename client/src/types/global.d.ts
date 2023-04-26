@@ -43,7 +43,9 @@ export interface UserState {
   isError: boolean | null;
   error: any;
   users?: [];
-  user: {};
+  user?: {
+    _id: string;
+  } | null;
 }
 
 export type FormRegisterInputs = {
@@ -52,6 +54,15 @@ export type FormRegisterInputs = {
   email: string;
   password: string;
   confirmPassword: string;
+};
+
+export type AddUserRegisterInputs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phoneNumber?: Number;
+  role: [];
 };
 
 export type FormLoginInputs = {
