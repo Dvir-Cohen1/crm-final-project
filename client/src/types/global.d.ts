@@ -18,7 +18,9 @@ export interface AppState {
 
 export interface RootState {
   auth: AuthState;
+  user: UserState;
   app: AppState;
+  // showMessage?: Function
   // Other slices of your Redux state...
 }
 

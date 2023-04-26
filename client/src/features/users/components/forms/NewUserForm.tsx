@@ -2,20 +2,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { AddUserRegisterInputs } from '@/types/global';
-import registerValidationSchema from '../../../authentication/validations/registerSchema.validation';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { useDispatch } from 'react-redux';
 import Input from '@/components/common/Input';
 import { Button } from '@/components/common/Button';
 import { addUser } from '../../redux/userSlice';
+import newUserSchemaValidation from '../../validations/newUserSchema.validation';
 const NewUserForm = () => {
      const {
           register,
           handleSubmit,
           formState: { errors },
      } = useForm<AddUserRegisterInputs>({
-          // resolver: yupResolver(registerValidationSchema),
+          resolver: yupResolver(newUserSchemaValidation),
           defaultValues: {
                firstName: '',
                lastName: '',

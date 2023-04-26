@@ -36,7 +36,6 @@ export const addUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("from add user controller");
   const { firstName, lastName, email, password } = req.body;
   const role = String(req.body.role).toLocaleUpperCase();
   const user = await User.create({

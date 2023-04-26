@@ -58,7 +58,7 @@ export const userSlice = createSlice({
       })
       .addCase(allUsers.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;
-        state.isError = false;
+        state.isError = null;
         state.error = "";
       })
       .addCase(getUserById.pending, (state, action) => {
@@ -71,7 +71,7 @@ export const userSlice = createSlice({
       })
       .addCase(getUserById.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;
-        state.isError = false;
+        state.isError = null;
         state.error = "";
         state.user = payload;
       })
