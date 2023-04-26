@@ -4,7 +4,10 @@ import type { ColumnsType } from 'antd/es/table';
 import Link from 'next/link';
 import { RootState } from '@/types/global';
 import { useSelector } from 'react-redux';
-
+import { deleteUser } from '@/features/users/redux/userSlice';
+import { useDispatch } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 interface DataType {
      key: string;
@@ -14,9 +17,16 @@ interface DataType {
      role: string[];
 }
 
-const CustomTable = ({ data }: any) => {
-     const role = useSelector((state: RootState) => state.auth?.user?.role || {});
 
+const CustomTable = ({ data, handleDelete }: any) => {
+     const role = useSelector((state: RootState) => state.auth?.user?.role || {});
+     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
+     // const dispatch = useDispatch()
+
+     // const handleDelete = (userId: string) => {
+     //      dispatch(deleteUser(userId))
+     // }
+     
 
      const usersColumns: ColumnsType<DataType> = [
           {
@@ -65,10 +75,10 @@ const CustomTable = ({ data }: any) => {
           {
                title: 'Action',
                key: 'action',
-               render: (_, record) => (
+               render: (_, record: any) => (
                     role == "Admin" ?
                          <Space size="middle">
-                              <a>Delete</a>
+                              <button onClick={() => handleDelete(record._id)}>Delete</button>
                          </Space>
                          : 'Only Admins can perform actions'
                ),

@@ -48,3 +48,18 @@ export const addUser = async (
 
   res.status(201).send({ error: false, data: user });
 };
+
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const user = await User.findByIdAndDelete(id);
+    res.status(201).send({ error: false, data: user });
+  } catch (error) {
+    console.log(error);
+  }
+};

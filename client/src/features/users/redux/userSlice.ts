@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addNewUser, getAllUsers, getUser } from "../services/users.service";
+import { addNewUser, deleteUserById, getAllUsers, getUser } from "../services/users.service";
 import { UserState } from "@/types/global";
 
 // interface UserState {
@@ -32,6 +32,11 @@ export const addUser = createAsyncThunk("user/addUser", async (values: {}) => {
   return data;
 });
 
+export const deleteUser = createAsyncThunk("user/deleteUser", async (userId: string) => {
+  const data = await deleteUserById(userId);
+  return data;
+});
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -39,10 +44,6 @@ export const userSlice = createSlice({
     // setUser: (state, action: PayloadAction<UserState>) => {
     //   state.username = action.payload.username;
     //   state.email = action.payload.email;
-    // },
-    // clearUser: (state) => {
-    //   state.username = "";
-    //   state.email = "";
     // },
   },
   extraReducers: (builder) => {
@@ -87,6 +88,20 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.error = "user Created";
+        state.user = payload;
+      })
+      .addCase(deleteUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(deleteUser.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "user Deleted";
         state.user = payload;
       });
   },
