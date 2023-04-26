@@ -71,7 +71,7 @@ function SecondaryItems() {
           {
                label: (
                     <div className='flex place-items-center'>
-                         <Tooltip arrow={false} title="Profile">
+                         <Tooltip arrow={false} title={user?.email || "profile"}>
                               <div
                                    className='menu-actions-svg-container'>
                                    <div className=' bg-profileButtonColor hover:bg-profileButtonColor/90 rounded-full p-1'>

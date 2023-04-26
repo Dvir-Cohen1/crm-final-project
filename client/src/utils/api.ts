@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { getCookie } from "./cookies";
 
 // create an axios instance with default config
 const api: AxiosInstance = axios.create({
@@ -6,6 +7,7 @@ const api: AxiosInstance = axios.create({
   timeout: 5000, // 5 seconds timeout
   headers: {
     "Content-Type": "application/json",
+    "access-token": getCookie("ac-token"),
   },
 });
 

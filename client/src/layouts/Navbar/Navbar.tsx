@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const Navbar = () => {
      return (
-          <nav className='flex items-center shadow shadow-shadowColor px-4'>
+          <nav className='flex items-center border-b border-[#091e4224] px-4'>
                <MainItems />
                <SecondaryItems />
           </nav>

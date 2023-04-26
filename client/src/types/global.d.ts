@@ -38,6 +38,13 @@ export interface AuthState {
     role: [];
   } | null;
 }
+export interface UserState {
+  isLoading: boolean;
+  isError: boolean | null;
+  error: any;
+  users?: [];
+  user: {};
+}
 
 export type FormRegisterInputs = {
   firstName: string;
@@ -56,3 +63,11 @@ type LayoutProps = {
   children?: ReactNode;
   isAuthenticated?: any;
 };
+
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: [string];
+}

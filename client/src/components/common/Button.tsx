@@ -66,7 +66,8 @@ export const Button = ({ type = "submit", children, className, label = "", onCli
                break;
 
           default:
-               variant = "bg-[#0073EA]";
+               // variant = "bg-[#0073EA]";
+               variant = "bg-[#0052CC]";
 
      }
 

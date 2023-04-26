@@ -172,3 +172,8 @@ a {
 	padding: 3px 8px;
 	font-size: 0.7rem;
  }
+ 
+ .ant-breadcrumb a:hover {
+	/* color: rgba(0, 0, 0, 0.88); */
+	background-color: #EAEDF1;
+ }

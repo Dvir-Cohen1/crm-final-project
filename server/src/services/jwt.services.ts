@@ -1,4 +1,4 @@
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 // import "dotenv/config";
 // require('dotenv').config();
 const jwtConfig = {
@@ -28,7 +28,7 @@ export const createRefreshToken = (userId: string) => {
   }
 };
 
-export const verifyAccessToken = (token: string) => {
+export const verifyAccessToken = (token: string): string | JwtPayload => {
   try {
     const decoded = jwt.verify(token, jwtConfig.ac_secret);
     return decoded;

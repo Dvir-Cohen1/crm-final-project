@@ -19,7 +19,7 @@ export function useAuthContext() {
   return useContext(AuthContext);
 }
 
-export const useChat = () => useContext(AuthContext);
+// export const useChat = () => useContext(AuthContext);
 
 
 export function AuthProvider({ children }: AuthContextProps) {
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: AuthContextProps) {
 
   useEffect(() => {
     dispatch(isLoginByToken())
-  }, [isAuthenticated, isRegister, isError, dispatch])
+  }, [dispatch])
 
 
   useEffect(() => {

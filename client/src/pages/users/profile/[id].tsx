@@ -57,22 +57,20 @@ const Profile = () => {
 
      return (
           <Layout>
-               <section className='relative text-white w-full mb-5'>
+               <section className='relative mx-auto text-white w-1/2 mb-5'>
                     <div className={"bg-no-repeat bg-center flex gap-4 flex-col justify-center align-middle text-center place-items-center  bg-contain  bg-slate-400/20 p-5"}>
 
-                         {/* <CustomEmpty /> */}
                          <Avatar
                               size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                               icon={<AntDesignOutlined />}
                          />
                          <div className='text-slate-800 text-xl'>{user?.firstName}</div>
                          <div className='text-slate-800'>{user?.firstName}</div>
-                         {/* <Image fill src="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg" alt='' /> */}
                     </div>
 
+               <Tabs defaultActiveKey="1" items={items} />
                </section>
 
-               <Tabs defaultActiveKey="1" items={items} />
           </Layout>
      )
 }

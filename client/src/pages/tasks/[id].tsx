@@ -1,9 +1,9 @@
 import React from 'react'
 import Layout from "@/layouts/Layout"
-const task = () => {
+const Task = () => {
   return (
     <Layout>task</Layout>
   )
 }
 
-export default task
+export default Task

@@ -1,40 +1,38 @@
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { getItem } from '@/utils/general';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Menu } from 'antd';
+import { MenuProps } from 'antd/lib/menu';
+import Link from 'next/link';
+import { json } from 'stream/consumers';
+
+
 type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
      getItem('Projects', 'sub1', <MailOutlined />, [
-
-          getItem((<Link href={"/projects/project"}>Projects</Link>), null, null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group'),
+          getItem((<Link href={"/projects/project"}>All Projects</Link>), '1'),
+          // getItem((<Link href={"/projects/project"}>Projects</Link>), null, null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group'),
      ]),
 
      getItem('Tasks', 'sub2', <AppstoreOutlined />, [
-          getItem((<Link href={"/tasks/task"}>Tasks</Link>), '5'),
-          getItem('Option 6', '6'),
-          getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')]),
+          getItem((<Link href={"/tasks"}>All Tasks</Link>), '2'),
+          getItem((<Link href={"/tasks/task"}>Kanban</Link>), '3'),
      ]),
 
-     getItem('Members', 'sub4', <SettingOutlined />, [
-          getItem('Option 9', '9'),
+     getItem('Users', 'sub4', <SettingOutlined />, [
+          getItem((<Link href={"/users"}>All Users</Link>), '4'),
+          getItem((<Link href={"/users"}>Departments</Link>), '5'),
 
      ]),
      getItem('Customers', 'sub5', <SettingOutlined />, [
           getItem('Option 94', '94'),
 
      ]),
-     getItem('Setting', 'sub6', <SettingOutlined />, [
-          getItem('Option 92', '92'),
-
-     ]),
+     getItem((<Link href={"/Departments"}>Setting</Link>), 'sub6', <SettingOutlined />),
 ];
 
-
-import React, { useState, useEffect, useCallback } from 'react';
-import { Menu } from 'antd';
-import { MenuProps } from 'antd/lib/menu';
-import Link from 'next/link';
-import { json } from 'stream/consumers';
 
 type NavItem = {
      path: string;
@@ -77,9 +75,6 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
      const menuItems = convertToItemType(navList);
 
 
-
-
-
      const maxSidebarWidth = 270;
      const minSidebarWidth = 30;
      // const [menuWidth, setMenuWidth] = useState(maxSidebarWidth);
@@ -104,12 +99,12 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
      const toggleSidebarButtonPosition = isSidebarToggeld ? "left-1" : "left-52";
      return (
           <aside
-               className='hidden lg:block border-l transition-all duration-100 relative'
+               className='hidden lg:block border-r border-[#091e4224] transition-all duration-100 relative'
                style={{ width: isSidebarToggeld ? minSidebarWidth : maxSidebarWidth, height: 'calc(100vh - 64px)', background: '#F6F7FB' }}
           >
                <button
                     onClick={() => handleToggleSidebar()}
-                    className={`w-6 h-6 absolute bg-white text-slate-500 hover:bg-[#0073ea] transition hover:w-7 hover:text-white  border border-borderColor-secondary  rounded-full justify-center flex place-items-center mx-3  top-2 ${toggleSidebarButtonPosition}`}>
+                    className={`w-6 h-6 absolute bg-white text-slate-500 hover:bg-[#0073ea] transition hover:w-7 hover:text-white  border border-[#091e4224]  rounded-full justify-center flex place-items-center mx-3  top-2 ${toggleSidebarButtonPosition}`}>
                     {
                          isSidebarToggeld ? < FaChevronRight className='mr-1 text-sm' /> : <FaChevronLeft className='mr-1  text-sm' />
                     }
@@ -119,7 +114,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
 
                     <Menu
                          className={`mt-8 ${className}`}
-                         onClick={(e) => console.log(e.key)}
+                         // onClick={(e) => console.log(e.key)}
                          style={{ background: '#F6F7FB', border: 0 }}
                          mode="vertical"
                          triggerSubMenuAction='click'

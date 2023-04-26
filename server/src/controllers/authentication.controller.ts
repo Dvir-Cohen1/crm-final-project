@@ -41,11 +41,11 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     return new BadRequestError("email / password not provided");
 
   const user = await User.findOne({ email });
-  if (!user) return next(new NotFoundError());
+  if (!user) return next(new NotFoundError('User not found'));
 
   const isPasswordMatch = await user.comparePassword(password);
   if (!isPasswordMatch)
-    return next(new UnauthorizeError("email / password incorrect"));
+    return next(new UnauthorizeError("Password incorrect"));
  
   const jwt_ac_token = createAccessToken(user._id);
   const jwt_rf_token = createRefreshToken(user._id);
