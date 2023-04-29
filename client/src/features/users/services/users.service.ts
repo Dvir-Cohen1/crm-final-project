@@ -55,3 +55,27 @@ export async function deleteUserById(userId: string) {
     );
   }
 }
+
+export async function uploadProfileImageApi(
+  profileImage: Object,
+  userId: string | undefined
+) {
+  try {
+    const response = await api.post(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `users/uploadProfileImage/${userId}`,
+      { profileImage },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // set the appropriate content type
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}

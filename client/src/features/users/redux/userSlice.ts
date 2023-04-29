@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addNewUser, deleteUserById, getAllUsers, getUser } from "../services/users.service";
+import {
+  addNewUser,
+  deleteUserById,
+  getAllUsers,
+  getUser,
+  uploadProfileImageApi,
+} from "../services/users.service";
 import { UserState } from "@/types/global";
 
 // interface UserState {
@@ -32,19 +38,28 @@ export const addUser = createAsyncThunk("user/addUser", async (values: {}) => {
   return data;
 });
 
-export const deleteUser = createAsyncThunk("user/deleteUser", async (userId: string) => {
-  const data = await deleteUserById(userId);
-  return data;
-});
+export const deleteUser = createAsyncThunk(
+  "user/deleteUser",
+  async (userId: string) => {
+    const data = await deleteUserById(userId);
+    return data;
+  }
+);
+// export const uploadProfileImage = createAsyncThunk(
+//   "user/uploadProfileImage",
+//   async (profileImage: Object) => {
+//     const data = await uploadProfileImageApi(profileImage);
+//     return data;
+//   }
+// );
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // setUser: (state, action: PayloadAction<UserState>) => {
-    //   state.username = action.payload.username;
-    //   state.email = action.payload.email;
-    // },
+    setUser: (state, action: PayloadAction<UserState>) => {
+      state.user = action.payload.user;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,6 +76,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = null;
         state.error = "";
+        state.users = payload;
       })
       .addCase(getUserById.pending, (state, action) => {
         state.isLoading = true;
@@ -101,7 +117,7 @@ export const userSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;
         state.isError = false;
-        state.error = "user Deleted";
+        state.error = "User Deleted";
         state.user = payload;
       });
   },

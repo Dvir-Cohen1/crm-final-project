@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '@/layouts/Layout'
 import { AntDesignOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserById } from '@/features/users/redux/userSlice';
-import store from '@/redux/store';
-import { Avatar, Switch, Tabs, TabsProps } from 'antd';
+import { Avatar, Tabs, TabsProps } from 'antd';
 import Input from '@/components/common/Input';
-import { Button } from '@/components/common/Button';
-import { RootState } from '@/redux/reducers';
+import { RootState } from '@/types/global';
+import { uploadProfileImageApi } from '@/features/users/services/users.service';
+
 
 const User = () => {
      const router = useRouter();
@@ -18,7 +18,7 @@ const User = () => {
 
      useEffect(() => {
           dispatch<any>(getUserById(id))
-     }, [dispatch])
+     }, [dispatch, id])
 
      const items: TabsProps['items'] = [
           {
@@ -30,7 +30,7 @@ const User = () => {
                               <Input showLabel disabled type='text' label='ID' placeholder={user?._id} />
                               <Input showLabel disabled type='text' label='First Name' placeholder={user?.firstName} />
                               <Input showLabel disabled type='text' label='Last Name' placeholder={user?.lastName} />
-                              <Input showLabel disabled type='text' label='Role' placeholder={user?.role} />
+                              <Input showLabel disabled type='text' label='Role' placeholder={user?.role[0]} />
                               {/* <Button type='submit' className='w-32' fontSize='sm' variant='secondary'>Save Changes</Button> */}
                          </form>
                     </>
@@ -60,18 +60,32 @@ const User = () => {
           // },
      ];
 
+     const [file, setFile] = useState<any>(null);
+     function handleFileChange(event: any) {
+          setFile(event.target.files[0]);
+     }
 
-
+     async function handleSubmit(event: any) {
+          event.preventDefault();
+          const formData = new FormData();
+          formData.append('profileImage', file, file.name);
+          await uploadProfileImageApi(file,user?._id)
+          // dispatch<any>(uploadProfileImage(file))         
+     }
 
 
      return (
           <Layout>
                <section className='relative mx-auto text-white w-1/2 mb-5'>
                     <div className={"bg-no-repeat bg-center flex gap-4 flex-col justify-center align-middle text-center place-items-center  bg-contain  bg-slate-400/20 p-5"}>
-
+                         <form onSubmit={handleSubmit}>
+                              <input required type="file" onChange={handleFileChange} />
+                              <button type="submit">Upload</button>
+                         </form>
                          <Avatar
                               size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                               icon={<AntDesignOutlined />}
+                              src={user?.imgSRC}
                          />
                          <div className='text-slate-800 text-xl'>{user?.firstName}</div>
                          <div className='text-slate-800'>{user?.firstName}</div>

@@ -47,6 +47,11 @@ export interface UserState {
   users?: [];
   user?: {
     _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    imgSRC?: string;
+    role: [string];
   } | null;
 }
 

@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { emailRegex } from "../config/constants/regex.constant.js";
 import { Secret } from "jsonwebtoken";
 
-interface IUser extends Document {
+export interface IUser extends Document {
   email: string;
   firstName: string;
   lastName: string;

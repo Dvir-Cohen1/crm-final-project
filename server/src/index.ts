@@ -6,12 +6,20 @@ import initialMongoConnection from "./config/initialConnection.js";
 import errorHandler from "./errors/errorHandler.js";
 
 const app: Express = express();
-const PORT = process.env.PORT || 3010;
 app.use(cors({ origin: process.env.CLIENT_ENDPOINT }));
+
+app.use(express.static('public'));
+
+// Use the built-in middleware for parsing request bodies
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.raw());
+
+
 app.use(appRoutes);
 app.use(errorHandler);
 
+const PORT = process.env.PORT || 3010;
 initialMongoConnection()
   .then(() => {
     app.listen(PORT, () => {
