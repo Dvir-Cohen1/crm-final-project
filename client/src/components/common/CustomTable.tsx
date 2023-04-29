@@ -91,7 +91,7 @@ const CustomTable = ({ data, handleDelete }: any) => {
           },
      ];
      return (
-          <Table bordered columns={usersColumns} dataSource={data} />
+          <Table scroll={{ x: 1500, y: 300 }} bordered columns={usersColumns} dataSource={data} />
      )
 }
 

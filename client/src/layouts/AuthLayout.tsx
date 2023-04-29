@@ -25,9 +25,9 @@ const AuthLayout = ({ children }: LayoutProps) => {
                <main className='flex flex-col justify-center min-h-full mx-auto p-5 lg:w-1/4 lg:p-8 '>
                     {children}
                </main>
-               <div className='flex justify-between items-end mt-10 h-0  absolute w-full bottom-0 '>
+               <div className='hidden md:flex justify-between items-end mt-10 h-0  absolute w-full bottom-0 '>
 
-                    <Image width={360} height={360} src="/left.svg" alt='' />
+                    <Image className='' width={360} height={360} src="/left.svg" alt='' />
                     <div className='text-sm my-5 flex gap-4 text-gray-300'>
                          <Link className='text-gray-500' href={"/"}>
                               <span className='text-gray-500'>Privacy Policy</span>
@@ -41,7 +41,7 @@ const AuthLayout = ({ children }: LayoutProps) => {
                               <span className='text-gray-500'> User Manual </span>
                          </Link>
                     </div>
-                    <Image width={360} height={360} src="/right.svg" alt='' />
+                    <Image className='hidden md:block' width={360} height={360} src="/right.svg" alt='' />
 
                </div>
           </section>

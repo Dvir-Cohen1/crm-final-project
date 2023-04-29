@@ -97,7 +97,7 @@ const MainItems = () => {
           <>
                <AppLogo fontSize='lg' title="CRM" />
                <Menu
-                    className='border-0 bg-transparent app-navbar flex place-items-center flex-auto'
+                    className='hidden border-0 bg-transparent app-navbar lg:flex place-items-center flex-auto'
                     style={{ minWidth: 0, flex: "auto" }}
                     onClick={onClick}
                     selectedKeys={[current]}

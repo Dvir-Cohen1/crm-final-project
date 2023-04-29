@@ -19,10 +19,10 @@ export default function Home(): JSX.Element {
   const isLoading = useLoader()
   console.log(users)
   const cardData = [
-    { title: 'Projects', path: '/projects', description: "www.instagram.com" },
-    { title: ' Tasks ', path: '/tasks', description: "www.instagram.com" },
+    { title: 'Projects', path: '/projects', description: "Projects" },
+    { title: ' Tasks ', path: '/tasks', description: "Tasks" },
     { title: ' Users ', path: '/users', description:`All Users: ${users?.length || 0}` },
-    { title: ' Last Activity ', path: '/', description: "www.instagram.com" },
+    { title: ' Last Activity ', path: '/', description: "Last Activity" },
   ]
 
 
@@ -39,7 +39,8 @@ export default function Home(): JSX.Element {
                   bordered={false}
                   key={indexId}
                   hoverable
-                  style={{ width: 240 }}
+                  className="w-96 lg:w-full"
+                  // style={{ width: 240 }}
                   cover={<Image width={100} height={100} alt="example" src="https://cdn.monday.com/images/quick_search_recent_board.svg" />}
                 >
                   <Meta title={item.title} description={item.description} />

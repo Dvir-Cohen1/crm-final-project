@@ -18,7 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
                     <Navbar />
                     <div className='mt-1 flex'>
                          <Sidebar />
-                         <main className="w-full py-2 px-20 flex flex-col">
+                         <main className="w-full px-4 lg:px-20 lg:py-2  flex flex-col">
                               <Breadcrumbs />
                               {isLoading ? <SkeletonLoader isLoading={isLoading} /> : children}
                          </main>
