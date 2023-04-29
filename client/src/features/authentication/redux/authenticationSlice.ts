@@ -130,6 +130,9 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error.message;
+        removeCookie("ac-token", { path: "/" });
+        state.user = null;
+        state.isAuthenticated = false;
       })
       .addCase(logoutByToken.fulfilled, (state, { payload }: any) => {
         removeCookie("ac-token", { path: "/" });

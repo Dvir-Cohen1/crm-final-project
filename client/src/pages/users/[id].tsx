@@ -5,12 +5,9 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserById, uploadProfileImage } from '@/features/users/redux/userSlice';
 import { Avatar, Switch, Tabs, TabsProps } from 'antd';
-import Input from '@/components/common/Input';
 import { RootState } from '@/types/global';
 import { message } from 'antd';
-import { Button } from '@/components/common/Button';
-// import { uploadProfileImageApi } from '@/features/users/services/users.service';
-
+import EditUserForm from '@/features/users/components/forms/EditUserForm';
 
 const User = () => {
      const router = useRouter();
@@ -20,25 +17,7 @@ const User = () => {
      const { isLoading, isError, error } = useSelector((state: RootState) => state.user);
      const dispatch = useDispatch()
 
-     const isAdmin = (user: any) => {
-          if (user) {
-               return user.role === "admin" ? true : false
-          }
-          return false
-     }
 
-     const isUserCanEdit = (user: any, loggedUser: any) => {
-          console.log(loggedUser, "loggedUser")
-          console.log(user, "user")
-          if (!user || !loggedUser) return false
-
-          if (loggedUser.role === "admin" || loggedUser._id == user._id) {
-               return true
-          }
-          return false
-
-
-     }
 
      useEffect(() => {
           dispatch<any>(getUserById(id))
@@ -50,18 +29,7 @@ const User = () => {
                label: `Personal Info`,
                children: (
                     <>
-                         <form >
-                              <Input showLabel disabled type='text' label='ID' placeholder={user?._id} />
-                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='text' label='First Name' placeholder={user?.firstName} />
-                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='text' label='Last Name' placeholder={user?.lastName} />
-                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='email' label='Email' placeholder={user?.email} />
-                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='number' label='Phone Number' placeholder={user?.phoneNumber?.toString() || ""} />
-                              <Input showLabel disabled={loggedUser?.role !== "admin"} type='text' label='Role' placeholder={user?.role} />
-
-                              {isUserCanEdit(user, loggedUser) &&
-                                   <Button type='submit' className='w-32' fontSize='sm' variant='secondary'>Save Changes</Button>
-                              }
-                         </form>
+                         <EditUserForm user={user} loggedUser={loggedUser} />
                     </>
                ),
           },
@@ -82,11 +50,7 @@ const User = () => {
                     </>
                ),
           },
-          {
-               key: '3',
-               label: `Privacy and Security`,
-               children: `Content of Tab Pane 3`,
-          },
+
      ];
 
      const [file, setFile] = useState<any>(null);
@@ -100,7 +64,6 @@ const User = () => {
           const formData = new FormData();
           formData.append('profileImage', file, file.name);
           await dispatch<any>(uploadProfileImage({ file, userId: user?._id }))
-          // message.destroy()
      }
 
      useEffect(() => {

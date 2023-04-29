@@ -71,7 +71,7 @@ export async function uploadProfileImageApi(
         },
       }
     );
-    console.log(response.data)
+    console.log(response.data);
 
     return response.data;
   } catch (error: any) {
@@ -79,5 +79,23 @@ export async function uploadProfileImageApi(
       error.response?.data?.message || error.message || "Server Error"
     );
   }
-  
+}
+
+export async function editUserApi(
+  userData: Object,
+  userId: string | undefined
+) {
+  try {
+    const response = await api.put(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `users/editUser/${userId}`,
+      userData
+    );
+
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
 }

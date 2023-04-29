@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addNewUser,
   deleteUserById,
+  editUserApi,
   getAllUsers,
   getUser,
   uploadProfileImageApi,
@@ -50,6 +51,17 @@ export const uploadProfileImage = createAsyncThunk(
   async ({ file, userId }: { file: object; userId: string | undefined }) => {
     const data = await uploadProfileImageApi(file, userId);
     return data;
+  }
+);
+
+export const editUser = createAsyncThunk(
+  "user/editUser",
+  async ({
+    data,
+    userId,
+  }: any) => {
+    const response = await editUserApi(data, userId);
+    return response;
   }
 );
 
@@ -110,7 +122,7 @@ export const userSlice = createSlice({
       .addCase(addUser.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;
         state.isError = false;
-        state.error = "user Created";
+        state.error = "User Created";
         state.user = payload;
       })
       .addCase(deleteUser.pending, (state, action) => {
@@ -140,7 +152,21 @@ export const userSlice = createSlice({
         state.isError = false;
         state.error = "Profile image updated";
         state.user = payload.data;
-      });
+      })
+      .addCase(editUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(editUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(editUser.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "User updated";
+        state.user = payload.data;
+      })
   },
 });
 

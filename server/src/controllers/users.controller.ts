@@ -3,13 +3,10 @@ import {
   BadRequestError,
   NotFoundError,
   ServerError,
-  UnauthorizeError,
 } from "../errors/Errors.js";
-
 import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
 import User from "../models/user.model.js";
-import fs from "fs";
-import { uploadFile } from "../utils/uploadFile.js";
+import { deleteFile, uploadFile } from "../utils/uploadFile.js";
 
 export const allUsers = async (
   req: Request,
@@ -61,12 +58,10 @@ export const deleteUser = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  console.log(id);
-  console.log(req.userId);
   if (id == req.userId) {
-    return res
-      .status(200)
-      .send({ error: true, data: "Cant delete the user you are logged into" });
+    return next(
+      new BadRequestError("Cant delete the user you are logged into")
+    );
   }
 
   const user = await User.findByIdAndDelete(id);
@@ -82,7 +77,13 @@ export const uploadProfileImage = async (
   const { userId } = req.params;
   const user: any = await User.findById(userId);
 
-  uploadFile(next, file);
+  if (!user.imgSRC) {
+    uploadFile(next, file);
+  } else {
+    const exsistedFile = user.imgSRC.split("/").at(-1);
+    deleteFile(next, exsistedFile);
+  }
+
   user.imgSRC = `${process.env.BASE_ENDPOINT}${file?.filename}`;
   user.save();
   res.status(200).send({ error: false, data: user });
@@ -98,15 +99,15 @@ export const editUser = async (
     return next(new BadRequestError("ID not provided"));
   }
 
-  const { firstName, lastName, email, password, phoneNumber, role } = req.body;
-  if (!firstName || !lastName || !email || !password || !phoneNumber || !role) {
+  const { firstName, lastName, email, phoneNumber, role } = req.body;
+  if (!firstName || !lastName || !email || !phoneNumber || !role) {
     return next(new BadRequestError());
   }
 
   try {
     const user: any = await User.findByIdAndUpdate(
       id,
-      { firstName, lastName, email, password, phoneNumber, role },
+      { firstName, lastName, email, phoneNumber, role },
       { new: true }
     );
     res.status(200).send({ error: false, data: user });

@@ -10,6 +10,9 @@ import { Button } from '@/components/common/Button';
 import { addUser } from '../../redux/userSlice';
 import newUserSchemaValidation from '../../validations/newUserSchema.validation';
 const NewUserForm = () => {
+
+
+
      const {
           register,
           handleSubmit,
@@ -22,7 +25,7 @@ const NewUserForm = () => {
                email: '',
                password: '',
                phoneNumber: '',
-               role: [],
+               role: 'Member',
           },
           mode: 'onBlur',
           reValidateMode: 'onChange',
@@ -46,7 +49,7 @@ const NewUserForm = () => {
                     {errors.email && <span className='mx-5'>{errors.email.message}</span>}
                     <Input register={{ ...register('password') }} required type='password' placeholder={'Password'} />
                     {errors.password && <span className='mx-5'>{errors.password.message}</span>}
-                    <Input register={{ ...register('phoneNumber') }} type='number' placeholder={'Phone Number'} />
+                    <Input register={{ ...register('phoneNumber') }} type='text' placeholder={'Phone Number'} />
                     {errors.phoneNumber && <span className='mx-5'>{errors.phoneNumber.message}</span>}
                     <Input register={{ ...register('role') }} type='select' placeholder={'Role'} />
                     {errors.role && <span className='mx-5'>{errors.role.message}</span>}

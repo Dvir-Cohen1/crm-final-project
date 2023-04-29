@@ -27,3 +27,21 @@ export function uploadFile(next: NextFunction, file: File | undefined) {
     next();
   }
 }
+
+export function deleteFile(next: NextFunction, filename: string) {
+  try {
+    const filePath = `./public/${filename}`;
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        return next(new ServerError(Object(err)));
+      } else {
+        return filename;
+      }
+    });
+
+    return filename;
+  } catch (error) {
+    next(error);
+  }
+}

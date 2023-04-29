@@ -8,21 +8,23 @@ import useLoader from "@/hooks/useLoader";
 import store from "@/redux/store";
 import { RootState } from "@/types/global";
 import { useSelector } from "react-redux";
-
 const { Meta } = Card;
 
-const cardData = [
-  { title: 'Projects', path: '/projects', description: "www.instagram.com" },
-  { title: ' Tasks ', path: '/tasks', description: "www.instagram.com" },
-  { title: ' Users ', path: '/users', description: "www.instagram.com" },
-  { title: ' Last Activity ', path: '/', description: "www.instagram.com" },
-]
 
 
 export default function Home(): JSX.Element {
   // const { user } = store.getState().auth
-  const {user} = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const users = useSelector((state: RootState) => state.user.users);
   const isLoading = useLoader()
+  console.log(users)
+  const cardData = [
+    { title: 'Projects', path: '/projects', description: "www.instagram.com" },
+    { title: ' Tasks ', path: '/tasks', description: "www.instagram.com" },
+    { title: ' Users ', path: '/users', description:`All Users: ${users?.length || 0}` },
+    { title: ' Last Activity ', path: '/', description: "www.instagram.com" },
+  ]
+
 
   return (
     <Layout>
@@ -48,10 +50,10 @@ export default function Home(): JSX.Element {
         </div>
         {/* <GlobeShareSVG className="mb-10" /> */}
         <div className="text-center">
-          <p className=" font-semibold text-2xl mt-5 mb-3"> שתף דפים או אזכר צוותים במקום חברים בודדים </p>
-          <p className="text-md"> צור צוות עכשיו או <Link href={"/"}> למד כיצד אתה יכול לשתף פעולה עם צוותים </Link></p>
+          <p className=" font-semibold text-2xl mt-5 mb-3"> Share pages or mention a team instead of individual members</p>
+          <p className="text-md"> Create a team now or<Link href={"/"}> Learn how you can collaborate with teams</Link></p>
         </div>
-        <Button fontSize="sm" label="צור צוות חדש" variant="default"></Button>
+        <Button fontSize="sm" label="Create new Team" variant="default"></Button>
       </section>
 
     </Layout>

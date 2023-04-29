@@ -80,9 +80,11 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
   if (!token && !userId) {
     return next(new BadRequestError());
   }
-
-  const user = await User.findOne({ _id: userId });
-
-  user?.deleteAcToken();
-  res.status(200).end();
+  try {
+    const user = await User.findOne({ _id: userId });
+    user?.deleteAcToken();
+    res.status(200).end();
+  } catch (error) {
+    next(new ServerError(String(error)));
+  }
 }
