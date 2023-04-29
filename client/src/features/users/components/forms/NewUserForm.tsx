@@ -39,8 +39,8 @@ const NewUserForm = () => {
 
      return (
           <>
-               <form className='w-1/2' onSubmit={handleSubmit(onSubmitAddUser)}>
-                    <div className='text-3xl font-semibold text-left'>New User</div>
+               <form className='w-full lg:w-1/2' onSubmit={handleSubmit(onSubmitAddUser)}>
+                    <div className='text-2xl lg:text-3xl font-semibold text-left'>New User</div>
                     <Input register={{ ...register('firstName') }} required type='text' placeholder={'First Name'} />
                     {errors.firstName && <span className='mx-5'>{errors.firstName.message}</span>}
                     <Input register={{ ...register('lastName') }} required type='text' placeholder={'Last Name'} />
@@ -53,7 +53,7 @@ const NewUserForm = () => {
                     {errors.phoneNumber && <span className='mx-5'>{errors.phoneNumber.message}</span>}
                     <Input register={{ ...register('role') }} type='select' placeholder={'Role'} />
                     {errors.role && <span className='mx-5'>{errors.role.message}</span>}
-                    <Button type="submit" label='Create User'/>
+                    <Button type="submit" label='Create User' />
                </form>
           </>
      )

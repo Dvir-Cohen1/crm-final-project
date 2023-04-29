@@ -39,7 +39,7 @@ export default function Home(): JSX.Element {
                   bordered={false}
                   key={indexId}
                   hoverable
-                  className="w-96 lg:w-full"
+                  className="w-64 lg:w-full"
                   // style={{ width: 240 }}
                   cover={<Image width={100} height={100} alt="example" src="https://cdn.monday.com/images/quick_search_recent_board.svg" />}
                 >
