@@ -2,60 +2,51 @@ import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import { emailRegex } from "../config/constants/regex.constant.js";
 import { Secret } from "jsonwebtoken";
+import { IUser } from "../types/global";
 
-export interface IUser extends Document {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  phoneNumber?: Number;
-  role?: string[];
-  imgSRC?: string;
-  jwt_ac_token?: Secret;
-  jwt_rf_token?: Secret;
-  comparePassword: Function;
-  setJwtTokens: Function;
-  deleteAcToken: Function;
-}
-
-const userSchema: Schema<IUser> = new Schema({
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    match: [emailRegex, "Invalid email address"],
+const userSchema: Schema<IUser> = new Schema(
+  {
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      match: [emailRegex, "Invalid email address"],
+    },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: Number,
+      required: false,
+    },
+    role: {
+      type: String,
+      required: false,
+      default: "Member",
+    },
+    imgSRC: {
+      type: String,
+    },
+    jwt_ac_token: {
+      type: String,
+    },
+    jwt_rf_token: {
+      type: String,
+    },
   },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  phoneNumber: {
-    type: Number,
-    required: false,
-  },
-  role: {
-    type: [String],
-    required: false,
-    default: "Member",
-  },
-  imgSRC: {
-    type: String,
-  },
-  jwt_ac_token: {
-    type: String,
-  },
-  jwt_rf_token: {
-    type: String,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) return next();

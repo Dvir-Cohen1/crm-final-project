@@ -92,7 +92,7 @@ function SecondaryItems() {
                          label: 'Profile',
                          children: [
                               {
-                                   label: (<Link href={'/users/profile/1'}>Personal Profile</Link>),
+                                   label: (<Link href={`/users/${user?._id}`}>Personal Profile</Link>),
                                    key: 'profile',
                               },
                               {
@@ -101,11 +101,6 @@ function SecondaryItems() {
                               },
                          ],
                     },
-
-
-
-
-
                     {
                          type: 'group',
                          label: "Admin Panel",

@@ -3,18 +3,42 @@ import Layout from '@/layouts/Layout'
 import { AntDesignOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserById } from '@/features/users/redux/userSlice';
-import { Avatar, Tabs, TabsProps } from 'antd';
+import { getUserById, uploadProfileImage } from '@/features/users/redux/userSlice';
+import { Avatar, Switch, Tabs, TabsProps } from 'antd';
 import Input from '@/components/common/Input';
 import { RootState } from '@/types/global';
-import { uploadProfileImageApi } from '@/features/users/services/users.service';
+import { message } from 'antd';
+import { Button } from '@/components/common/Button';
+// import { uploadProfileImageApi } from '@/features/users/services/users.service';
 
 
 const User = () => {
      const router = useRouter();
      const { id }: any = router.query;
+     const loggedUser = useSelector((state: RootState) => state.auth.user);
      const user = useSelector((state: RootState) => state.user.user);
+     const { isLoading, isError, error } = useSelector((state: RootState) => state.user);
      const dispatch = useDispatch()
+
+     const isAdmin = (user: any) => {
+          if (user) {
+               return user.role === "admin" ? true : false
+          }
+          return false
+     }
+
+     const isUserCanEdit = (user: any, loggedUser: any) => {
+          console.log(loggedUser, "loggedUser")
+          console.log(user, "user")
+          if (!user || !loggedUser) return false
+
+          if (loggedUser.role === "admin" || loggedUser._id == user._id) {
+               return true
+          }
+          return false
+
+
+     }
 
      useEffect(() => {
           dispatch<any>(getUserById(id))
@@ -28,36 +52,41 @@ const User = () => {
                     <>
                          <form >
                               <Input showLabel disabled type='text' label='ID' placeholder={user?._id} />
-                              <Input showLabel disabled type='text' label='First Name' placeholder={user?.firstName} />
-                              <Input showLabel disabled type='text' label='Last Name' placeholder={user?.lastName} />
-                              <Input showLabel disabled type='text' label='Role' placeholder={user?.role[0]} />
-                              {/* <Button type='submit' className='w-32' fontSize='sm' variant='secondary'>Save Changes</Button> */}
+                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='text' label='First Name' placeholder={user?.firstName} />
+                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='text' label='Last Name' placeholder={user?.lastName} />
+                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='email' label='Email' placeholder={user?.email} />
+                              <Input showLabel disabled={!isUserCanEdit(user, loggedUser)} type='number' label='Phone Number' placeholder={user?.phoneNumber?.toString() || ""} />
+                              <Input showLabel disabled={loggedUser?.role !== "admin"} type='text' label='Role' placeholder={user?.role} />
+
+                              {isUserCanEdit(user, loggedUser) &&
+                                   <Button type='submit' className='w-32' fontSize='sm' variant='secondary'>Save Changes</Button>
+                              }
                          </form>
                     </>
                ),
           },
-          // {
-          //      key: '2',
-          //      label: `Notifications`,
-          //      children: (
-          //           <>
-          //                <section className='flex justify-between flex-col gap-5'>
-          //                     <div className='flex justify-between'>Mobile Notification:
-          //                          <Switch defaultChecked /></div>
+          {
+               key: '2',
+               label: `Notifications`,
+               children: (
+                    <>
+                         <section className='flex justify-between flex-col gap-5'>
+                              <div className='flex justify-between'>Mobile Notification:
+                                   <Switch defaultChecked /></div>
 
-          //                     <div className='flex justify-between'>Desktop Notification:
-          //                          <Switch defaultChecked /></div>
-          //                     <div className='flex justify-between'>Emails Notification:
-          //                          <Switch defaultChecked /></div>
-          //                </section>
-          //           </>
-          //      ),
-          // },
-          // {
-          //      key: '3',
-          //      label: `Privacy and Security`,
-          //      children: `Content of Tab Pane 3`,
-          // },
+                              <div className='flex justify-between'>Desktop Notification:
+                                   <Switch defaultChecked /></div>
+                              <div className='flex justify-between'>Emails Notification:
+                                   <Switch defaultChecked /></div>
+                         </section>
+                    </>
+               ),
+          },
+          {
+               key: '3',
+               label: `Privacy and Security`,
+               children: `Content of Tab Pane 3`,
+          },
      ];
 
      const [file, setFile] = useState<any>(null);
@@ -66,13 +95,35 @@ const User = () => {
      }
 
      async function handleSubmit(event: any) {
+          message.loading("Loading...");
           event.preventDefault();
           const formData = new FormData();
           formData.append('profileImage', file, file.name);
-          await uploadProfileImageApi(file,user?._id)
-          // dispatch<any>(uploadProfileImage(file))         
+          await dispatch<any>(uploadProfileImage({ file, userId: user?._id }))
+          // message.destroy()
      }
 
+     useEffect(() => {
+
+          switch (isError) {
+               case true:
+                    message.destroy()
+                    message.error(error);
+                    break;
+               case false:
+                    message.destroy()
+                    message.success(error || "Success");
+                    break;
+
+               default:
+                    break;
+          }
+
+          return () => {
+               message.destroy()
+          }
+
+     }, [error, isError, isLoading])
 
      return (
           <Layout>

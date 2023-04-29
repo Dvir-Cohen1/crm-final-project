@@ -5,6 +5,7 @@ import {
   getUserById,
   deleteUser,
   uploadProfileImage,
+  editUser,
 } from "../controllers/users.controller.js";
 const router = express.Router();
 
@@ -25,6 +26,7 @@ const upload = multer({ storage: storage });
 router.get("/", allUsers);
 router.get("/:id", getUserById);
 router.post("/add", addUser);
+router.put("/editUser/:id", editUser);
 router.delete("/:id", deleteUser);
 router.post(
   "/uploadProfileImage/:userId",

@@ -22,7 +22,7 @@ const NewUser = () => {
                     setTimeout(() => {
 
                          router.push('/users')
-                    }, 2000);
+                    }, 1000);
                     break;
 
                default:

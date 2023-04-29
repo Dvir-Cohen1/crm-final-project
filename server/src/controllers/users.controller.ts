@@ -40,7 +40,7 @@ export const addUser = async (
   next: NextFunction
 ) => {
   const { firstName, lastName, email, password } = req.body;
-  const role = String(req.body.role).toLocaleUpperCase();
+  const role = String(req.body.role).toLocaleLowerCase();
   try {
     const user = await User.create({
       firstName,
@@ -56,11 +56,19 @@ export const addUser = async (
 };
 
 export const deleteUser = async (
-  req: Request,
+  req: Request | any,
   res: Response,
   next: NextFunction
 ) => {
   const { id } = req.params;
+  console.log(id);
+  console.log(req.userId);
+  if (id == req.userId) {
+    return res
+      .status(200)
+      .send({ error: true, data: "Cant delete the user you are logged into" });
+  }
+
   const user = await User.findByIdAndDelete(id);
   res.status(200).send({ error: false, data: user });
 };
@@ -71,12 +79,38 @@ export const uploadProfileImage = async (
   next: NextFunction
 ) => {
   const file = req.file;
-  // console.log(file?.filename)
-  const fileName = uploadFile(file, res, next);
   const { userId } = req.params;
-  // console.log(process.env.BASE_ENDPOINT)
-
   const user: any = await User.findById(userId);
+
+  uploadFile(next, file);
   user.imgSRC = `${process.env.BASE_ENDPOINT}${file?.filename}`;
   user.save();
+  res.status(200).send({ error: false, data: user });
+};
+
+export const editUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  if (!id) {
+    return next(new BadRequestError("ID not provided"));
+  }
+
+  const { firstName, lastName, email, password, phoneNumber, role } = req.body;
+  if (!firstName || !lastName || !email || !password || !phoneNumber || !role) {
+    return next(new BadRequestError());
+  }
+
+  try {
+    const user: any = await User.findByIdAndUpdate(
+      id,
+      { firstName, lastName, email, password, phoneNumber, role },
+      { new: true }
+    );
+    res.status(200).send({ error: false, data: user });
+  } catch (error) {
+    return next(new ServerError(String(error)));
+  }
 };

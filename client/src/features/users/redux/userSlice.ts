@@ -45,13 +45,13 @@ export const deleteUser = createAsyncThunk(
     return data;
   }
 );
-// export const uploadProfileImage = createAsyncThunk(
-//   "user/uploadProfileImage",
-//   async (profileImage: Object) => {
-//     const data = await uploadProfileImageApi(profileImage);
-//     return data;
-//   }
-// );
+export const uploadProfileImage = createAsyncThunk(
+  "user/uploadProfileImage",
+  async ({ file, userId }: { file: object; userId: string | undefined }) => {
+    const data = await uploadProfileImageApi(file, userId);
+    return data;
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -60,6 +60,13 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<UserState>) => {
       state.user = action.payload.user;
     },
+    // clearMessages: (state, action: PayloadAction<UserState>) => {
+    //   setTimeout(() => {
+    //     state.isError = null;
+    //     state.error = null;
+    //     state.isLoading = false;
+    //   }, 1000);
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -119,6 +126,20 @@ export const userSlice = createSlice({
         state.isError = false;
         state.error = "User Deleted";
         state.user = payload;
+      })
+      .addCase(uploadProfileImage.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadProfileImage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(uploadProfileImage.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Profile image updated";
+        state.user = payload.data;
       });
   },
 });

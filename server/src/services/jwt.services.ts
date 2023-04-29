@@ -7,7 +7,7 @@ const jwtConfig = {
   ac_expired_millisecond: process.env.JWT_ACCESS_TOKEN_EXPIRED_MILLISECONDS, // 1 hour
 };
 
-export const createAccessToken = (userId: string) => {
+export const createAccessToken = (userId: string ) => {
   try {
     const token = jwt.sign({ userId }, jwtConfig.ac_secret);
     return token;

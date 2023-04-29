@@ -36,8 +36,9 @@ export interface AuthState {
     _id: string;
     firstName: string;
     lastName: string;
+    phoneNumber?: Number | undefined | string;
     email: string;
-    role: [];
+    role: string;
   } | null;
 }
 export interface UserState {
@@ -50,8 +51,9 @@ export interface UserState {
     firstName: string;
     lastName: string;
     email: string;
+    phoneNumber?: Number | undefined | string;
     imgSRC?: string;
-    role: [string];
+    role: string;
   } | null;
 }
 
@@ -68,8 +70,8 @@ export type AddUserRegisterInputs = {
   lastName: string;
   email: string;
   password: string;
-  phoneNumber?: Number;
-  role: [];
+  phoneNumber?: Number | undefined | string;
+  role: string;
 };
 
 export type FormLoginInputs = {
@@ -86,6 +88,7 @@ interface User {
   id: number;
   firstName: string;
   lastName: string;
+  phoneNumber?: Number | undefined | string;
   email: string;
-  role: [string];
+  role: string;
 }
