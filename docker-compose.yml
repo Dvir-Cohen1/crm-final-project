@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./client/.env
+  server:
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    env_file:
+      - ./server/.env
+    environment:
+      MONGO_URI: ${MONGO_ATLAS_URI}
