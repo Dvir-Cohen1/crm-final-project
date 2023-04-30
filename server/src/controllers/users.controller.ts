@@ -7,6 +7,7 @@ import {
 import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
 import User from "../models/user.model.js";
 import { deleteFile, uploadFile } from "../utils/uploadFile.js";
+// import { IAuthenticatedDeleteUserRequest } from "../types/global";
 
 export const allUsers = async (
   req: Request,

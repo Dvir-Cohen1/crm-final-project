@@ -1,3 +1,5 @@
+import { Response, Request, NextFunction } from "express";
+
 export interface IUser extends Document {
   _id: string;
   email: string;
@@ -14,3 +16,7 @@ export interface IUser extends Document {
   deleteAcToken: Function;
   isModified: Function;
 }
+
+// export interface IAuthenticatedDeleteUserRequest extends Request {
+//   userId: string;
+// }

@@ -23,7 +23,6 @@ export interface RootState {
   // showMessage?: Function
   // Other slices of your Redux state...
 }
-
 // Auth
 export interface AuthState {
   isAuthenticated: boolean | null;
