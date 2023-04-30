@@ -1,18 +1,20 @@
-version: '3'
+version: '3.8'
 
 services:
   client:
     build:
       context: ./client
-      dockerfile: dockerfile
+      dockerfile: ./dockerfile
     ports:
       - "3000:3000"
     env_file:
       - ./client/.env
+    volumes:
+      - ./client:/app  
   server:
     build:
       context: ./server
-      dockerfile: dockerfile
+      dockerfile: ./dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -20,4 +22,16 @@ services:
     env_file:
       - ./server/.env
     environment:
-      MONGO_URI: ${MONGO_ATLAS_URI}
+      MONGO_URI: "mongodb+srv://dvir906:2n436a36@cluster0.mh7ufac.mongodb.net/?retryWrites=true&w=majority"
+    volumes:
+      - ./server:/app
+  db:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

@@ -10,29 +10,29 @@ import { json } from 'stream/consumers';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const items: MenuItem[] = [
-     getItem('Projects', 'sub1', <MailOutlined />, [
-          getItem((<NextLink href={"/projects/project"}>All Projects</NextLink>), '1'),
-          // getItem((<Link href={"/projects/project"}>Projects</Link>), null, null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group'),
-     ]),
+// const items: MenuItem[] = [
+//      getItem('Projects', 'sub1', <MailOutlined />, [
+//           getItem((<NextLink href={"/projects/project"}>All Projects</NextLink>), '1'),
+//           // getItem((<Link href={"/projects/project"}>Projects</Link>), null, null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group'),
+//      ]),
 
-     getItem('Tasks', 'sub2', <AppstoreOutlined />, [
-          getItem((<NextLink href={"/tasks"}>All Tasks</NextLink>), '2'),
-          getItem((<NextLink href={"/tasks/task"}>Kanban</NextLink>), '3'),
-     ]),
+//      getItem('Tasks', 'sub2', <AppstoreOutlined />, [
+//           getItem((<NextLink href={"/tasks"}>All Tasks</NextLink>), '2'),
+//           getItem((<NextLink href={"/tasks/task"}>Kanban</NextLink>), '3'),
+//      ]),
 
-     getItem('Users', 'sub4', <SettingOutlined />, [
-          getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
-          getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
-          getItem((<NextLink href={"/users"}>Departments</NextLink>), '6'),
+//      getItem('Users', 'sub4', <SettingOutlined />, [
+//           getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
+//           getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
+//           getItem((<NextLink href={"/users"}>Departments</NextLink>), '6'),
 
-     ]),
-     getItem('Customers', 'sub5', <SettingOutlined />, [
-          getItem('Option 94', '94'),
+//      ]),
+//      getItem('Customers', 'sub5', <SettingOutlined />, [
+//           getItem('Option 94', '94'),
 
-     ]),
-     getItem((<NextLink href={"/Departments"}>Setting</NextLink>), 'sub6', <SettingOutlined />),
-];
+//      ]),
+//      getItem((<NextLink href={"/Departments"}>Setting</NextLink>), 'sub6', <SettingOutlined />),
+// ];
 
 
 type NavItem = {
@@ -119,7 +119,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
                          style={{ background: '#F6F7FB', border: 0 }}
                          mode="vertical"
                          triggerSubMenuAction='click'
-                         items={items}
+                         items={[]}
 
                     />
                }
