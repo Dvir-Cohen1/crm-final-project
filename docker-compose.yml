@@ -4,7 +4,7 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: ./dockerfile
+      dockerfile: dockerfile
     ports:
       - "3000:3000"
     env_file:
@@ -14,7 +14,7 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: ./dockerfile
+      dockerfile: dockerfile
     ports:
       - "8080:8080"
     depends_on:

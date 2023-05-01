@@ -46,6 +46,7 @@
     "dotenv-webpack": "^8.0.1",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
-    "redux-devtools-extension": "^2.13.9"
+    "redux-devtools-extension": "^2.13.9",
+    "swc": "^1.0.11"
   }
 }

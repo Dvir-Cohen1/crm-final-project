@@ -1,5 +1,5 @@
-# Base image with Node.js 16 LTS
-FROM node:16-alpine
+# Base image
+FROM node:16-alpine3.14
 
 # Set working directory
 WORKDIR /app
@@ -7,16 +7,16 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
-
-# Install TypeScript globally
+# Install TypeScript
 RUN npm install -g typescript
 
-# Copy the source code
-COPY ./src ./src
+# Install dependencies
+RUN next build
 
-# Build the app for production
+# Copy the rest of the client code
+COPY . .
+
+# Build the app
 RUN npm run build
 
 # Expose port 3000

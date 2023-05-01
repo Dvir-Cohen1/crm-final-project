@@ -36,27 +36,30 @@ export async function register(
 }
 
 export async function login(req: Request, res: Response, next: NextFunction) {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
+    if (!email && !password) {
+      return new BadRequestError("email / password not provided");
+    }
 
-  if (!email && !password) {
-    return new BadRequestError("email / password not provided");
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new NotFoundError("User not found"));
+    }
+
+    const isPasswordMatch = await user.comparePassword(password);
+    if (!isPasswordMatch) {
+      return next(new UnauthorizeError("Password incorrect"));
+    }
+
+    const jwt_ac_token = createAccessToken(user._id);
+    const jwt_rf_token = createRefreshToken(user._id);
+
+    user.setJwtTokens(jwt_ac_token, jwt_rf_token);
+    res.status(200).send({ error: false, data: user, token: jwt_ac_token });
+  } catch (error) {
+    next(new ServerError(String(error)));
   }
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    return next(new NotFoundError("User not found"));
-  }
-
-  const isPasswordMatch = await user.comparePassword(password);
-  if (!isPasswordMatch) {
-    return next(new UnauthorizeError("Password incorrect"));
-  }
-
-  const jwt_ac_token = createAccessToken(user._id);
-  const jwt_rf_token = createRefreshToken(user._id);
-
-  user.setJwtTokens(jwt_ac_token, jwt_rf_token);
-  res.status(200).send({ error: false, data: user, token: jwt_ac_token });
 }
 
 export async function isLogin(req: Request, res: Response, next: NextFunction) {

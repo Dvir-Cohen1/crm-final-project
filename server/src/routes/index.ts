@@ -1,7 +1,7 @@
 import express from "express";
 import authRoute from "./authentication.route.js";
 import usersRoute from "./users.route.js";
-import { formatUptime } from "../utils/dates.utils.js";
+import { formatUptime } from "../utils/dates.util.js";
 import catchAsyncError from "../errors/catchAsyncError.js";
 import authJwtTokenVerify from "../middlewares/authentication.middleware.js";
 const router = express.Router();

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addNewUser,
+  deleteProfileImageApi,
   deleteUserById,
   editUserApi,
   getAllUsers,
@@ -48,18 +49,28 @@ export const deleteUser = createAsyncThunk(
 );
 export const uploadProfileImage = createAsyncThunk(
   "user/uploadProfileImage",
-  async ({ file, userId }: { file: object; userId: string | undefined }) => {
+  async ({
+    file,
+    userId,
+  }: {
+    file: string | undefined;
+    userId: string | undefined;
+  }) => {
     const data = await uploadProfileImageApi(file, userId);
+    return data;
+  }
+);
+export const deleteProfileImage = createAsyncThunk(
+  "user/deleteProfileImage",
+  async ({ userId }: { userId: string | undefined }) => {
+    const data = await deleteProfileImageApi(userId);
     return data;
   }
 );
 
 export const editUser = createAsyncThunk(
   "user/editUser",
-  async ({
-    data,
-    userId,
-  }: any) => {
+  async ({ data, userId }: any) => {
     const response = await editUserApi(data, userId);
     return response;
   }
@@ -167,6 +178,20 @@ export const userSlice = createSlice({
         state.error = "User updated";
         state.user = payload.data;
       })
+      .addCase(deleteProfileImage.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteProfileImage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(deleteProfileImage.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Profile image deleted";
+        state.user = payload.data;
+      });
   },
 });
 

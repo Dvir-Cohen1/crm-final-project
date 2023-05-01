@@ -1,5 +1,5 @@
-# Base image with Node.js 16 LTS
-FROM node:16-alpine
+# Base image
+FROM node:16-alpine3.14
 
 # Set working directory
 WORKDIR /app
@@ -7,21 +7,19 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-RUN apk --no-cache add --virtual .gyp python3 make g++
-
-RUN npm rebuild bcrypt --build-from-source
+# Install TypeScript
+RUN npm install -g typescript
 
 # Install dependencies
 RUN npm install
 
-# Install TypeScript globally
-RUN npm install -g typescript
+# Copy the rest of the server code
+COPY . .
 
-# Copy the source code
-COPY ./src ./src
 
-# Build the app for production
-RUN npm run build
+# Build the app
+RUN npx tsc
+# RUN npm run build
 
 # Expose port 8080
 EXPOSE 8080

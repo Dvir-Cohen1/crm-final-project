@@ -6,6 +6,7 @@ import {
   deleteUser,
   uploadProfileImage,
   editUser,
+  deleteProfileImage
 } from "../controllers/users.controller.js";
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.get("/:id", getUserById);
 router.post("/add", addUser);
 router.put("/editUser/:id", editUser);
 router.delete("/:id", deleteUser);
+router.delete("/deleteProfileImage/:id",deleteProfileImage);
 router.post(
   "/uploadProfileImage/:userId",
   upload.single("profileImage"),
