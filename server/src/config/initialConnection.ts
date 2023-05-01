@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-let MONGO_CONNECTION_URI: string;
+let MONGO_CONNECTION_URI: string = `${process.env.MONGO_ATLAS_URI}`;
 
-if (process.env.NODE_ENV === "production") {
-  MONGO_CONNECTION_URI = `${process.env.MONGO_ATLAS_URI}`;
-} else {
+
+if (process.env.NODE_ENV === "development") {
   MONGO_CONNECTION_URI = `${process.env.MONGO_ATLAS_URI_DEVELOPMENT}`;
 }
 
@@ -13,7 +12,7 @@ if (process.env.NODE_ENV === "production") {
 const initialMongoConnection = async () => {
   mongoose.set("strictQuery", false);
   return new Promise((resolve, reject) => {
-    resolve(mongoose.connect(MONGO_CONNECTION_URI));
+    resolve(mongoose.connect(`${MONGO_CONNECTION_URI}`));
   });
 };
 
