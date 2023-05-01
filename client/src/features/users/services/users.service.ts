@@ -57,7 +57,7 @@ export async function deleteUserById(userId: string) {
 }
 
 export async function uploadProfileImageApi(
-  profileImage: Object,
+  profileImage: string | undefined,
   userId: string | undefined
 ) {
   try {
@@ -72,6 +72,20 @@ export async function uploadProfileImageApi(
       }
     );
     console.log(response.data);
+
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+
+export async function deleteProfileImageApi(
+  userId: string | undefined
+) {
+  try {
+    const response = await api.delete(process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `users/deleteProfileImage/${userId}`);
 
     return response.data;
   } catch (error: any) {

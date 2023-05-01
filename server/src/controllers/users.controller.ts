@@ -6,7 +6,7 @@ import {
 } from "../errors/Errors.js";
 import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
 import User from "../models/user.model.js";
-import { deleteFile, uploadFile } from "../utils/uploadFile.js";
+import { deleteFile, uploadFile } from "../utils/files.util.js";
 
 export const allUsers = async (
   req: Request,
@@ -73,20 +73,46 @@ export const uploadProfileImage = async (
   res: Response,
   next: NextFunction
 ) => {
-  const file = req.file;
-  const { userId } = req.params;
-  const user: any = await User.findById(userId);
+  try {
+    const file = req.file;
+    const { userId } = req.params;
+    const user: any = await User.findById(userId);
 
-  if (!user.imgSRC) {
+    // if (!user.imgSRC) {
     uploadFile(next, file);
-  } else {
-    const exsistedFile = user.imgSRC.split("/").at(-1);
-    deleteFile(next, exsistedFile);
-  }
+    // } else {
+    //   const exsistedFile = user.imgSRC.split("/").at(-1);
+    //   deleteFile(next, exsistedFile);
+    // }
 
-  user.imgSRC = `${process.env.BASE_ENDPOINT}${file?.filename}`;
-  user.save();
-  res.status(200).send({ error: false, data: user });
+    user.imgSRC = `${process.env.BASE_ENDPOINT}${file?.filename}`;
+    user.save();
+    res.status(200).send({ error: false, data: user });
+  } catch (error) {
+    return next(new ServerError(String(error)));
+  }
+};
+
+export const deleteProfileImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const user: any = await User.findById(id);
+
+    if (!user.imgSRC) {
+      return next(new NotFoundError("Profile image not found!"));
+    }
+
+    // deleteFile(user.imgSRC);
+    user.imgSRC = null;
+    user.save();
+    res.status(200).send({ error: false, data: user });
+  } catch (error) {
+    return next(new ServerError(String(error)));
+  }
 };
 
 export const editUser = async (

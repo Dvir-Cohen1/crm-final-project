@@ -5,6 +5,8 @@ import { message, Upload } from 'antd';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import Image from "next/image";
+import { uploadProfileImage } from '../../redux/userSlice';
+import { useDispatch } from 'react-redux';
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
      const reader = new FileReader();
@@ -25,11 +27,28 @@ const beforeUpload = (file: RcFile) => {
 };
 
 
-const UploadFileAvatar = () => {
+const UploadFileAvatar = ({ userId }: { userId: string | undefined }) => {
+
+     const dispatch = useDispatch()
+     // const [file, setFile] = useState<any>(null);
+     
+     // function handleFileChange(event: any) {
+     //      setFile(event.target.files[0]);
+     // }
+
+     // async function handleSubmit(event: any) {
+     //      message.loading("Loading...");
+     //      event.preventDefault();
+     //      const formData = new FormData();
+     //      formData.append('profileImage', file, file.name);
+     //      await dispatch<any>(uploadProfileImage({ file, userId: userId }))
+     // }
+
+
 
      const [loading, setLoading] = useState(false);
      const [imageUrl, setImageUrl] = useState<string>();
-console.log(imageUrl)
+
      const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
           if (info.file.status === 'uploading') {
                setLoading(true);
@@ -37,10 +56,13 @@ console.log(imageUrl)
           }
           if (info.file.status === 'done') {
                // Get this url from response in real world.
-               getBase64(info.file.originFileObj as RcFile, (url) => {
+               getBase64(info.file.originFileObj as RcFile, async(url) => {
                     setLoading(false);
                     setImageUrl(url);
+                    await dispatch<any>(uploadProfileImage({ file:url, userId: userId }))
                });
+
+               
           }
      };
 
@@ -57,12 +79,12 @@ console.log(imageUrl)
                     name="avatar"
                     listType="picture-card"
                     className="avatar-uploader"
-                    showUploadList={false}
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    showUploadList={true}
+                    // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                     beforeUpload={beforeUpload}
                     onChange={handleChange}
                >
-                    {imageUrl ? <Image src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                    {imageUrl ? <Image width={300} height={300} src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                </Upload>
           </>
      )
