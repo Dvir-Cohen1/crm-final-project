@@ -6,7 +6,7 @@ import initialMongoConnection from "./config/initialConnection.js";
 import errorHandler from "./errors/errorHandler.js";
 const app: Express = express();
 
-app.use(cors({ origin: process.env.CLIENT_ENDPOINT }));
+app.use(cors({ origin: "*"}));
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
