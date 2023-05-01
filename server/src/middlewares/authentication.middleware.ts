@@ -12,21 +12,18 @@ const authJwtTokenVerify = (
   next: NextFunction
 ) => {
   try {
-    const token = Array.isArray(req.headers["access-token"])
-      ? req.headers["access-token"][0]
-      : req.headers["access-token"];
+    const token = Array.isArray(req.headers["ac-token"])
+      ? req.headers["ac-token"][0]
+      : req.headers["ac-token"];
 
-    // if (!token) return next(new UnauthorizeError());
-    // const decodedToken = verifyAccessToken(token);
-    // // console.log(decodedToken.userId);
-    // if (typeof decodedToken === "string") {
-    //   console.log(decodedToken)
-    //   req.userId = decodedToken;
-    // } else {
-    //   // console.log(decodedToken.userId)
-    //   req.userId = decodedToken.userId;
-    //   // req.userId = decodedToken.sub as string;
-    // }
+    if (!token) return next(new UnauthorizeError());
+    const decodedToken = verifyAccessToken(token);
+
+    if (typeof decodedToken === "string") {
+      req.userId = decodedToken;
+    } else {
+      req.userId = decodedToken.userId;
+    }
 
     next();
   } catch (error) {

@@ -1,6 +1,7 @@
 import express from "express";
-import authRoute from "./authentication.route.js";
-import usersRoute from "./users.route.js";
+import authRoute from "./authentication.routes.js";
+import usersRoute from "./users.routes.js";
+import tasksRoutes from "./tasks.routes.js";
 import { formatUptime } from "../utils/dates.util.js";
 import catchAsyncError from "../errors/catchAsyncError.js";
 import authJwtTokenVerify from "../middlewares/authentication.middleware.js";
@@ -14,5 +15,6 @@ router.get("/", (req, res) => {
    });
 router.use("/auth", authRoute);
 router.use("/users", authJwtTokenVerify, catchAsyncError(usersRoute));
+router.use("/tasks", authJwtTokenVerify, catchAsyncError(tasksRoutes));
 
 export default router;

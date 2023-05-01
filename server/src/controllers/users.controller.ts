@@ -18,6 +18,7 @@ export const allUsers = async (
   res.status(200).send(users);
 };
 
+
 export const getUserById = async (
   req: Request,
   res: Response,
