@@ -81,11 +81,12 @@ export async function uploadProfileImageApi(
   }
 }
 
-export async function deleteProfileImageApi(
-  userId: string | undefined
-) {
+export async function deleteProfileImageApi(userId: string | undefined) {
   try {
-    const response = await api.delete(process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `users/deleteProfileImage/${userId}`);
+    const response = await api.delete(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `users/deleteProfileImage/${userId}`
+    );
 
     return response.data;
   } catch (error: any) {

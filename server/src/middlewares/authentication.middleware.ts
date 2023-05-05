@@ -15,7 +15,6 @@ const authJwtTokenVerify = (
     const token = Array.isArray(req.headers["ac-token"])
       ? req.headers["ac-token"][0]
       : req.headers["ac-token"];
-
     if (!token) return next(new UnauthorizeError());
     const decodedToken = verifyAccessToken(token);
 
