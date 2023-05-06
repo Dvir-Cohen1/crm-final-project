@@ -1,10 +1,10 @@
-import { Avatar, Space, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import React from 'react'
-
-import { UserOutlined } from '@ant-design/icons';
+import { Button, Tooltip, Avatar, Space, Table, } from 'antd';
+import { UserOutlined, DeleteOutlined, StarOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { ITaskDataType } from '@/types/global';
+import PopConfirm from '@/components/common/PopConfirm';
 
 const TasksTable = ({ tasks, handleDelete }: any) => {
 
@@ -79,8 +79,15 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                title: 'Action',
                key: 'action',
                render: (_, record) => (
-                    <Space size="middle">
-                         <button onClick={() => handleDelete(record._id)}>Delete</button>
+                    <Space className='flex justify-center' size="middle">
+
+                         <Button type="text" shape="default" icon={<StarOutlined />} />
+                         <PopConfirm placement={"topRight"} description='Are you sure you want to delete this task?' confirm={() => handleDelete(record._id)}>
+
+                              <Button  type="text" shape="default" icon={<DeleteOutlined />} />
+                         </PopConfirm>
+
+                         {/* <button onClick={() => handleDelete(record._id)}>Delete</button> */}
                     </Space>
                ),
           },

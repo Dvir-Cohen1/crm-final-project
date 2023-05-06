@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { Button } from '@/components/common/Button';
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, UnlockOutlined, LockOutlined,DownOutlined,UpOutlined,UpCircleTwoTone,DownCircleTwoTone,MinusCircleTwoTone } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import { IUser, RootState } from '@/types/global';
@@ -55,12 +55,12 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                onClose={onClose}
                open={open}
                bodyStyle={{ paddingBottom: 80 }}
-               extra={
-                    <Space>
-                         <Button fontSize='xs' variant="default" >Automation</Button>
-                         {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
-                    </Space>
-               }
+          // extra={
+          //      <Space>
+          //           <Button fontSize='xs' variant="default" >Automation</Button>
+          //           {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
+          //      </Space>
+          // }
           >
 
                <Form layout="vertical" onFinish={onSubmit} form={form}>
@@ -82,8 +82,21 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                    rules={[{ required: true, message: 'Please enter type' }]}
                               >
                                    <Select placeholder="Please choose type">
-                                        <Option value="private">Private</Option>
-                                        <Option value="public">Public</Option>
+
+                                        <Option value="private">
+                                             <div className="flex gap-2">
+                                                  <LockOutlined />
+                                                  Private
+                                             </div>
+                                        </Option>
+                                        <Option value="public">
+                                             <div className="flex gap-2">
+                                                  <UnlockOutlined />
+                                                  Public
+                                             </div>
+
+
+                                        </Option>
                                    </Select>
                               </Form.Item>
                          </Col>
@@ -99,21 +112,26 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                    <Select placeholder="Please select priority owner">
                                         <Option value="high">
                                              <div className="flex gap-2">
-                                                  <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/high.svg" width="16px" height="16px" />
+                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/high.svg" width="16px" height="16px" /> */}
+                              
+                                                  <UpCircleTwoTone twoToneColor={'#FF5630'} style={{ fontSize: '16px'}}  />
                                                   High
                                              </div>
 
                                         </Option>
                                         <Option value="medium">
                                              <div className="flex gap-2">
-                                                  <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/medium.svg" width="16px" height="16px" />
+                                             <MinusCircleTwoTone twoToneColor={'#FFAB00'} style={{ fontSize: '16px' }} />
+                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/medium.svg" width="16px" height="16px" /> */}
                                                   Medium
                                              </div>
 
                                         </Option>
                                         <Option value="low">
                                              <div className="flex gap-2">
-                                                  <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/low.svg" width="16px" height="16px" />
+                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/low.svg" width="16px" height="16px" /> */}
+                       
+                                                  <DownCircleTwoTone twoToneColor={'#2684FF'} style={{ fontSize: '16px'}} />
                                                   Low
                                              </div>
 

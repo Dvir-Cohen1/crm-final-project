@@ -27,13 +27,16 @@ const Task = () => {
       <h1 className='text-2xl'>
         {task.title}
       </h1>
-      <p>
+      <p className='text-lg'>
         {task.description}
       </p>
-      <br />
-      {task.priority}
-      <br />
-      {task.created_by?.firstName}
+      <hr className='mb-6' />
+      <p>
+        Priority: <span className="font-semibold">{task.priority}</span>
+      </p>
+      <p>
+        Created by: <span className="font-semibold">{task.created_by?.firstName}</span>
+      </p>
     </Layout>
   )
 }

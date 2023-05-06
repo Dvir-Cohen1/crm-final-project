@@ -7,9 +7,9 @@ import { AnyAction } from 'redux';
 import { ITasks, RootState } from '@/types/global';
 import { allTasks, deleteTask, newTask } from '@/features/tasks/redux/taskSlice';
 import Link from 'next/link';
-import { Button } from '@/components/common/Button';
+// import { Button } from '@/components/common/Button';
 import NewTaskDrawer from '@/features/tasks/components/NewTaskDrawer';
-import { message } from 'antd';
+import { Button, message } from 'antd';
 
 
 const Tasks = () => {
@@ -71,9 +71,9 @@ const Tasks = () => {
 
   return (
     <Layout>
-      <div className='flex justify-between place-items-center mb-5'>
-        <div className='text-3xl font-semibold'>Tasks</div>
-        <div><Button onClick={showDrawer} className='px-5' fontSize='sm' >New</Button></div>
+      <div className='flex justify-between align-center place-items-center mb-5'>
+        <div className='text-2xl font-semibold'>Tasks</div>
+        <div><Button type='primary' onClick={showDrawer}>New</Button></div>
       </div>
       <NewTaskDrawer open={open} onClose={onClose} onSubmit={onSubmit} />
       <TasksTable handleDelete={handleDelete} tasks={tasks} />
