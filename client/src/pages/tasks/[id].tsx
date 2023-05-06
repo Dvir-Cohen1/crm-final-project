@@ -20,22 +20,24 @@ const Task = () => {
     dispatch<any>(getTask(id))
   }, [dispatch, id])
 
-  console.log(task)
+  useEffect(() => {
 
+  }, [task])
+console.log(task)
   return (
     <Layout>
       <h1 className='text-2xl'>
-        {task.title}
+        {task?.title}
       </h1>
       <p className='text-lg'>
-        {task.description}
+        {task?.description}
       </p>
       <hr className='mb-6' />
       <p>
-        Priority: <span className="font-semibold">{task.priority}</span>
+        Priority: <span className="font-semibold">{task?.priority}</span>
       </p>
       <p>
-        Created by: <span className="font-semibold">{task.created_by?.firstName}</span>
+        Created by: <span className="font-semibold">{task?.created_by?.firstName}</span>
       </p>
     </Layout>
   )
