@@ -41,7 +41,7 @@ const CustomTable = ({ data, handleDelete }: any) => {
                title: 'Profile Image',
                dataIndex: 'imgSRC',
                key: 'imgSRC',
-               render: (imgSRC) => imgSRC ? <img className='rounded' width={60} src={imgSRC} alt="profile image" /> : <Avatar size={30} icon={<UserOutlined />}></Avatar>
+               render: (imgSRC) => <Avatar src={imgSRC} size={30} icon={<UserOutlined />}></Avatar>
           },
           {
                title: 'First Name',
@@ -62,21 +62,21 @@ const CustomTable = ({ data, handleDelete }: any) => {
                title: 'Role',
                key: 'role',
                dataIndex: 'role',
-               // render: (_, { role }) => (
-               //      <>
-               //           {
-               //                // let color = item.length > 5 ? 'geekblue' : 'green';
+               render: (_, { role }) => (
+                    <>
+                         {
+                              // let color = item.length > 5 ? 'geekblue' : 'green';
 
-               //                // console.log(item)
-               //                role === 'loser' ? color = 'volcano' : ''}
-               //                return (
-               //           <Tag color={color} key={role}>
-               //                {role.toUpperCase()}
-               //           </Tag>
-               //           );
-               //           }
-               //      </>
-               // ),
+                              // console.log(item)
+                              // role === 'loser' ? color = 'volcano' : ''}
+
+                              <Tag color={role.length > 5 ? 'geekblue' : 'green'} key={role}>
+                                   {role.toUpperCase()}
+                              </Tag>
+
+                         }
+                    </>
+               ),
           },
           {
                title: 'Action',
@@ -91,7 +91,7 @@ const CustomTable = ({ data, handleDelete }: any) => {
           },
      ];
      return (
-          <Table scroll={{ x: 1500, y: 300 }} bordered columns={usersColumns} dataSource={data} />
+          <Table size='small' scroll={{ x: 1500 }} bordered columns={usersColumns} dataSource={data} />
      )
 }
 

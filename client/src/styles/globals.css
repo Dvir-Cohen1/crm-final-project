@@ -160,20 +160,40 @@ a {
 /* ant card */
 .ant-card:not(.ant-card-bordered) {
 	border: 1px solid #D0D4E4;
- }
+}
+
 .ant-card-hoverable:hover {
 	box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
 	border-color: transparent;
- }
+}
 
 
 .ant-tooltip .ant-tooltip-inner {
 	min-height: 25px;
 	padding: 3px 8px;
 	font-size: 0.7rem;
- }
- 
- .ant-breadcrumb a:hover {
+}
+
+.ant-breadcrumb a:hover {
 	/* color: rgba(0, 0, 0, 0.88); */
 	background-color: #EAEDF1;
- }
+}
+
+
+.ant-drawer-wrapper-body {
+	overflow-x: hidden;
+}
+
+.ant-drawer-wrapper-body:hover {
+	resize: horizontal;
+	overflow-x: hidden;
+}
+
+
+.ant-btn-primary:not(:disabled) {
+	background-color: #0073EA;
+}
+
+.ant-btn-primary:not(:disabled):hover {
+	background-color: #0060B9;
+}

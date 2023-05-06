@@ -29,7 +29,7 @@ const NewUser = () => {
                     break;
           }
 
-     }, [isError, error, router]);
+     }, [isError, error]);
 
      useEffect(() => {
 

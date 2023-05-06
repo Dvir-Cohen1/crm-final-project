@@ -7,7 +7,7 @@ const api: AxiosInstance = axios.create({
   timeout: 5000, // 5 seconds timeout
   headers: {
     "Content-Type": "application/json",
-    "access-token": getCookie("ac-token"),
+    "ac-token": getCookie("ac-token"),
   },
 });
 

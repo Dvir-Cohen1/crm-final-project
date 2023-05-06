@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react'
 import Layout from '@/layouts/Layout'
 import { useDispatch } from 'react-redux'
 import { allUsers, deleteUser } from '@/features/users/redux/userSlice'
-import { User } from '@/types/global'
+import { IUser } from '@/types/global'
 import CustomTable from '@/components/common/CustomTable'
 import { Button } from '@/components/common/Button'
-import AddUserModal from '@/features/users/components/AddUserModal'
 import Link from 'next/link'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 
 const Users = () => {
-     const [users, setUsers] = useState<User[]>([]);
+     const [users, setUsers] = useState<IUser[]>([]);
 
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
      useEffect(() => {
@@ -21,7 +20,7 @@ const Users = () => {
      const handleDelete = (userId: string) => {
           dispatch(deleteUser(userId)).then(() => {
                // After the user is deleted, fetch the updated list of users
-               dispatch<any>(allUsers()).then((res: any) => setUsers(res.payload));
+               dispatch<any>(allUsers()).then((res: { payload: [] }) => setUsers(res.payload));
           });
      };
 
