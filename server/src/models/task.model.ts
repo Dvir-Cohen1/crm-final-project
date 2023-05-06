@@ -8,12 +8,12 @@ const taskSchema = new Schema(
     },
     title: {
       type: String,
-      unique: false,
+      require: true,
     },
     type: {
       type: String,
       enum: ["private", "public"],
-      unique: false,
+      require: true,
     },
     description: {
       type: String,

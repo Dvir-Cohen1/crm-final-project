@@ -1,7 +1,6 @@
 import { api } from "@/utils/api";
 
 export async function getUser(userId: string) {
-  // console.log(userId);
   try {
     const response = await api.get(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `users/${userId}`
@@ -33,7 +32,6 @@ export async function addNewUser(data: {}) {
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `users/add`,
       data
     );
-    console.log(response.data);
     return response.data;
   } catch (error: any) {
     return Promise.reject(
@@ -47,7 +45,6 @@ export async function deleteUserById(userId: string) {
     const response = await api.delete(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `users/${userId}`
     );
-    console.log(response.data);
     return response.data;
   } catch (error: any) {
     return Promise.reject(
@@ -71,8 +68,6 @@ export async function uploadProfileImageApi(
         },
       }
     );
-    console.log(response.data);
-
     return response.data;
   } catch (error: any) {
     return Promise.reject(

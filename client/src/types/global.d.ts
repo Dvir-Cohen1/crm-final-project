@@ -86,7 +86,8 @@ type LayoutProps = {
 };
 
 interface IUser {
-  id: number;
+  imgSRC: ReactNode;
+  _id: Key | null | undefined;
   firstName: string;
   lastName: string;
   phoneNumber?: Number | undefined | string;
@@ -112,7 +113,15 @@ export interface ITaskState {
   isError: boolean | null;
   error: any;
   tasks?: [] | any;
-  task?: {};
+  task?: any;
+  // {
+  //   _id: string;
+  //   title: string;
+  //   priority: string;
+  //   due_date: string;
+  //   assignee?: [] | null;
+  //   followers?: [] | null;
+  // } | null | {};
 }
 
 export type AddTaskRegisterInputs = {
@@ -133,4 +142,39 @@ export interface TaskState {
   isRegister: boolean;
   isError: boolean | null;
   error: any;
+  task?: any;
+  // {
+  //   _id: string;
+  //   title: string;
+  //   priority: string;
+  //   due_date: string;
+  //   assignee?: [] | null;
+  //   followers?: [] | null;
+  // } | null | {};
+}
+
+
+
+export interface ITaskDataType {
+  _id: string;
+  key: string;
+  title: string;
+  firstName: string;
+  created_by: {
+       _id: string
+       firstName: string
+       imgSRC: string
+  }
+  assignee: [
+       {
+            firstName: string
+            imgSRC: string
+       }
+  ];
+  followers: [
+       {
+            firstName: string
+            imgSRC: string
+       }
+  ];
 }

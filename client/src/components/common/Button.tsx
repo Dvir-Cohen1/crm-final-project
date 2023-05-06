@@ -12,7 +12,7 @@ type buttonProps = {
      htmlType?: any,
 }
 
-export const Button = ({ type = "submit", children, className, label = "", onClick, fontSize = "text-lg", variant = "primary",htmlType, ...props }: buttonProps) => {
+export const Button = ({ type = "submit", children, className, label = "", onClick, fontSize = "text-lg", variant = "primary", htmlType, ...props }: buttonProps) => {
 
      switch (fontSize) {
           case "xs":
@@ -48,6 +48,7 @@ export const Button = ({ type = "submit", children, className, label = "", onCli
                variant = "bg-white"
                fontColor = "text-slate-800"
                border = "border border-[#c5c7d0]";
+               hoverColor = "hover:bg-slate-300/10"
                break;
           case "secondary":
                variant = "bg-slate-600"

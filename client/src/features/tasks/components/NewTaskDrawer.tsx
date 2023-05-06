@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
-import { Resizable } from 'react-resizable';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { Button } from '@/components/common/Button';
 import { InboxOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { AddTaskRegisterInputs, AddUserRegisterInputs } from '@/types/global';
-import { newTask } from '../redux/taskSlice';
-import { useDispatch } from 'react-redux';
+import type { UploadProps } from 'antd';
+import { IUser, RootState } from '@/types/global';
+import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { allUsers } from '@/features/users/redux/userSlice';
 
 const { Dragger } = Upload;
-
 const props: UploadProps = {
      name: 'file',
      multiple: true,
@@ -39,42 +35,16 @@ const props: UploadProps = {
 
 const { Option } = Select;
 
-const NewTaskDrawer = ({ onClose, open }: any) => {
-
-     // const {
-     //      register,
-     //      handleSubmit,
-     //      formState: { errors },
-     // } = useForm<AddTaskRegisterInputs>({
-     //      // resolver: yupResolver(newUserSchemaValidation),
-     //      defaultValues: {
-     //           title: '',
-     //           type: '',
-     //           description: '',
-     //           priority: '',
-     //           assignee: [],
-     //           followers: [],
-     //           due_date: '',
-     //           Attachments: [],
-     //      },
-     //      mode: 'onBlur',
-     //      reValidateMode: 'onChange',
-     // });
-
-     // const onSubmitAddTask = (data: AddTaskRegisterInputs) => {
-     //      // dispatch(addUser(data))
-     //      alert("clicked on onSubmitAddTask")
-     // }
-     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
-     // const { register, handleSubmit, formState: { errors } } = useForm<AddTaskRegisterInputs>();
+const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
      const [form] = Form.useForm();
+     const usersState = useSelector((state: RootState) => state.user.users);
+     const [users, setUsers] = useState<IUser[]>(usersState || []);
+     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
-     const onSubmit = (data: any) => {
-          console.log(data);
-          dispatch(newTask(data))
-     };
-
-
+     // dispatch users for new task options
+     useEffect(() => {
+          dispatch<any>(allUsers()).then((res: any) => setUsers(res.payload))
+     }, [dispatch])
 
 
      return (
@@ -85,21 +55,16 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                onClose={onClose}
                open={open}
                bodyStyle={{ paddingBottom: 80 }}
-               // extra={
-               //      <Space>
-               //           <Button fontSize='sm' onClick={onClose} variant="default" >Cancel</Button>
-               //           <Button htmlType="submit" fontSize='sm' >Create</Button>
-               //      </Space>
-               // }
+               extra={
+                    <Space>
+                         <Button fontSize='xs' variant="default" >Automation</Button>
+                         {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
+                    </Space>
+               }
           >
 
-
-               <Form
-                    layout="vertical"
-                    onFinish={onSubmit}
-                    // hideRequiredMark
-                    form={form}
-               >
+               <Form layout="vertical" onFinish={onSubmit} form={form}>
+                    {/* Title Row */}
                     <Row gutter={16}>
                          <Col span={12}>
                               <Form.Item
@@ -116,13 +81,14 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                                    label="Type"
                                    rules={[{ required: true, message: 'Please enter type' }]}
                               >
-                                   <Select  placeholder="Please choose type">
-                                        <Option  value="private">Private</Option>
-                                        <Option  value="public">Public</Option>
+                                   <Select placeholder="Please choose type">
+                                        <Option value="private">Private</Option>
+                                        <Option value="public">Public</Option>
                                    </Select>
                               </Form.Item>
                          </Col>
                     </Row>
+                    {/* Priority Row */}
                     <Row gutter={16}>
                          <Col span={12}>
                               <Form.Item
@@ -162,13 +128,18 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                                    rules={[{ required: false, message: 'Please choose the assignee' }]}
                               >
                                    <Select placeholder="Please choose the assignee">
-                                        <Option value={[]}>none</Option>
-                                        <Option value="644f942db2b6b10b605b8620">Dvir Cohen</Option>
-                                        <Option value="644ed8ce3f32bd976e2f6ad4">Israel Israeli</Option>
+                                        <Option>none</Option>
+                                        {users.map(user => {
+                                             return (
+                                                  <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
+                                             )
+                                        })}
+                                        {/* <Option value="644ed8ce3f32bd976e2f6ad4">Israel Israeli</Option> */}
                                    </Select>
                               </Form.Item>
                          </Col>
                     </Row>
+                    {/* Followers Row */}
                     <Row gutter={16}>
                          <Col span={12}>
                               <Form.Item
@@ -177,9 +148,12 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                                    rules={[{ required: false, message: 'Please choose the followers' }]}
                               >
                                    <Select placeholder="Please choose the followers">
-                                        <Option value={[]}>none</Option>
-                                        <Option value="644f942db2b6b10b605b8620">Dvir Cohen</Option>
-                                        <Option value="644ed8ce3f32bd976e2f6ad4">Israel Israeli</Option>
+                                        <Option >none</Option>
+                                        {users.map(user => {
+                                             return (
+                                                  <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
+                                             )
+                                        })}
                                    </Select>
                               </Form.Item>
                          </Col>
@@ -197,6 +171,7 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                               </Form.Item>
                          </Col>
                     </Row>
+                    {/* Description Row */}
                     <Row gutter={16}>
                          <Col span={24}>
                               <Form.Item
@@ -213,6 +188,7 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                               </Form.Item>
                          </Col>
                     </Row>
+                    {/* Attachments Row */}
                     <Row gutter={16}>
                          <Col span={24}>
                               <Form.Item
@@ -242,9 +218,7 @@ const NewTaskDrawer = ({ onClose, open }: any) => {
                               </Form.Item>
                          </Col>
                     </Row>
-                    <Button fontSize='sm' htmlType="submit">
-                         Create
-                    </Button>
+                    <Button fontSize='sm' htmlType="submit">Create</Button>
                </Form>
 
           </Drawer>

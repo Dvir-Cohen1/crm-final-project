@@ -34,11 +34,23 @@ export const getTask = async (
     return next(new BadRequestError("Not provided task id"));
   }
 
-  const task = await Task.findById(taskId);
+  const task = await Task.findById(taskId)
+  .populate({
+    path: "created_by",
+    select: ["firstName", "lastName", "email", "role", "imgSRC"],
+  })
+  .populate({
+    path: "assignee",
+    select: ["firstName", "lastName", "email", "role", "imgSRC"],
+  })
+  .populate({
+    path: "followers",
+    select: ["firstName", "lastName", "email", "role", "imgSRC"],
+  });
   if (!task) {
     return next(new NotFoundError(`Task: "${taskId}" not found`));
   }
-  res.status(200).send({ error: false, data: task });
+  res.status(200).send(task);
 };
 
 interface ICreateTaskPropsType extends Request {
@@ -64,6 +76,10 @@ export const createTask = async (
 
     // Creating new slug for easy url's
     const slug = String(title).toLowerCase().replace(/\s+/g, "_");
+    // console.log(req.body);
+    // console.log(assignee);
+    // console.log(followers);
+    // return res.end()
 
     // Creating the Task
     const newTask = await Task.create({
@@ -73,13 +89,13 @@ export const createTask = async (
       description,
       due_date,
       priority,
+      assignee,
       followers,
       created_by: createdByUserId,
     });
-
     // If theres new assignee/followers push them to model
-    assignee && newTask.assignee?.push(assignee);
-    followers && newTask.followers?.push(followers);
+    // assignee && newTask.assignee?.push(assignee);
+    // followers && newTask.followers?.push(followers);
 
     res.status(201).send(newTask);
   } catch (error: any) {

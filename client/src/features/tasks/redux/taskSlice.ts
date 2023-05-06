@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { allTasksApi, newTaskApi } from "../services/tasks.service";
+import {
+  allTasksApi,
+  newTaskApi,
+  deleteTaskApi,
+  getTaskApi,
+} from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 
 const initialState: ITaskState = {
@@ -12,14 +17,26 @@ const initialState: ITaskState = {
 
 export const allTasks = createAsyncThunk("task/allTasks", async () => {
   const data = await allTasksApi();
+  console.log(data);
+  return data;
+});
+export const getTask = createAsyncThunk("task/getTask", async (values: any) => {
+  const data = await getTaskApi(values);
   return data;
 });
 
 export const newTask = createAsyncThunk("task/newTask", async (values: any) => {
   const data = await newTaskApi(values);
-  console.log(data);
   return data;
 });
+
+export const deleteTask = createAsyncThunk(
+  "user/deleteTask",
+  async (userId: string) => {
+    const data = await deleteTaskApi(userId);
+    return data;
+  }
+);
 
 export const taskSlice = createSlice({
   name: "task",
@@ -50,6 +67,20 @@ export const taskSlice = createSlice({
         state.error = "";
         state.tasks = payload;
       })
+      .addCase(getTask.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(getTask.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        state.error = "";
+        state.task = payload;
+      })
       .addCase(newTask.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -60,9 +91,24 @@ export const taskSlice = createSlice({
       })
       .addCase(newTask.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;
-        state.isError = null;
-        state.error = "";
-        state.tasks = state.tasks?.push(payload.data);
+        state.isError = false;
+        state.error = "Task created!";
+        state.task = payload.data;
+        // state.task = payload.data;
+      })
+      .addCase(deleteTask.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(deleteTask.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Task deleted!";
+        state.task = payload.data;
         // state.task = payload.data;
       });
   },

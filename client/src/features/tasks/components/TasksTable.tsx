@@ -3,35 +3,17 @@ import { ColumnsType } from 'antd/es/table';
 import React from 'react'
 
 import { UserOutlined } from '@ant-design/icons';
-import Image from 'next/image';
 import Link from 'next/link';
+import { ITaskDataType } from '@/types/global';
 
-const TasksTable = ({ tasks }: { tasks: any }) => {
+const TasksTable = ({ tasks, handleDelete }: any) => {
 
-     interface DataType {
-          key: string;
-          title: string;
-          assignee: [
-               {
-                    firstName: string
-                    imgSRC: string
-               }
-          ];
-          firstName: string;
-          created_by: {
-               _id: string
-               firstName: string
-               imgSRC: string
-          }
-     }
-
-
-     const columns: ColumnsType<DataType> = [
+     const columns: ColumnsType<ITaskDataType> = [
           {
                title: 'Title',
                dataIndex: 'title',
                key: 'title',
-               render: (text) => <a>{text}</a>,
+               render: (_, record) => <Link href={`/tasks/${record._id}`}> {record.title}</Link>,
                // specify the condition of filtering result
                // here is that finding the name started with `value`
                // onFilter: (value: string, record) => record.name.indexOf(value) === 0,
@@ -79,12 +61,26 @@ const TasksTable = ({ tasks }: { tasks: any }) => {
                }))
           },
           {
+               title: 'Followers',
+               key: 'followers',
+               dataIndex: 'followers',
+               render: (_, { followers }) => (followers?.map((item: any) => {
+                    return (
+                         <>
+                              <Link href={`/users/${item._id}`}>
+
+                                   <Avatar src={item.imgSRC} size={32} icon={<UserOutlined />} />
+                              </Link>
+                         </>
+                    )
+               }))
+          },
+          {
                title: 'Action',
                key: 'action',
                render: (_, record) => (
                     <Space size="middle">
-                         <a>Invite {record.key}</a>
-                         <a>Delete</a>
+                         <button onClick={() => handleDelete(record._id)}>Delete</button>
                     </Space>
                ),
           },
@@ -93,10 +89,10 @@ const TasksTable = ({ tasks }: { tasks: any }) => {
 
      // rowSelection object indicates the need for row selection
      const rowSelection = {
-          onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+          onChange: (selectedRowKeys: React.Key[], selectedRows: ITaskDataType[]) => {
                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           },
-          getCheckboxProps: (record: DataType) => ({
+          getCheckboxProps: (record: ITaskDataType) => ({
                disabled: record.key === 'Disabled User', // Column configuration not to be checked
                key: record.key,
           }),
