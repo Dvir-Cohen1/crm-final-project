@@ -177,3 +177,13 @@ a {
 	/* color: rgba(0, 0, 0, 0.88); */
 	background-color: #EAEDF1;
  }
+
+
+ .ant-drawer-wrapper-body {
+	overflow-x: hidden;
+   }
+   
+   .ant-drawer-wrapper-body:hover {
+	resize: horizontal;
+	overflow-x: hidden;
+   }

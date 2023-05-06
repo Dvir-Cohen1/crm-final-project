@@ -10,6 +10,11 @@ const taskSchema = new Schema(
       type: String,
       unique: false,
     },
+    type: {
+      type: String,
+      enum: ["private", "public"],
+      unique: false,
+    },
     description: {
       type: String,
       unique: false,
@@ -20,17 +25,19 @@ const taskSchema = new Schema(
     },
     priority: {
       type: String,
-      ref: "Priority",
+      // ref: "Priority",
       unique: false,
     },
     assignee: {
       type: [Schema.Types.ObjectId],
       ref: "User",
+      default: [],
       unique: false,
     },
     followers: {
       type: [Schema.Types.ObjectId],
       ref: "User",
+      default: [],
       unique: false,
     },
     created_by: {

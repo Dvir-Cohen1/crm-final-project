@@ -1,33 +1,31 @@
 import React from 'react'
-import {Skeleton } from 'antd';
+import { Skeleton } from 'antd';
 
 
 type LoaderProps = {
-	isLoading?: boolean
+     isLoading?: boolean
+     amount?: number
 }
 
 
-const SkeletonLoader = ({ isLoading }: LoaderProps) => {
-  return (
-     <>
-     <Skeleton
-          loading={isLoading}
-          active
-          paragraph={{ rows: 4 }}
-          avatar>
-     </Skeleton>
-     <br />
-     <br />
-     <Skeleton
-          loading={isLoading}
-          active
-          round={false}
-          paragraph={{ rows: 4 }}
-          avatar>
-
-     </Skeleton>
-</>
-  )
+const SkeletonLoader = ({ isLoading, amount = 1 }: LoaderProps) => {
+     const skeletons = [];
+     for (let i = 0; i < amount; i++) {
+          skeletons.push(
+               <Skeleton
+                    key={i}
+                    loading={isLoading}
+                    active
+                    paragraph={{ rows: 4 }}
+                    avatar
+               />
+          );
+     }
+     return (
+          <>
+               {skeletons}
+          </>
+     )
 }
 
 export default SkeletonLoader

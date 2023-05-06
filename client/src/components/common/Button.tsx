@@ -1,3 +1,4 @@
+import { CompoundedComponent } from 'antd/es/float-button/interface'
 import React, { ReactNode } from 'react'
 
 type buttonProps = {
@@ -7,10 +8,11 @@ type buttonProps = {
      children?: ReactNode,
      className?: string,
      fontSize?: string
-     onClick?: () => {},
+     onClick?: any,
+     htmlType?: any,
 }
 
-export const Button = ({ type = "submit", children, className, label = "", onClick, fontSize = "text-lg", variant = "primary", ...props }: buttonProps) => {
+export const Button = ({ type = "submit", children, className, label = "", onClick, fontSize = "text-lg", variant = "primary",htmlType, ...props }: buttonProps) => {
 
      switch (fontSize) {
           case "xs":
@@ -73,7 +75,10 @@ export const Button = ({ type = "submit", children, className, label = "", onCli
 
 
      return (
-          <button type={type} className={`
+          <button
+               onClick={onClick}
+               type={type}
+               className={`
           flex 
           justify-center 
           place-items-center 

@@ -17,13 +17,15 @@ export interface AppState {
 }
 
 export interface RootState {
+  app: AppState;
   auth: AuthState;
   user: UserState;
-  app: AppState;
+  task: TaskState;
   // showMessage?: Function
   // Other slices of your Redux state...
 }
 // Auth
+
 export interface AuthState {
   isAuthenticated: boolean | null;
   token?: string | null;
@@ -83,11 +85,52 @@ type LayoutProps = {
   isAuthenticated?: any;
 };
 
-interface User {
+interface IUser {
   id: number;
   firstName: string;
   lastName: string;
   phoneNumber?: Number | undefined | string;
   email: string;
   role: string;
+}
+
+// Tasks
+interface ITasks {
+  id: number;
+  slug: string;
+  title: string;
+  description?: string;
+  due_date?: string;
+  priority?: string;
+  assignee?: [string];
+  followers?: [string];
+  created_by: string;
+}
+
+export interface ITaskState {
+  isLoading: boolean;
+  isError: boolean | null;
+  error: any;
+  tasks?: [] | any;
+  task?: {};
+}
+
+export type AddTaskRegisterInputs = {
+  title: string;
+  type: string;
+  description?: string;
+  priority: string;
+  assignee?: [];
+  followers?: [];
+  due_date?: string;
+  Attachments?: [];
+};
+
+export interface TaskState {
+  task: {};
+  tasks: [];
+  isLoading: boolean;
+  isRegister: boolean;
+  isError: boolean | null;
+  error: any;
 }

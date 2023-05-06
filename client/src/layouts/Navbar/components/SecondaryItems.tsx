@@ -12,6 +12,7 @@ import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import store from '@/redux/store';
 import CustomEmpty from '@/components/common/CustomEmpty';
 import { RootState } from '@/types/global';
+import Search from './Search';
 
 // const profileDropDownContent = (
 //      <div>
@@ -43,11 +44,7 @@ const notificationDropDownContent = (
 
 
 
-const searchHotKeySpan = () => {
-     return (
-          <span>click <span className='bg-slate-600 rounded-sm mx-1 px-1'> . </span>to open search panel</span>
-     )
-}
+
 
 
 function SecondaryItems() {
@@ -132,20 +129,10 @@ function SecondaryItems() {
 
 
 
-     const [searchInputWidth, setSearchInputWidth] = useState(180);
      return (
           <div className="border-0 bg-transparent font-semibold app-navbar flex place-items-center">
-               <Tooltip arrow={false} title={searchHotKeySpan}>
-                    <Input
-                         className='hidden lg:flex main-search-input'
-                         placeholder="Search"
-                         suffix={<FaSearch />}
-                         onFocus={() => setSearchInputWidth(500)}
-                         onBlur={() => setSearchInputWidth(180)}
-                         style={{ borderRadius: "4px", width: searchInputWidth }}
-                    />
-               </Tooltip>
 
+               <Search />
 
 
                <Tooltip arrow={false} title="Pinned Items">

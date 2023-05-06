@@ -8,10 +8,21 @@ export const allTasks = async (
   res: Response,
   next: NextFunction
 ) => {
-  const tasks = await Task.find();
-  res.status(201).send({ error: false, data: tasks });
+  const tasks = await Task.find()
+    .populate({
+      path: "created_by",
+      select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    })
+    .populate({
+      path: "assignee",
+      select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    })
+    .populate({
+      path: "followers",
+      select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    });
+  res.status(201).send(tasks);
 };
-
 // Get one
 export const getTask = async (
   req: Request,
@@ -30,47 +41,51 @@ export const getTask = async (
   res.status(200).send({ error: false, data: task });
 };
 
+interface ICreateTaskPropsType extends Request {
+  userId: string;
+}
+
 // Create
 export const createTask = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const {
-    title,
-    description,
-    due_date,
-    priority,
-    assignee,
-    followers,
-    created_by,
-  } = req.body;
+  const { title, type, description, due_date, priority, assignee, followers } =
+    req.body;
 
-  if (
-    !title ||
-    !description ||
-    !due_date ||
-    !priority ||
-    !assignee ||
-    !followers ||
-    !created_by
-  ) {
+  if (!title || !type || !description || !due_date || !priority) {
     return next(new BadRequestError());
   }
 
-  const slug = String(title).toLowerCase().replace(/\s+/g, "_");
-  const newTask = await Task.create({
-    slug,
-    title,
-    description,
-    due_date,
-    priority,
-    assignee,
-    followers,
-    created_by,
-  });
+  try {
+    // Getting the user who created the task
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
 
-  res.status(201).send({ error: false, data: newTask });
+    // Creating new slug for easy url's
+    const slug = String(title).toLowerCase().replace(/\s+/g, "_");
+
+    // Creating the Task
+    const newTask = await Task.create({
+      slug,
+      type: type.toLowerCase(),
+      title,
+      description,
+      due_date,
+      priority,
+      followers,
+      created_by: createdByUserId,
+    });
+
+    // If theres new assignee/followers push them to model
+    assignee && newTask.assignee?.push(assignee);
+    followers && newTask.followers?.push(followers);
+
+    res.status(201).send(newTask);
+  } catch (error: any) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
+  }
 };
 
 // Edit
