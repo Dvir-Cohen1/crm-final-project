@@ -7,6 +7,7 @@ import {
 import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
 import User from "../models/user.model.js";
 import { deleteFile, uploadFile } from "../utils/files.util.js";
+import { IUser } from "../types/global";
 
 export const allUsers = async (
   req: Request,
@@ -17,7 +18,6 @@ export const allUsers = async (
   if (!users) return next(new NotFoundError("Users not found"));
   res.status(200).send(users);
 };
-
 
 export const getUserById = async (
   req: Request,
@@ -142,3 +142,24 @@ export const editUser = async (
     return next(new ServerError(String(error)));
   }
 };
+
+// export const pinItem = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { itemId } = req.params;
+
+//   if (!itemId) {
+//     return next(new BadRequestError());
+//   }
+
+//   try {
+//     const userId = req.userId
+//     const user: IUser | null = await User.findById(req.userId);
+//     const pinnedItem: {} = await user.pinItem(itemId);
+//     res.status(200).send(pinnedItem);
+//   } catch (error) {
+//     return next(new ServerError(String(error)));
+//   }
+// };

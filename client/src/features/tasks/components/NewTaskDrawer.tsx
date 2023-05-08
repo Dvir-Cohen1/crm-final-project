@@ -147,7 +147,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                               >
                                    <Select placeholder="Please choose the assignee">
                                         <Option>none</Option>
-                                        {users.map(user => {
+                                        {users?.map(user => {
                                              return (
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )
@@ -167,7 +167,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                               >
                                    <Select placeholder="Please choose the followers">
                                         <Option >none</Option>
-                                        {users.map(user => {
+                                        {users?.map(user => {
                                              return (
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )
