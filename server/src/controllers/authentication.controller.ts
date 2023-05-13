@@ -12,7 +12,10 @@ import {
   verifyAccessToken,
 } from "../services/jwt.services.js";
 import { JwtPayload } from "jsonwebtoken";
-import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
+import {
+  SELECTED_PINNED_ITEMS_FIELDS,
+  SELECTED_USER_FIELDS,
+} from "../config/constants/user.constants.js";
 
 export async function register(
   req: Request,
@@ -70,7 +73,12 @@ export async function isLogin(req: Request, res: Response, next: NextFunction) {
 
   const { userId } = verifyAccessToken(token) as JwtPayload;
   // const { userId } = decodedUserId;
-  const user = await User.findById(userId).select(SELECTED_USER_FIELDS);
+  const user = await User.findById(userId)
+    .select(SELECTED_USER_FIELDS)
+    .populate({
+      path: "pinned_items",
+      select: SELECTED_PINNED_ITEMS_FIELDS,
+    });
 
   res.status(200).send({ isAuthenticated: true, user: user });
 }

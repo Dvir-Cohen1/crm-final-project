@@ -1,69 +1,60 @@
 import React, { useState } from 'react'
-import { Empty, Menu, Popover } from 'antd';
-import { FaBell, FaQuestionCircle, FaStar, FaUser, FaSearch, FaCaretDown, FaServicestack } from "react-icons/fa";
+import { Button, Empty, Menu, Popover } from 'antd';
+import { FaBell, FaQuestionCircle, FaStar, FaUser } from "react-icons/fa";
 import { MenuProps, Input } from 'antd';
 import Tooltip from '@/components/common/Tooltip';
-
 import Link from 'next/link';
-import { JsxElement } from 'typescript';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutByToken } from '@/features/authentication/redux/authenticationSlice';
+import { isLoginByToken, logoutByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import store from '@/redux/store';
-import CustomEmpty from '@/components/common/CustomEmpty';
 import { RootState } from '@/types/global';
 import Search from './Search';
-
-// const profileDropDownContent = (
-//      <div>
-//           <p>Content</p>
-//           <hr />
-//           <Link href={"authentication/login"}>Login</Link>
-//      </div>
-// );
-const pinnedDropDownContent = (
-     <div>
-          <Empty />
-          {/* <CustomEmpty/> */}
-
-     </div>
-);
-const knowledgeBaseDropDownContent = (
-     <div>
-          <p>Content</p>
-          <p>Content</p>
-     </div>
-);
-const notificationDropDownContent = (
-     <div>
-          <p> No notifications </p>
-     </div>
-);
-
-
-
-
-
-
-
+import { DeleteOutlined, CloseOutlined } from '@ant-design/icons'
+import { pinItem } from '@/features/users/redux/userSlice';
 
 function SecondaryItems() {
-
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
-
-     // const { user } = store.getState().auth
      const { user } = useSelector((state: RootState) => state.auth);
 
-     const handleLogout = () => {
-          dispatch(logoutByToken(user?._id))
-     }
+
+     // handle delete pin item
+     const handlePinItem = async (itemId: any) => {
+          await dispatch(pinItem(itemId))
+          dispatch(isLoginByToken())
+     };
 
 
      const [current, setCurrent] = useState('mail');
      const onClick: MenuProps['onClick'] = (e) => {
           // console.log('click ', e);
-          setCurrent(e.key);
+          // setCurrent(e.key);
      };
+     const pinnedDropDownContent = (
+          <div>
+               <ul>
+                    {user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: any, indexId) => {
+                         return (
+                              <div className='my-2 font-semibold flex justify-between' key={pinItem._id}>
+                                   <li>{pinItem.title}</li>
+                                   <Button size={'small'} onClick={() => handlePinItem(pinItem._id)} type='text'><CloseOutlined /></Button>
+                              </div>
+                         )
+                    }) : <Empty />}
+               </ul>
+          </div>
+     );
+     const knowledgeBaseDropDownContent = (
+          <div>
+               <p>Content</p>
+               <p>Content</p>
+          </div>
+     );
+     const notificationDropDownContent = (
+          <div>
+               <p> No notifications </p>
+          </div>
+     );
+
 
 
      const profileItems: MenuProps['items'] = [
@@ -136,7 +127,7 @@ function SecondaryItems() {
 
 
                <Tooltip arrow={false} title="Pinned Items">
-                    <Popover placement="topLeft" content={pinnedDropDownContent} title="Pinned Items" trigger="click">
+                    <Popover placement="bottomRight" content={pinnedDropDownContent} title="Pinned Items" trigger="click">
                          <div className='menu-actions-svg-container'>
                               <FaStar />
                          </div>
@@ -144,7 +135,7 @@ function SecondaryItems() {
                </Tooltip>
 
                <Tooltip arrow={false} title="Knowlage Base">
-                    <Popover placement="topLeft" content={knowledgeBaseDropDownContent} title="Knowlage Base" trigger="click">
+                    <Popover placement="bottomRight" content={knowledgeBaseDropDownContent} title="Knowlage Base" trigger="click">
                          <div className='menu-actions-svg-container'>
                               <FaQuestionCircle />
                          </div>
@@ -152,17 +143,12 @@ function SecondaryItems() {
                </Tooltip>
 
                <Tooltip arrow={false} title="Notifications">
-                    <Popover placement="topLeft" content={notificationDropDownContent} title="Notifications" trigger="click">
+                    <Popover placement="bottomRight" content={notificationDropDownContent} title="Notifications" trigger="click">
                          <div className='menu-actions-svg-container'>
                               <FaBell />
                          </div>
                     </Popover>
                </Tooltip>
-               {/* <Popover placement="topLeft" content={profileDropDownContent} title="פרופיל אישי" trigger="click" >
-                    <div className='menu-actions-svg-container bg-profileButtonColor hover:bg-profileButtonColor/90'>
-                         <FaUser color='white' fontSize={16} />
-                    </div>
-               </Popover> */}
                <Menu
                     className="border-0 bg-transparent font-semibold"
                     style={{ minWidth: 0 }}

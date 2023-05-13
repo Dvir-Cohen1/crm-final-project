@@ -4,20 +4,26 @@ import {
   NotFoundError,
   ServerError,
 } from "../errors/Errors.js";
-import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
+import {
+  SELECTED_PINNED_ITEMS_FIELDS,
+  SELECTED_USER_FIELDS,
+} from "../config/constants/user.constants.js";
 import User from "../models/user.model.js";
 import { deleteFile, uploadFile } from "../utils/files.util.js";
+import { IRequestUserId, IUser } from "../types/global";
 
 export const allUsers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const users = await User.find().select(SELECTED_USER_FIELDS);
+  const users = await User.find().select(SELECTED_USER_FIELDS).populate({
+    path: "pinned_items",
+    select: SELECTED_PINNED_ITEMS_FIELDS,
+  });
   if (!users) return next(new NotFoundError("Users not found"));
   res.status(200).send(users);
 };
-
 
 export const getUserById = async (
   req: Request,
@@ -26,8 +32,11 @@ export const getUserById = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const user = await User.findById(id).select(SELECTED_USER_FIELDS);
-
+  const user = await User.findById(id).select(SELECTED_USER_FIELDS).populate({
+    path: "pinned_items",
+    select: SELECTED_PINNED_ITEMS_FIELDS,
+  });
+  console.log(user?.pinned_items);
   if (!user) return next(new NotFoundError("User not found"));
   res.status(200).send(user);
 };
@@ -79,12 +88,7 @@ export const uploadProfileImage = async (
     const { userId } = req.params;
     const user: any = await User.findById(userId);
 
-    // if (!user.imgSRC) {
     uploadFile(next, file);
-    // } else {
-    //   const exsistedFile = user.imgSRC.split("/").at(-1);
-    //   deleteFile(next, exsistedFile);
-    // }
 
     user.imgSRC = `${process.env.BASE_ENDPOINT}${file?.filename}`;
     user.save();
@@ -107,9 +111,12 @@ export const deleteProfileImage = async (
       return next(new NotFoundError("Profile image not found!"));
     }
 
+    // Delete file from server
     // deleteFile(user.imgSRC);
+
     user.imgSRC = null;
     user.save();
+
     res.status(200).send({ error: false, data: user });
   } catch (error) {
     return next(new ServerError(String(error)));
@@ -138,6 +145,33 @@ export const editUser = async (
       { new: true }
     );
     res.status(200).send({ error: false, data: user });
+  } catch (error) {
+    return next(new ServerError(String(error)));
+  }
+};
+
+export const pinItem = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { itemId } = req.params;
+
+  try {
+    const { userId }: IRequestUserId = req;
+    const user: IUser | null = await User.findById(userId).select(
+      SELECTED_USER_FIELDS
+    );
+    const pinnedItem = await user?.pinItem(itemId);
+
+    if (!pinnedItem) {
+      await user?.unpinItem(itemId);
+      return res
+        .status(200)
+        .send({ error: false, data: user, message: "Item unpinned" });
+    }
+
+    res.status(200).send({ error: false, data: user, message: "Item pinned" });
   } catch (error) {
     return next(new ServerError(String(error)));
   }

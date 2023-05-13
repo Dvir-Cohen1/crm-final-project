@@ -19,6 +19,7 @@ module.exports = {
         mainTextColor: "#344563",
         altButtonColor: "#0052CC",
         profileButtonColor: "#00875A",
+        yellow: "#00875A",
         borderColor: {
           primary: "#e0e0e0",
           secondary: "#E8E8EC",

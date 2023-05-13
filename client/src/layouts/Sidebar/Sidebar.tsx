@@ -1,4 +1,4 @@
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, MailOutlined, SettingOutlined, UserOutlined, CalendarOutlined } from '@ant-design/icons';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { getItem } from '@/utils/general';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -21,13 +21,13 @@ const items: MenuItem[] = [
           getItem((<NextLink href={"/tasks/task"}>Kanban</NextLink>), '3'),
      ]),
 
-     getItem('Users', 'sub4', <SettingOutlined />, [
+     getItem('Users', 'sub4', <UserOutlined />, [
           getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
           getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
           getItem((<NextLink href={"/users"}>Departments</NextLink>), '6'),
 
      ]),
-     getItem('Customers', 'sub5', <SettingOutlined />, [
+     getItem('Customers', 'sub5', <CalendarOutlined />, [
           getItem('Option 94', '94'),
 
      ]),

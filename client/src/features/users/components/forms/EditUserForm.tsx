@@ -35,7 +35,6 @@ const EditUserForm = ({ user, loggedUser }: any) => {
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
      const onSubmitEditUser = (data: any) => {
-          console.log(data)
           dispatch(editUser({ data:data, userId: user?._id }))
      }
 

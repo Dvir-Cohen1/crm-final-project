@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { Button } from '@/components/common/Button';
-import { InboxOutlined, UnlockOutlined, LockOutlined,DownOutlined,UpOutlined,UpCircleTwoTone,DownCircleTwoTone,MinusCircleTwoTone } from '@ant-design/icons';
+import { InboxOutlined, UnlockOutlined, LockOutlined, DownOutlined, UpOutlined, UpCircleTwoTone, DownCircleTwoTone, MinusCircleTwoTone } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import { IUser, RootState } from '@/types/global';
@@ -113,15 +113,15 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                         <Option value="high">
                                              <div className="flex gap-2">
                                                   {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/high.svg" width="16px" height="16px" /> */}
-                              
-                                                  <UpCircleTwoTone twoToneColor={'#FF5630'} style={{ fontSize: '16px'}}  />
+
+                                                  <UpCircleTwoTone twoToneColor={'#FF5630'} style={{ fontSize: '16px' }} />
                                                   High
                                              </div>
 
                                         </Option>
                                         <Option value="medium">
                                              <div className="flex gap-2">
-                                             <MinusCircleTwoTone twoToneColor={'#FFAB00'} style={{ fontSize: '16px' }} />
+                                                  <MinusCircleTwoTone twoToneColor={'#FFAB00'} style={{ fontSize: '16px' }} />
                                                   {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/medium.svg" width="16px" height="16px" /> */}
                                                   Medium
                                              </div>
@@ -130,8 +130,8 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                         <Option value="low">
                                              <div className="flex gap-2">
                                                   {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/low.svg" width="16px" height="16px" /> */}
-                       
-                                                  <DownCircleTwoTone twoToneColor={'#2684FF'} style={{ fontSize: '16px'}} />
+
+                                                  <DownCircleTwoTone twoToneColor={'#2684FF'} style={{ fontSize: '16px' }} />
                                                   Low
                                              </div>
 
@@ -147,7 +147,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                               >
                                    <Select placeholder="Please choose the assignee">
                                         <Option>none</Option>
-                                        {users.map(user => {
+                                        {users?.map(user => {
                                              return (
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )
@@ -167,7 +167,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                               >
                                    <Select placeholder="Please choose the followers">
                                         <Option >none</Option>
-                                        {users.map(user => {
+                                        {users?.map(user => {
                                              return (
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )

@@ -28,6 +28,7 @@ export const isLoginByToken = createAsyncThunk(
   "auth/isLoginByToken",
   async () => {
     const data = await isLogin();
+    console.log(data);
     return data;
   }
 );
@@ -101,7 +102,7 @@ export const authSlice = createSlice({
       })
       // Handle isLogin?
       .addCase(isLoginByToken.pending, (state, action) => {
-        state.isLoading = true;
+        // state.isLoading = true;
         state.isError = null;
         state.error = "";
       })

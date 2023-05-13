@@ -9,11 +9,11 @@ type File = {
 
 export function uploadFile(next: NextFunction, file: File | undefined) {
   try {
-    const filePath = `./public/${file?.filename}`;
     if (!file) {
-      return next(new BadRequestError("image not provided"));
+      return next(new BadRequestError("File not provided"));
     }
 
+    const filePath = `./public/${file?.filename}`;
     fs.writeFileSync(filePath, file.buffer);
 
     return file?.filename;

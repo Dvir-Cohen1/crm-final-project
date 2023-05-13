@@ -9,14 +9,18 @@ export interface IUser extends Document {
   phoneNumber?: Number;
   role?: string[];
   imgSRC?: string;
+  pinned_items?: any;
   jwt_ac_token?: Secret;
   jwt_rf_token?: Secret;
   comparePassword: Function;
   setJwtTokens: Function;
   deleteAcToken: Function;
   isModified: Function;
+  pinItem: any;
+  unpinItem: Function;
 }
 
-// export interface IAuthenticatedDeleteUserRequest extends Request {
-//   userId: string;
-// }
+export interface IRequestUserId extends Request {
+  userId?: string | null | undefined;
+  itemId?: string | null | undefined;
+}
