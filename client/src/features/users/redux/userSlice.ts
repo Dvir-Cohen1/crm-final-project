@@ -6,6 +6,7 @@ import {
   editUserApi,
   getAllUsers,
   getUser,
+  pinItemApi,
   uploadProfileImageApi,
 } from "../services/users.service";
 import { UserState } from "@/types/global";
@@ -75,6 +76,13 @@ export const editUser = createAsyncThunk(
     return response;
   }
 );
+export const pinItem = createAsyncThunk(
+  "user/pinItem",
+  async (itemId: string) => {
+    const response = await pinItemApi(itemId);
+    return response;
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -93,9 +101,11 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Handle Register
+      //
+      // Get all users
+      //
       .addCase(allUsers.pending, (state, action) => {
-        state.isLoading = true;
+        // state.isLoading = true;
       })
       .addCase(allUsers.rejected, (state, action) => {
         state.isLoading = false;
@@ -108,6 +118,9 @@ export const userSlice = createSlice({
         state.error = "";
         state.users = payload;
       })
+      //
+      // Get user
+      //
       .addCase(getUserById.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -122,6 +135,9 @@ export const userSlice = createSlice({
         state.error = "";
         state.user = payload;
       })
+      //
+      // Create user
+      //
       .addCase(addUser.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -136,6 +152,9 @@ export const userSlice = createSlice({
         state.error = "User Created";
         state.user = payload;
       })
+      //
+      // Delete user
+      //
       .addCase(deleteUser.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -150,20 +169,9 @@ export const userSlice = createSlice({
         state.error = "User Deleted";
         state.user = payload;
       })
-      .addCase(uploadProfileImage.pending, (state, action) => {
-        state.isLoading = true;
-      })
-      .addCase(uploadProfileImage.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.error = action.error.message;
-      })
-      .addCase(uploadProfileImage.fulfilled, (state, { payload }: any) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.error = "Profile image updated";
-        state.user = payload.data;
-      })
+      //
+      // Edit user
+      //
       .addCase(editUser.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -178,6 +186,26 @@ export const userSlice = createSlice({
         state.error = "User updated";
         state.user = payload.data;
       })
+      //
+      // Upload profile image
+      //
+      .addCase(uploadProfileImage.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadProfileImage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(uploadProfileImage.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Profile image updated";
+        state.user = payload.data;
+      })
+      //
+      // Delete profile image
+      //
       .addCase(deleteProfileImage.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -190,6 +218,23 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.error = "Profile image deleted";
+        state.user = payload.data;
+      })
+      //
+      // Pin item
+      //
+      .addCase(pinItem.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(pinItem.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(pinItem.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = payload.message;
         state.user = payload.data;
       });
   },

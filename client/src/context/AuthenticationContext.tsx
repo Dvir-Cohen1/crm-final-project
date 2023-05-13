@@ -39,7 +39,7 @@ export function AuthProvider({ children }: AuthContextProps) {
       // Redirect the user to the login page if they are not authenticated
       router.replace('/authentication/login');
     }
-  }, [isAuthenticated, isRegister, router])
+  }, [isAuthenticated, isRegister, isError, router])
 
 
   return (

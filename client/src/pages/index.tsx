@@ -17,7 +17,6 @@ export default function Home(): JSX.Element {
   const { user } = useSelector((state: RootState) => state.auth);
   const users = useSelector((state: RootState) => state.user.users);
   const isLoading = useLoader()
-  console.log(users)
   const cardData = [
     { title: 'Projects', path: '/projects', description: "Projects" },
     { title: ' Tasks ', path: '/tasks', description: "Tasks" },

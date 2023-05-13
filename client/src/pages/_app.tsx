@@ -13,7 +13,7 @@ const Loader = lazy(() => import('@/components/common/Loader'));
 
 
 function App({ Component, pageProps }: AppProps) {
-  const isLoading = useLoader(2500);
+  const isLoading = useLoader(2000);
 
   return (
     <Provider store={store}>

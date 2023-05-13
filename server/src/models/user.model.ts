@@ -36,6 +36,13 @@ const userSchema: Schema<IUser> = new Schema(
     imgSRC: {
       type: String,
     },
+    pinned_items: {
+      type: [Schema.Types.ObjectId],
+      ref: "Task",
+      default: [],
+      required: false,
+    },
+
     jwt_ac_token: {
       type: String,
     },
@@ -70,6 +77,24 @@ userSchema.methods.setJwtTokens = function (
 userSchema.methods.deleteAcToken = function () {
   this.jwt_ac_token = null;
   this.save();
+};
+
+userSchema.methods.pinItem = async function (itemId: string) {
+  if (!this.pinned_items.includes(itemId)) {
+    this.pinned_items.push(itemId);
+    await this.save();
+    return true;
+  } else {
+    return false;
+  }
+};
+
+userSchema.methods.unpinItem = async function (itemId: string) {
+  const index = this.pinned_items.indexOf(itemId);
+  if (index > -1) {
+    this.pinned_items.splice(index, 1);
+    await this.save();
+  }
 };
 
 const User = model<IUser>("User", userSchema);

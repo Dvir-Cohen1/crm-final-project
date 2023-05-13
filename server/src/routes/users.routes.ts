@@ -6,12 +6,14 @@ import {
   deleteUser,
   uploadProfileImage,
   editUser,
-  deleteProfileImage
+  deleteProfileImage,
+  pinItem
 } from "../controllers/users.controller.js";
 const router = express.Router();
 
 import multer from "multer";
 // const upload = multer({ dest: "./uploads/" });
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -30,10 +32,8 @@ router.post("/add", addUser);
 router.put("/editUser/:id", editUser);
 router.delete("/:id", deleteUser);
 router.delete("/deleteProfileImage/:id",deleteProfileImage);
-router.post(
-  "/uploadProfileImage/:userId",
-  upload.single("profileImage"),
-  uploadProfileImage
-);
+router.post("/uploadProfileImage/:userId", upload.single("profileImage"),uploadProfileImage);
+router.post("/pinItem/:itemId", pinItem);
+
 
 export default router;
