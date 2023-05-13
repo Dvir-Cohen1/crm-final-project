@@ -10,12 +10,14 @@ import Link from 'next/link';
 // import { Button } from '@/components/common/Button';
 import NewTaskDrawer from '@/features/tasks/components/NewTaskDrawer';
 import { Button, message } from 'antd';
+import { pinItem } from '@/features/users/redux/userSlice';
 
 
 const Tasks = () => {
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
   const [tasks, setTasks] = useState<ITasks[]>([]);
+
 
   useEffect(() => {
     dispatch<any>(allTasks()).then((res: any) => setTasks(res.payload))
@@ -33,25 +35,6 @@ const Tasks = () => {
     // Note that this will only run when the `users` variable changes
   }, [tasks]);
 
-  // handle Error
-  const { isError, error } = useSelector((state: RootState) => state.task);
-
-  useEffect(() => {
-    switch (isError) {
-      case true:
-        message.destroy()
-        message.error(error)
-        break;
-      case false:
-        message.destroy()
-        message.success(error)
-        break;
-
-      default:
-        break;
-    }
-  }, [error, isError]);
-
   // New Task Drawer
   const [open, setOpen] = useState(false);
 
@@ -65,6 +48,7 @@ const Tasks = () => {
 
   const onSubmit = (data: any) => {
     dispatch(newTask(data))
+    console.log("asd")
     dispatch<any>(allTasks()).then((res: any) => setTasks(res.payload))
     onClose()
   };

@@ -197,3 +197,9 @@ a {
 .ant-btn-primary:not(:disabled):hover {
 	background-color: #0060B9;
 }
+
+/* Tasks */
+
+.ant-drawer-content-wrapper {
+	min-width: 32%;
+}

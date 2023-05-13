@@ -39,6 +39,7 @@ export interface AuthState {
     lastName: string;
     phoneNumber?: Number | undefined | string;
     email: string;
+    pinned_items?: [];
     role: string;
   } | null;
 }
@@ -54,6 +55,7 @@ export interface UserState {
     email: string;
     phoneNumber?: Number | undefined | string;
     imgSRC?: string;
+    pinned_items?: [];
     role: string;
   } | null;
 }
@@ -160,6 +162,7 @@ export interface ITaskDataType {
   key: string;
   title: string;
   firstName: string;
+  record: any;
   created_by: {
        _id: string
        firstName: string

@@ -17,7 +17,6 @@ const initialState: ITaskState = {
 
 export const allTasks = createAsyncThunk("task/allTasks", async () => {
   const data = await allTasksApi();
-  console.log(data);
   return data;
 });
 export const getTask = createAsyncThunk("task/getTask", async (values: any) => {
@@ -54,7 +53,7 @@ export const taskSlice = createSlice({
     builder
       // Handle Register
       .addCase(allTasks.pending, (state, action) => {
-        state.isLoading = true;
+        // state.isLoading = true;
       })
       .addCase(allTasks.rejected, (state, action) => {
         state.isLoading = false;
@@ -94,7 +93,6 @@ export const taskSlice = createSlice({
         state.isError = false;
         state.error = "Task created!";
         state.task = payload.data;
-        // state.task = payload.data;
       })
       .addCase(deleteTask.pending, (state, action) => {
         state.isLoading = true;
@@ -109,7 +107,6 @@ export const taskSlice = createSlice({
         state.isError = false;
         state.error = "Task deleted!";
         state.task = payload.data;
-        // state.task = payload.data;
       });
   },
 });

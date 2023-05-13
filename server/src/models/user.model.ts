@@ -39,6 +39,7 @@ const userSchema: Schema<IUser> = new Schema(
     pinned_items: {
       type: [Schema.Types.ObjectId],
       ref: "Task",
+      default: [],
       required: false,
     },
 
@@ -82,6 +83,9 @@ userSchema.methods.pinItem = async function (itemId: string) {
   if (!this.pinned_items.includes(itemId)) {
     this.pinned_items.push(itemId);
     await this.save();
+    return true;
+  } else {
+    return false;
   }
 };
 

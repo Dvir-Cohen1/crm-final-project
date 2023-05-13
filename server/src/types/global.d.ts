@@ -9,7 +9,7 @@ export interface IUser extends Document {
   phoneNumber?: Number;
   role?: string[];
   imgSRC?: string;
-  pinned_items?: [{ _id: string; title: string }];
+  pinned_items?: any;
   jwt_ac_token?: Secret;
   jwt_rf_token?: Secret;
   comparePassword: Function;
@@ -18,4 +18,9 @@ export interface IUser extends Document {
   isModified: Function;
   pinItem: any;
   unpinItem: Function;
+}
+
+export interface IRequestUserId extends Request {
+  userId?: string | null | undefined;
+  itemId?: string | null | undefined;
 }

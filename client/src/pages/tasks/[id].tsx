@@ -23,7 +23,6 @@ const Task = () => {
   useEffect(() => {
 
   }, [task])
-console.log(task)
   return (
     <Layout>
       <h1 className='text-2xl'>
