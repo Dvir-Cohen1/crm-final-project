@@ -10,6 +10,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useDispatch, useSelector } from 'react-redux';
 import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
+import PriorityTags from './PriorityTags';
 
 const TasksTable = ({ tasks, handleDelete }: any) => {
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
@@ -48,6 +49,7 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                title: 'Priority',
                dataIndex: 'priority',
                key: 'priority',
+               render: (_, record) => <PriorityTags priorityTitle={record?.priority} />,
           },
           {
                title: 'Due date',

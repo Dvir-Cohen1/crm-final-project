@@ -155,29 +155,28 @@ export interface TaskState {
   // } | null | {};
 }
 
-
-
 export interface ITaskDataType {
   _id: string;
   key: string;
   title: string;
   firstName: string;
   record: any;
+  priority: string;
   created_by: {
-       _id: string
-       firstName: string
-       imgSRC: string
-  }
+    _id: string;
+    firstName: string;
+    imgSRC: string;
+  };
   assignee: [
-       {
-            firstName: string
-            imgSRC: string
-       }
+    {
+      firstName: string;
+      imgSRC: string;
+    }
   ];
   followers: [
-       {
-            firstName: string
-            imgSRC: string
-       }
+    {
+      firstName: string;
+      imgSRC: string;
+    }
   ];
 }
