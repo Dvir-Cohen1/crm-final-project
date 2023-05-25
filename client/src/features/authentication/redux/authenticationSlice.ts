@@ -28,7 +28,6 @@ export const isLoginByToken = createAsyncThunk(
   "auth/isLoginByToken",
   async () => {
     const data = await isLogin();
-    console.log(data);
     return data;
   }
 );

@@ -1,34 +1,24 @@
+
+import React from 'react'
 import { ColumnsType } from 'antd/es/table';
-import React, { useEffect, useState } from 'react'
-import { Button, Tooltip, Avatar, Space, Table, message, } from 'antd';
+import { Button, Avatar, Space } from 'antd';
 import { UserOutlined, DeleteOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
 import Link from 'next/link';
-import { ITaskDataType, RootState } from '@/types/global';
+import { ITaskDataType, IUser, RootState, UserState } from '@/types/global';
 import PopConfirm from '@/components/common/PopConfirm';
-import { pinItem } from '@/features/users/redux/userSlice';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
-import { useDispatch, useSelector } from 'react-redux';
-import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
-import PriorityTags from './PriorityTags';
+import PriorityTags from '../PriorityTags';
+import { isItemPinned } from '../../utils/task.util';
 
-const TasksTable = ({ tasks, handleDelete }: any) => {
-     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
-     const { user } = useSelector((state: RootState) => state.auth);
+type TableColumnsProps = {
+     user: IUser,
+     handlePinItem: Function
+     handleDelete: Function
 
-     // is item pinned? changne the star icon color
-     const isItemPinned = (recordId: any) => {
-          return user?.pinned_items?.some((item: any) => item._id === recordId);
-     };
+}
 
-     // Pin Task
-     const handlePinItem = async (itemId: any) => {
-          await dispatch(pinItem(itemId))
-          dispatch(isLoginByToken())
-     };
+const TableColumns = ({ user, handlePinItem, handleDelete }: TableColumnsProps) => {
 
-     // Table Columns
-     const columns: ColumnsType<ITaskDataType> = [
+     return const Columns: ColumnsType<ITaskDataType> = [
           {
                title: 'Title',
                dataIndex: 'title',
@@ -101,7 +91,7 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                               type="text"
                               shape="default"
                               icon={
-                                   isItemPinned(record._id)
+                                   isItemPinned(user?.pinned_items, record._id)
                                         ?
                                         <StarFilled style={{ color: '#ffbe0b' }} />
                                         :
@@ -120,26 +110,7 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
           },
      ];
 
-     // rowSelection object indicates the need for row selection
-     const rowSelection = {
-          onChange: (selectedRowKeys: React.Key[], selectedRows: ITaskDataType[]) => {
-               console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          },
-          getCheckboxProps: (record: ITaskDataType) => ({
-               disabled: record.key === 'Disabled User', // Column configuration not to be checked
-               key: record.key,
-          }),
-     };
-
-     return (
-          <Table
-               size='small'
-               scroll={{ x: 1500 }} bordered
-               rowSelection={{
-                    type: "checkbox",
-                    ...rowSelection,
-               }} columns={columns} dataSource={tasks} />
-     )
+     return <Columns/>
 }
 
-export default TasksTable
+export default TableColumns

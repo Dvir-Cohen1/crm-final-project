@@ -95,6 +95,7 @@ interface IUser {
   phoneNumber?: Number | undefined | string;
   email: string;
   role: string;
+  pinned_items?: [];
 }
 
 // Tasks
