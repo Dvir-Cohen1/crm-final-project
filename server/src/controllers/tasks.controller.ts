@@ -35,18 +35,18 @@ export const getTask = async (
   }
 
   const task = await Task.findById(taskId)
-  .populate({
-    path: "created_by",
-    select: ["firstName", "lastName", "email", "role", "imgSRC"],
-  })
-  .populate({
-    path: "assignee",
-    select: ["firstName", "lastName", "email", "role", "imgSRC"],
-  })
-  .populate({
-    path: "followers",
-    select: ["firstName", "lastName", "email", "role", "imgSRC"],
-  });
+    .populate({
+      path: "created_by",
+      select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    })
+    .populate({
+      path: "assignee",
+      select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    })
+    .populate({
+      path: "followers",
+      select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    });
   if (!task) {
     return next(new NotFoundError(`Task: "${taskId}" not found`));
   }
@@ -62,14 +62,22 @@ export const createTask = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  const { title, type, description, due_date, priority, assignee, followers } =
-    req.body;
-
-  if (!title || !type || !description || !due_date || !priority) {
+  ) => {
+    const {
+      title,
+      type,
+    description,
+    due_date,
+    priority,
+    assignee,
+    followers,
+    status,
+  } = req.body;
+  
+  console.log(status)
+  if (!title || !type || !description || !due_date || !priority || !status) {
     return next(new BadRequestError());
   }
-
   try {
     // Getting the user who created the task
     const { userId: createdByUserId } = req as ICreateTaskPropsType;
@@ -91,6 +99,7 @@ export const createTask = async (
       priority,
       assignee,
       followers,
+      status,
       created_by: createdByUserId,
     });
     // If theres new assignee/followers push them to model

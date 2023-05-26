@@ -117,12 +117,12 @@ export interface ITaskState {
   error: any;
   tasks?: [] | any;
   task?: any;
+  assignee?: [string];
   // {
   //   _id: string;
   //   title: string;
   //   priority: string;
   //   due_date: string;
-  //   assignee?: [] | null;
   //   followers?: [] | null;
   // } | null | {};
 }

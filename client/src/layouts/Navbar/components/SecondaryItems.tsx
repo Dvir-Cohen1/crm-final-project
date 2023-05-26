@@ -44,10 +44,10 @@ function SecondaryItems() {
                          Pinned items
                     </span>
 
-                    { user?.pinned_items?.length  ?
-                         <Link href={""} onClick={() => handleRemoveAllPinItems()} className='text-xs'>
+                    {user?.pinned_items?.length ?
+                         <Button type='link' onClick={() => handleRemoveAllPinItems()} className='text-xs'>
                               Clear All
-                         </Link>
+                         </Button>
                          :
                          ""
                     }

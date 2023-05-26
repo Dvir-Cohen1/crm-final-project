@@ -15,6 +15,10 @@ const taskSchema = new Schema(
       enum: ["private", "public"],
       require: true,
     },
+    status: {
+      type: String,
+      unique: false,
+    },
     description: {
       type: String,
       unique: false,
