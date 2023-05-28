@@ -7,7 +7,8 @@ import {
   uploadProfileImage,
   editUser,
   deleteProfileImage,
-  pinItem
+  pinItem,
+  removeAllPinItems
 } from "../controllers/users.controller.js";
 const router = express.Router();
 
@@ -34,6 +35,7 @@ router.delete("/:id", deleteUser);
 router.delete("/deleteProfileImage/:id",deleteProfileImage);
 router.post("/uploadProfileImage/:userId", upload.single("profileImage"),uploadProfileImage);
 router.post("/pinItem/:itemId", pinItem);
+router.delete("/pinItem/removeAll", removeAllPinItems);
 
 
 export default router;

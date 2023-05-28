@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { MinusOutlined } from '@ant-design/icons';
+
 import { Button } from '@/components/common/Button';
 import { InboxOutlined, UnlockOutlined, LockOutlined, DownOutlined, UpOutlined, UpCircleTwoTone, DownCircleTwoTone, MinusCircleTwoTone } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { UploadProps } from 'antd';
-import { IUser, RootState } from '@/types/global';
+import { ITaskState, IUser, RootState } from '@/types/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { allUsers } from '@/features/users/redux/userSlice';
+import { getTasksStatuses } from '../redux/taskSlice';
 
 const { Dragger } = Upload;
 const props: UploadProps = {
@@ -31,8 +34,6 @@ const props: UploadProps = {
      },
 };
 
-
-
 const { Option } = Select;
 
 const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
@@ -46,6 +47,12 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
           dispatch<any>(allUsers()).then((res: any) => setUsers(res.payload))
      }, [dispatch])
 
+     const { taskStatuses }: ITaskState = useSelector((state: RootState) => state.task);
+
+     // Get all task statuses when component mount
+     useEffect(() => {
+          dispatch<any>(getTasksStatuses())
+     }, [dispatch])
 
      return (
           <Drawer
@@ -62,7 +69,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
           //      </Space>
           // }
           >
-
                <Form layout="vertical" onFinish={onSubmit} form={form}>
                     {/* Title Row */}
                     <Row gutter={16}>
@@ -82,7 +88,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                    rules={[{ required: true, message: 'Please enter type' }]}
                               >
                                    <Select placeholder="Please choose type">
-
                                         <Option value="private">
                                              <div className="flex gap-2">
                                                   <LockOutlined />
@@ -94,13 +99,12 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                                   <UnlockOutlined />
                                                   Public
                                              </div>
-
-
                                         </Option>
                                    </Select>
                               </Form.Item>
                          </Col>
                     </Row>
+
                     {/* Priority Row */}
                     <Row gutter={16}>
                          <Col span={12}>
@@ -139,6 +143,30 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                    </Select>
                               </Form.Item>
                          </Col>
+                         <Col span={12}>
+                              <Form.Item
+                                   name="status"
+                                   label="Status"
+                                   rules={[{ required: true, message: 'Please select status' }]}
+                              >
+                                   <Select placeholder="Please select task status">
+                                        {taskStatuses?.map((status: any) => {
+                                             return (
+                                                  <Option key={status._id} value={status._id}>
+                                                       <div className="flex gap-2">
+                                                       <MinusOutlined style={{ color: status?.color }} />
+                                                            {status.label}
+                                                       </div>
+                                                  </Option>
+                                             )
+                                        })}
+                                   </Select>
+                              </Form.Item>
+                         </Col>
+
+                    </Row>
+
+                    <Row gutter={16}>
                          <Col span={12}>
                               <Form.Item
                                    name="assignee"

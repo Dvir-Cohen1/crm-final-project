@@ -15,6 +15,11 @@ const taskSchema = new Schema(
       enum: ["private", "public"],
       require: true,
     },
+    status: {
+      type: Schema.Types.ObjectId,
+      ref: "TaskStatuses",
+      require: [true, "Field status is requierd!"],
+    },
     description: {
       type: String,
       unique: false,

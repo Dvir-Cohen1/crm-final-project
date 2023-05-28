@@ -176,3 +176,35 @@ export const pinItem = async (
     return next(new ServerError(String(error)));
   }
 };
+
+export const removeAllPinItems = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId }: IRequestUserId = req;
+  try {
+    const user = await User.findById(userId).select(
+      SELECTED_USER_FIELDS
+    );
+
+    if (user) {
+
+      if(!user.pinned_items.length) {
+        return
+      } 
+
+
+      user.pinned_items = []; // Set pinned_items to an empty array
+      await user.save(); // Save the updated user object
+
+      res.status(200).send({ error: false, data: user, message: "All pinned items removed" });
+    } else {
+      // Handle case when user is not found
+      res.status(404).send({ error: true, message: "User not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    return next(new ServerError(String(error)));
+  }
+};

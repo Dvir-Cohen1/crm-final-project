@@ -4,6 +4,8 @@ import {
   newTaskApi,
   deleteTaskApi,
   getTaskApi,
+  getTasksStatusesApi,
+  editTaskApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 
@@ -13,6 +15,7 @@ const initialState: ITaskState = {
   error: "",
   tasks: [],
   task: {},
+  taskStatuses: [],
 };
 
 export const allTasks = createAsyncThunk("task/allTasks", async () => {
@@ -28,11 +31,27 @@ export const newTask = createAsyncThunk("task/newTask", async (values: any) => {
   const data = await newTaskApi(values);
   return data;
 });
+export const editTask = createAsyncThunk(
+  "task/editTask",
+  async (values: any) => {
+    const data = await editTaskApi(values);
+    return data;
+  }
+);
 
 export const deleteTask = createAsyncThunk(
-  "user/deleteTask",
+  "task/deleteTask",
   async (userId: string) => {
     const data = await deleteTaskApi(userId);
+    return data;
+  }
+);
+
+// Tasks statuses
+export const getTasksStatuses = createAsyncThunk(
+  "task/getTasksStatuses",
+  async () => {
+    const data = await getTasksStatusesApi();
     return data;
   }
 );
@@ -56,18 +75,18 @@ export const taskSlice = createSlice({
         // state.isLoading = true;
       })
       .addCase(allTasks.rejected, (state, action) => {
-        state.isLoading = false;
+        // state.isLoading = false;
         state.isError = true;
         state.error = action.error.message;
       })
       .addCase(allTasks.fulfilled, (state, { payload }: any) => {
-        state.isLoading = false;
+        // state.isLoading = false;
         state.isError = null;
         state.error = "";
         state.tasks = payload;
       })
       .addCase(getTask.pending, (state, action) => {
-        state.isLoading = true;
+        // state.isLoading = true;
       })
       .addCase(getTask.rejected, (state, action) => {
         state.isLoading = false;
@@ -94,6 +113,22 @@ export const taskSlice = createSlice({
         state.error = "Task created!";
         state.task = payload.data;
       })
+
+      .addCase(editTask.pending, (state, action) => {
+        // state.isLoading = true;
+      })
+      .addCase(editTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(editTask.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        state.error = "Task edited!";
+        state.task = payload.data;
+      })
+
       .addCase(deleteTask.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -107,6 +142,20 @@ export const taskSlice = createSlice({
         state.isError = false;
         state.error = "Task deleted!";
         state.task = payload.data;
+      })
+      // Tasks statuses
+      .addCase(getTasksStatuses.pending, (state, action) => {
+        // state.isLoading = true;
+      })
+      .addCase(getTasksStatuses.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(getTasksStatuses.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        state.taskStatuses = payload.data;
       });
   },
 });

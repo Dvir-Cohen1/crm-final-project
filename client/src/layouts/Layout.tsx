@@ -10,7 +10,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs';
 
 
 const Layout = ({ children }: LayoutProps) => {
-     const isLoading = useLoader(800)
+     const isLoading = useLoader(400)
 
      return (
           <>

@@ -24,7 +24,7 @@ const items: MenuProps['items'] = [
           label: (
                <div>
 
-                    <NextLink href="/" rel="noopener noreferrer">
+                    <NextLink href="/myWork" rel="noopener noreferrer">
                          My Work
                     </NextLink>
                </div>

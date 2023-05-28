@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '@/layouts/Layout'
-import TasksTable from '@/features/tasks/components/TasksTable'
+import TasksTable from '@/features/tasks/components/tables/TasksTable'
 import { ThunkDispatch } from 'redux-thunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { AnyAction } from 'redux';
