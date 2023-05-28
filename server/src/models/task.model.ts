@@ -16,8 +16,9 @@ const taskSchema = new Schema(
       require: true,
     },
     status: {
-      type: String,
-      unique: false,
+      type: Schema.Types.ObjectId,
+      ref: "TaskStatuses",
+      require: [true, "Field status is requierd!"],
     },
     description: {
       type: String,

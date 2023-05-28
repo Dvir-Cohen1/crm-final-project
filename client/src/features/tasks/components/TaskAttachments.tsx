@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
-
+import Image from 'next/image';
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -19,19 +19,19 @@ const TaskAttachments = () => {
      const [previewTitle, setPreviewTitle] = useState('');
      const [fileList, setFileList] = useState<UploadFile[]>([
        {
-         uid: '-1',
+         uid: '123123',
          name: 'image.png',
          status: 'done',
          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
        },
        {
-         uid: '-2',
+         uid: '1241414',
          name: 'image.png',
          status: 'done',
          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
        },
        {
-         uid: '-2',
+         uid: '677867867',
          name: 'image.png',
          status: 'done',
          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
@@ -75,7 +75,7 @@ const TaskAttachments = () => {
        {fileList.length >= 8 ? null : uploadButton}
      </Upload>
      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-       <img alt="example" style={{ width: '100%' }} src={previewImage} />
+       <Image alt="example" width={300} height={300} style={{ width: '100%' }} src={previewImage} />
      </Modal>
    </>
   )

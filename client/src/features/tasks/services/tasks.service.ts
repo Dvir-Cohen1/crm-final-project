@@ -1,7 +1,6 @@
 import { api } from "@/utils/api";
 
 export async function allTasksApi() {
-  // console.log(userId);
   try {
     const response = await api.get(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks`
@@ -15,7 +14,6 @@ export async function allTasksApi() {
 }
 
 export async function getTaskApi(taskId: string) {
-  // console.log(userId);
   try {
     const response = await api.get(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${taskId}`
@@ -29,7 +27,6 @@ export async function getTaskApi(taskId: string) {
 }
 
 export async function newTaskApi(data: {}) {
-  // console.log(userId);
   try {
     const response = await api.post(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/`,
@@ -42,10 +39,42 @@ export async function newTaskApi(data: {}) {
     );
   }
 }
+
+export async function editTaskApi(data:any) {
+  // console.log(taskData)
+  try {
+    const response = await api.put(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${data.taskId}`,
+      data.taskData
+    );
+
+
+
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
 export async function deleteTaskApi(userId: string) {
   try {
     const response = await api.delete(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${userId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+
+// Tasks statuses
+export async function getTasksStatusesApi() {
+  try {
+    const response = await api.get(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/task/statuses`
     );
     return response.data;
   } catch (error: any) {

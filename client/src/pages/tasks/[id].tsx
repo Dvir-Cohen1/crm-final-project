@@ -18,7 +18,6 @@ import Link from 'next/link';
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
 
-
 const { Panel } = Collapse;
 
 const Task = () => {
@@ -36,17 +35,14 @@ const Task = () => {
   const { task }: ITaskState = useSelector((state: RootState) => state.task);
   const { user }: AuthState = useSelector((state: RootState) => state.auth);
 
-
   // Listen for changes in the task id - (for query and page change)
   useEffect(() => {
     dispatch<any>(getTask(id))
   }, [dispatch, id])
 
-
   // Listen for any changes in task data and get updated data
   useEffect(() => {
   }, [task])
-
 
   const onChange = (key: string | string[]) => {
     console.log(key);
@@ -61,13 +57,13 @@ const Task = () => {
 
         <Button
           className='mb-4'
-          key={task._id}
+          key={task?._id}
           // size='large'
-          onClick={() => handlePinItem(task._id)}
+          onClick={() => handlePinItem(task?._id)}
           type="text"
           shape="circle"
           icon={
-            isItemPinned(user?.pinned_items, task._id)
+            isItemPinned(user?.pinned_items, task?._id)
               ?
               <StarFilled style={{ marginBottom: "10px", color: '#ffbe0b' }} />
               :
@@ -84,9 +80,8 @@ const Task = () => {
           <Button type="default" className='font-semibold' icon={<ExportOutlined />}>Export </Button>
         </div>
         <div>
-          <TaskSetting/>
+          <TaskSetting />
         </div>
-
       </div>
 
       <hr className='mb-6' />
@@ -108,10 +103,9 @@ const Task = () => {
         <Col span={6} pull={0}>
           <section>
             <div className='mb-5'>
-              <StatusDropDown status={task?.status} />
+              <StatusDropDown status={task?.status} taskId={task?._id} getTask={getTask} />
               <Button type="default" className='font-semibold' icon={<SlidersOutlined />}>Actions </Button>
             </div>
-
 
             <Collapse defaultActiveKey={['1']} onChange={onChange}>
               <Panel header="Details" key="1">
@@ -161,9 +155,6 @@ const Task = () => {
           </section>
         </Col>
       </Row>
-
-
-
     </Layout>
   )
 }

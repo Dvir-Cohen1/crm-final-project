@@ -118,6 +118,7 @@ export interface ITaskState {
   tasks?: [] | any;
   task?: any;
   assignee?: [string];
+  taskStatuses?: [];
   // {
   //   _id: string;
   //   title: string;

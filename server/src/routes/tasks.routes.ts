@@ -2,9 +2,12 @@ import express from "express";
 import {
   allTasks,
   createTask,
+  createTaskStatus,
   deleteTask,
   editTask,
   getTask,
+  getTaskStatus,
+  removeTaskStatus,
 } from "../controllers/tasks.controller.js";
 
 const router = express.Router();
@@ -16,4 +19,8 @@ router.put("/:taskId", editTask);
 router.delete("/:taskId", deleteTask);
 router.get("/:taskId", getTask);
 
+// Task Statuses
+router.get("/task/statuses", getTaskStatus);
+router.post("/task/statuses", createTaskStatus);
+router.delete("/task/statuses/:statusId", removeTaskStatus);
 export default router;
