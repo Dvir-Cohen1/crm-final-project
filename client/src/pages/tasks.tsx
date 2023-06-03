@@ -7,7 +7,7 @@ import { AnyAction } from 'redux';
 import TasksTable from '@/features/tasks/components/tables/TasksTable'
 import { allTasks, deleteTask, newTask } from '@/features/tasks/redux/taskSlice';
 import NewTaskDrawer from '@/features/tasks/components/NewTaskDrawer';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 
 const Tasks = () => {
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
@@ -17,9 +17,9 @@ const Tasks = () => {
 
   useEffect(() => {
     dispatch<any>(allTasks()).then((res: any) => {
-      const tasks = res.payload.filter((task: any) => task.status.label !== "Done")
-      console.log(tasks)
-      setTasks(tasks)
+      // const tasks = res.payload.filter((task: any) => task.status.label !== "Done")
+      // console.log(tasks)
+      setTasks(res.payload)
     })
   }, [dispatch])
 

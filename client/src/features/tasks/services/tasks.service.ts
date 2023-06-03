@@ -57,10 +57,10 @@ export async function editTaskApi(data:any) {
     );
   }
 }
-export async function deleteTaskApi(userId: string) {
+export async function deleteTaskApi(taskId: string) {
   try {
     const response = await api.delete(
-      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${userId}`
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${taskId}`
     );
     return response.data;
   } catch (error: any) {

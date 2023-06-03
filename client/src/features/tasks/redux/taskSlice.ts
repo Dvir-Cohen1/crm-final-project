@@ -41,8 +41,8 @@ export const editTask = createAsyncThunk(
 
 export const deleteTask = createAsyncThunk(
   "task/deleteTask",
-  async (userId: string) => {
-    const data = await deleteTaskApi(userId);
+  async (taskId: string) => {
+    const data = await deleteTaskApi(taskId);
     return data;
   }
 );

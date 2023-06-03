@@ -4,10 +4,22 @@ import { Button, Dropdown, Space, Tooltip } from 'antd';
 import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import PopConfirm from '@/components/common/PopConfirm';
-const TaskSetting = (taskId: any) => {
+import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { deleteTask } from '../redux/taskSlice';
+import { useRouter } from 'next/router';
+const TaskSetting = ({ taskId }: any) => {
+
+     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
+     const router = useRouter();
 
 
-
+     function handleDeleteTask() {
+          dispatch(deleteTask(taskId))
+          router.push('/tasks');
+     }
 
 
      const items: MenuProps['items'] = [
@@ -30,9 +42,14 @@ const TaskSetting = (taskId: any) => {
           {
                key: '3',
                label: (
-                    <>
-                         Delete
-                    </>
+                    <PopConfirm
+                         placement={"topRight"}
+                         description='Are you sure you want to delete this task?'
+                         confirm={() => handleDeleteTask()}
+                    >
+                         <li>Delete</li>
+
+                    </PopConfirm>
                ),
           },
           {
@@ -41,9 +58,9 @@ const TaskSetting = (taskId: any) => {
           {
                key: '4',
                label: (
-                    <>
+                    <li onClick={()=>window.print()}>
                          Print
-                    </>
+                    </li>
                ),
           },
      ];
