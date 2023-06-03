@@ -1,12 +1,15 @@
 
 import React from 'react'
-
 import { Button, Dropdown, Space, Tooltip } from 'antd';
-import { CaretDownOutlined } from '@ant-design/icons';
-import { capitalizeFirstLetters } from '@/utils/text';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-const TaskSetting = () => {
+import PopConfirm from '@/components/common/PopConfirm';
+const TaskSetting = (taskId: any) => {
+
+
+
+
+
      const items: MenuProps['items'] = [
           {
                key: '1',

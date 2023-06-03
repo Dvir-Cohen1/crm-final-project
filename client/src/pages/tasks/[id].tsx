@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect } from 'react'
 import Layout from "@/layouts/Layout"
 import { useRouter } from 'next/router';
-import { AuthState, ITaskState, IUser, RootState } from '@/types/global';
+import { AuthState, ITaskState, RootState } from '@/types/global';
 import { isItemPinned } from '@/features/tasks/utils/task.util';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getTask } from '@/features/tasks/redux/taskSlice';
+import { editTask, getTask } from '@/features/tasks/redux/taskSlice';
 import { pinItem } from '@/features/users/redux/userSlice';
 import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction } from 'redux';
@@ -13,10 +13,11 @@ import { ThunkDispatch } from 'redux-thunk';
 //  Ant Design
 import { StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, SlidersOutlined, EllipsisOutlined } from '@ant-design/icons';
 import StatusDropDown from '@/features/tasks/components/StatusDropDown';
-import { Collapse, Col, Row, Button, Avatar } from 'antd';
+import { Collapse, Col, Row, Button, Avatar, message } from 'antd';
 import Link from 'next/link';
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
+import { Input } from 'antd';
 
 const { Panel } = Collapse;
 
@@ -48,17 +49,29 @@ const Task = () => {
     console.log(key);
   };
 
+
+  // Performe edit task when clicking enter inside the inputs
+  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    message.loading("loading...")
+    const inputValue = e.currentTarget.value;
+    const inputName = e.currentTarget.name;
+    const taskId = task?._id
+
+    const taskData = {
+      [inputName]:inputValue
+    }
+
+    await dispatch<any>(editTask({ taskId, taskData }))
+    await dispatch<any>(getTask(id))
+    message.destroy()
+  };
+
   return (
     <Layout>
       <div className='flex place-items-center gap-2'>
-        <h1 className='text-2xl'>
-          {task?.title}
-        </h1>
-
         <Button
           className='mb-4'
           key={task?._id}
-          // size='large'
           onClick={() => handlePinItem(task?._id)}
           type="text"
           shape="circle"
@@ -70,6 +83,12 @@ const Task = () => {
               <StarOutlined style={{ marginBottom: "10px", color: 'black' }} />
           }
         />
+        <h1 className='text-2xl'>
+
+          <Input name='title' onPressEnter={(e)=> handleEditTask(e)} maxLength={40} defaultValue={task?.title} size='middle'
+           className='edit-task-input text-xl' placeholder={task?.title} />
+        </h1>
+
       </div>
 
       <div className='flex justify-between gap-3 mb-5'>
@@ -80,7 +99,7 @@ const Task = () => {
           <Button type="default" className='font-semibold' icon={<ExportOutlined />}>Export </Button>
         </div>
         <div>
-          <TaskSetting />
+          <TaskSetting taskId={task?._id} />
         </div>
       </div>
 
@@ -92,7 +111,10 @@ const Task = () => {
             <div className="task-description">
               <h1>Description</h1>
               <p>
-                {task?.description}
+              <Input name='description' onPressEnter={(e)=> handleEditTask(e)} maxLength={40} defaultValue={task?.description} size='middle'
+               className='edit-task-input' placeholder={task?.description} />
+
+                {/* {task?.description} */}
               </p>
             </div>
             <div className="task-attachments">

@@ -164,6 +164,10 @@ export interface ITaskDataType {
   firstName: string;
   record: any;
   priority: string;
+  status: {
+    label: string;
+    color: string;
+  };
   created_by: {
     _id: string;
     firstName: string;

@@ -13,15 +13,21 @@ import { isLoginByToken } from '@/features/authentication/redux/authenticationSl
 import PriorityTags from '../PriorityTags';
 import { isItemPinned } from '../../utils/task.util';
 import TableColumns from './TableColumns';
-const TasksTable = ({ tasks, handleDelete }: any) => {
+import StatusDropDown from '../StatusDropDown';
+import { getTask } from '@/features/tasks/redux/taskSlice';
+
+const TasksTable = ({ tasks, handleDelete,tableKey,setTableKey }: any) => {
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
+
+     // Getting the loggedIn user from redux
      const { user } = useSelector((state: RootState) => state.auth);
 
-     // Pin Task
+     // Handle Pin Task dispatch to redux
      const handlePinItem = async (itemId: any) => {
           await dispatch(pinItem(itemId))
           dispatch(isLoginByToken())
      };
+
 
      // Table Columns
      const columns: ColumnsType<ITaskDataType> = [
@@ -51,6 +57,13 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                title: 'Due date',
                dataIndex: 'due_date',
                key: 'due_date',
+          },
+          {
+               title: 'Status',
+               dataIndex: 'status',
+               key: 'status',
+               render: (_, record) =>
+                    <StatusDropDown status={record.status} taskId={record._id} getTask={getTask} setTableKey={setTableKey}  />
           },
           {
                title: 'Created by',
@@ -116,26 +129,27 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
           },
      ];
 
-  // rowSelection object indicates the need for row selection
-  const rowSelection = {
-     onChange: (selectedRowKeys: React.Key[], selectedRows: ITaskDataType[]) => {
-     //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-     },
-     getCheckboxProps: (record: ITaskDataType) => ({}),
-   };
+     // rowSelection object indicates the need for row selection
+     const rowSelection = {
+          onChange: (selectedRowKeys: React.Key[], selectedRows: ITaskDataType[]) => {
+               //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          },
+          getCheckboxProps: (record: ITaskDataType) => ({}),
+     };
 
      return (
           <Table
-      size='small'
-      scroll={{ x: 1500 }}
-      bordered
-      rowSelection={{
-        type: "checkbox",
-        ...rowSelection,
-      }}
-      columns={columns}
-      dataSource={tasks?.map((task: ITaskDataType) => ({ ...task, key: task._id }))}
-    />
+               size='small'
+               scroll={{ x: 1500 }}
+               bordered
+               rowSelection={{
+                    type: "checkbox",
+                    ...rowSelection,
+               }}
+               key={tableKey}
+               columns={columns}
+               dataSource={tasks?.map((task: ITaskDataType) => ({ ...task, key: task._id }))}
+          />
      )
 }
 

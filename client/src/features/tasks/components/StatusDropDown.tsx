@@ -10,7 +10,7 @@ import { editTask, getTasksStatuses } from '../redux/taskSlice';
 import { ITaskState, RootState } from '@/types/global';
 import useNormalizeStatusesArray from '../hooks/useNormalizeStatusesArray';
 
-const StatusDropDown = ({ status, taskId, getTask }: { status: { label: string, color: string }, taskId: string, getTask: any }) => {
+const StatusDropDown = ({ status, taskId, getTask, setTableKey }: { status: { label: string, color: string }, taskId: string, getTask: any, setTableKey?: Function }) => {
 
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
      const { taskStatuses }: ITaskState = useSelector((state: RootState) => state.task);
@@ -21,10 +21,14 @@ const StatusDropDown = ({ status, taskId, getTask }: { status: { label: string, 
      }, [dispatch])
 
      const handleChangeStatus = async (status: string) => {
-
           dispatch<any>(editTask({ taskId, taskData: { status } }))
           setTimeout(() => {
                dispatch<any>(getTask(taskId))
+
+               // Check if StatusDropDown called from task Table, if not setTableKey will return undefined (Error)
+               if (typeof setTableKey === 'function') {
+                    setTableKey(Date.now().toString());
+               }
           }, 800);
      }
 
@@ -32,16 +36,14 @@ const StatusDropDown = ({ status, taskId, getTask }: { status: { label: string, 
      const normalizedStatuses = useNormalizeStatusesArray(taskStatuses, handleChangeStatus);
      return (
           <Space className='mx-2' wrap>
-               <Tooltip title="status">
-                    <Dropdown menu={{ items: normalizedStatuses }} placement="bottomLeft" trigger={['click']}>
-                         {
-                              status?.label ?
-                                   <Button className='font-semibold' type='primary' style={{ backgroundColor: status?.color }}>{capitalizeFirstLetters(status?.label)} <CaretDownOutlined /></Button>
-                                   :
-                                   <Button type='default' style={{ backgroundColor: status?.color }} loading={true}> Loading </Button>
-                         }
-                    </Dropdown>
-               </Tooltip>
+               <Dropdown menu={{ items: normalizedStatuses }} placement="bottomLeft" trigger={['click']}>
+                    {
+                         status?.label ?
+                              <Button className='font-semibold' type='primary' style={{ backgroundColor: status?.color }}>{capitalizeFirstLetters(status?.label)} <CaretDownOutlined /></Button>
+                              :
+                              <Button type='default' style={{ backgroundColor: status?.color }} loading={true}> Loading </Button>
+                    }
+               </Dropdown>
           </Space>
      )
 }

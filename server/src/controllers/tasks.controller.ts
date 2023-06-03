@@ -87,7 +87,7 @@ export const createTask = async (
     followers,
     status,
   } = req.body;
-  console.log(req.body);
+
 
   if (!title || !type || !description || !due_date || !priority || !status) {
     return next(new BadRequestError());
@@ -145,7 +145,7 @@ export const editTask = async (
       created_by,
       status,
     } = req.body;
-
+// return console.log(req.body)
     // if (
     //   title ||
     //   description ||
@@ -159,7 +159,7 @@ export const editTask = async (
 
     //   return next(new BadRequestError());
     // }
-
+// return console.log(req.body)
     const { taskId } = req.params;
     const editedTask = await Task.findByIdAndUpdate(
       taskId,
