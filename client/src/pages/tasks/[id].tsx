@@ -32,23 +32,24 @@ const Task = () => {
     dispatch(isLoginByToken())
   };
 
-  // Get the states from redux slices
+  // Get the task state from redux slices
   const { task }: ITaskState = useSelector((state: RootState) => state.task);
+  // Get logged in user state from redux slices
   const { user }: AuthState = useSelector((state: RootState) => state.auth);
+  
 
-  // Listen for changes in the task id - (for query and page change)
   useEffect(() => {
+    // Listen for changes in the task id - (for query and page change)
     dispatch<any>(getTask(id))
   }, [dispatch, id])
 
-  // Listen for any changes in task data and get updated data
   useEffect(() => {
-  }, [task])
+    // Listen for any changes in task data and get updated data
+  }, [task,])
 
   const onChange = (key: string | string[]) => {
     console.log(key);
   };
-
 
   // Performe edit task when clicking enter inside the inputs
   const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -99,7 +100,7 @@ const Task = () => {
           <Button type="default" className='font-semibold' icon={<ExportOutlined />}>Export </Button>
         </div>
         <div>
-          <TaskSetting taskId={task?._id} />
+          <TaskSetting taskId={task?._id} taskTitle={task?.title} />
         </div>
       </div>
 

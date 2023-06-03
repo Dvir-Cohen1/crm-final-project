@@ -5,6 +5,7 @@ import {
   createTaskStatus,
   deleteTask,
   editTask,
+  cloneTask,
   getTask,
   getTaskStatus,
   removeTaskStatus,
@@ -18,6 +19,7 @@ router.post("/", createTask);
 router.put("/:taskId", editTask);
 router.delete("/:taskId", deleteTask);
 router.get("/:taskId", getTask);
+router.post("/clone/:taskId", cloneTask);
 
 // Task Statuses
 router.get("/task/statuses", getTaskStatus);

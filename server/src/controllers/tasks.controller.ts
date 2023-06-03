@@ -88,7 +88,6 @@ export const createTask = async (
     status,
   } = req.body;
 
-
   if (!title || !type || !description || !due_date || !priority || !status) {
     return next(new BadRequestError());
   }
@@ -135,31 +134,6 @@ export const editTask = async (
   next: NextFunction
 ) => {
   try {
-    const {
-      title,
-      description,
-      due_date,
-      priority,
-      assignee,
-      followers,
-      created_by,
-      status,
-    } = req.body;
-// return console.log(req.body)
-    // if (
-    //   title ||
-    //   description ||
-    //   due_date ||
-    //   priority ||
-    //   assignee ||
-    //   followers ||
-    //   created_by ||
-    //   status
-    // ) {
-
-    //   return next(new BadRequestError());
-    // }
-// return console.log(req.body)
     const { taskId } = req.params;
     const editedTask = await Task.findByIdAndUpdate(
       taskId,
@@ -176,7 +150,79 @@ export const editTask = async (
   }
 };
 
+// clone task
+export const cloneTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { taskId } = req.params;
+    const taskToBeCloned = await Task.findById(taskId).select([
+      "slug",
+      "title",
+      "type",
+      "status",
+      "description",
+      "due_date",
+      "priority",
+      "assignee",
+      "followers",
+    ]);
 
+    // Get the user id who perfome the action
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    // Get clone options
+    const { cloneAssignee, cloneFollowers, clonePriority } =
+      req.body.cloneOptions;
+
+    // Get the new task title if changed else stay the same as original
+    const { clonedTaskTitle } = req.body;
+
+    const clonedTask: any = new Task();
+
+    // Create new task slug (for situation when the title changed..)
+    const slug = String(clonedTaskTitle).toLowerCase().replace(/\s+/g, "_");
+
+    // Set cloned task properties
+    clonedTask.slug = slug;
+    clonedTask.title = clonedTaskTitle;
+    clonedTask.type = taskToBeCloned?.type;
+    clonedTask.description = taskToBeCloned?.description;
+    clonedTask.due_date = taskToBeCloned?.due_date;
+    clonedTask.created_by = createdByUserId;
+    clonedTask.status = taskToBeCloned?.status;
+
+    if (cloneAssignee) {
+      let assignees: [] | any = [];
+      taskToBeCloned?.assignee.forEach((item: any) => {
+        assignees.push(item);
+      });
+
+      clonedTask.assignee = assignees;
+    }
+
+    if (cloneFollowers) {
+      let followers: [] | any = [];
+      taskToBeCloned?.followers.forEach((item: any) => {
+        followers.push(item);
+      });
+
+      clonedTask.followers = followers;
+    }
+
+    if (clonePriority) {
+      clonedTask.priority = taskToBeCloned?.priority;
+    }
+
+    await clonedTask.save();
+    res.status(201).send({ error: false, data: clonedTask });
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
+  }
+};
 
 // Delete
 export const deleteTask = async (
@@ -188,7 +234,7 @@ export const deleteTask = async (
   if (!taskId) {
     return next(new BadRequestError("Not provided task id"));
   }
-// return console.log(taskId)
+  // return console.log(taskId)
   const deletedTask = await Task.findByIdAndRemove(taskId, { new: true });
   if (!deletedTask) {
     return next(new NotFoundError(`Task: "${taskId}" not found`));

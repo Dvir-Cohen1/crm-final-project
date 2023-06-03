@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Dropdown, Space, Tooltip } from 'antd';
 import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
@@ -8,19 +8,23 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { deleteTask } from '../redux/taskSlice';
+import { cloneTask, deleteTask } from '../redux/taskSlice';
 import { useRouter } from 'next/router';
-const TaskSetting = ({ taskId }: any) => {
+import CloneTaskModal from './CloneTaskModal';
+import useCloneTaskModal from '../hooks/useCloneTaskModal';
+const TaskSetting = ({ taskId,taskTitle }: any) => {
 
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
      const router = useRouter();
 
+     // Clone Task Modal
+     const { isOpen, openModal, handleCancel } = useCloneTaskModal();
 
+     // Perfome delete task
      function handleDeleteTask() {
           dispatch(deleteTask(taskId))
           router.push('/tasks');
      }
-
 
      const items: MenuProps['items'] = [
           {
@@ -34,9 +38,10 @@ const TaskSetting = ({ taskId }: any) => {
           {
                key: '2',
                label: (
-                    <>
+
+                    <li onClick={openModal}>
                          Clone
-                    </>
+                    </li>
                ),
           },
           {
@@ -58,7 +63,7 @@ const TaskSetting = ({ taskId }: any) => {
           {
                key: '4',
                label: (
-                    <li onClick={()=>window.print()}>
+                    <li onClick={() => window.print()}>
                          Print
                     </li>
                ),
@@ -66,6 +71,7 @@ const TaskSetting = ({ taskId }: any) => {
      ];
      return (
           <Space wrap>
+               <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel} />
                <Tooltip title="status">
                     <Dropdown menu={{ items }} placement="bottomRight" trigger={['click']}>
                          <Button type="default" className='font-semibold' icon={<EllipsisOutlined />} />
