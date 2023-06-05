@@ -1,4 +1,4 @@
-import React, {useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Layout from "@/layouts/Layout"
 import { useRouter } from 'next/router';
 import { AuthState, ITaskState, RootState } from '@/types/global';
@@ -18,6 +18,9 @@ import Link from 'next/link';
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
 import { Input } from 'antd';
+import PriorityTags from '@/features/tasks/components/PriorityTags';
+import PrioritySelect from '@/features/tasks/components/forms/PrioritySelect';
+import EditPrioritySelect from '@/features/tasks/components/forms/EditPrioritySelect';
 
 const { Panel } = Collapse;
 
@@ -36,7 +39,7 @@ const Task = () => {
   const { task }: ITaskState = useSelector((state: RootState) => state.task);
   // Get logged in user state from redux slices
   const { user }: AuthState = useSelector((state: RootState) => state.auth);
-  
+
 
   useEffect(() => {
     // Listen for changes in the task id - (for query and page change)
@@ -52,14 +55,28 @@ const Task = () => {
   };
 
   // Performe edit task when clicking enter inside the inputs
-  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    message.loading("loading...")
-    const inputValue = e.currentTarget.value;
-    const inputName = e.currentTarget.name;
+  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>, isEditPriority = false) => {
+
     const taskId = task?._id
+    let inputName;
+    let inputValue;
+
+    if (isEditPriority) {
+      inputName = 'priority';
+      inputValue = e;
+      console.log(inputName,inputValue)
+
+    } else {
+      inputName = e.currentTarget?.name;
+      inputValue = e.currentTarget?.value;
+
+      if (!inputName || !inputValue || inputValue.length <= 3) return;
+    }
+
+    message.loading("loading...")
 
     const taskData = {
-      [inputName]:inputValue
+      [inputName]: inputValue
     }
 
     await dispatch<any>(editTask({ taskId, taskData }))
@@ -86,8 +103,8 @@ const Task = () => {
         />
         <h1 className='text-2xl'>
 
-          <Input name='title' onPressEnter={(e)=> handleEditTask(e)} maxLength={40} defaultValue={task?.title} size='middle'
-           className='edit-task-input text-xl' placeholder={task?.title} />
+          <Input style={{ color: "#000" }} name='title' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+            className='edit-task-input text-xl' placeholder={task?.title} />
         </h1>
 
       </div>
@@ -112,8 +129,8 @@ const Task = () => {
             <div className="task-description">
               <h1>Description</h1>
               <p>
-              <Input name='description' onPressEnter={(e)=> handleEditTask(e)} maxLength={40} defaultValue={task?.description} size='middle'
-               className='edit-task-input' placeholder={task?.description} />
+                <Input name='description' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+                  className='edit-task-input' placeholder={task?.description} />
 
                 {/* {task?.description} */}
               </p>
@@ -132,14 +149,18 @@ const Task = () => {
 
             <Collapse defaultActiveKey={['1']} onChange={onChange}>
               <Panel header="Details" key="1">
-                <p>
-                  Priority: <span className="font-semibold">{task?.priority}</span>
+                <p className='flex align-middle place-items-center gap-2'>
+                  Priority:
+                  {/* <PriorityTags priorityTitle={task?.priority}></PriorityTags> */}
+                  {/* <PrioritySelect required={false} showLabel={true}/> */}
+                  <EditPrioritySelect handleEditTask={handleEditTask} defaultValue={task?.priority} />
                 </p>
                 <p>
                   Created by: <span className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</span>
                 </p>
                 <p>
-                  Assignee: <span className="font-semibold mx-2">
+                  Assignee:
+                  <span className="font-semibold mx-2">
                     {
                       task?.assignee?.map((item: { _id: string, imgSRC: string }, indexId: string) => {
                         return (
@@ -152,7 +173,8 @@ const Task = () => {
                   </span>
                 </p>
                 <p>
-                  Followers: <span className="font-semibold mx-2">
+                  Followers:
+                  <span className="font-semibold mx-2">
                     {
                       task?.followers?.map((item: { _id: string, imgSRC: string }, indexId: string) => {
                         return (

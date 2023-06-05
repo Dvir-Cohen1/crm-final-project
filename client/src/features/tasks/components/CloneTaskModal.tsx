@@ -24,12 +24,11 @@ const CloneTaskModal = ({ isOpen, handleCancel, taskId, taskTitle }: any) => {
           };
           const response = await dispatch(cloneTask(dataToSend));
           const clonedTaskId = response.payload?.data._id;
-          // console.log(response.payload.data._id)
-          console.log(clonedTaskId)
+
           dispatch(getTask(clonedTaskId)); // Fetch the updated data for the cloned task
           handleCancel()
           message.destroy()
-          message.success(`Task Cloned: ${clonedTaskTitle}`)
+          message.success(`Task Cloned: ${taskTitle}`)
           return router.push(`/tasks/${clonedTaskId}`);
      }
 

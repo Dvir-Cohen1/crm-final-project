@@ -1,7 +1,7 @@
 /**
  * Create sub string by given min and max number
  */
-export function createSubString(string: string, min = 0, max = 10) {
+export function createSubString(string: string, min = 0, max = 15) {
   // Check if the type of the argument is string
   if (typeof string !== "string" || !string) {
     return;
@@ -23,13 +23,13 @@ export function createSubWords(string: string, min = 0, max = 4) {
   if (typeof string !== "string" || !string) {
     return;
   }
-
   // Split the string into an array of words
   const words = string?.split(" ");
   if (words.length > max) {
     // Join the first 10 words and add three dots
     return (string = words?.slice(min, max).join(" ") + "...");
   }
+  console.log(string)
   return string;
 }
 

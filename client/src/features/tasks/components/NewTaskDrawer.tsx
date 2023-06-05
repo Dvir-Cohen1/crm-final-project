@@ -12,6 +12,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { allUsers } from '@/features/users/redux/userSlice';
 import { getTasksStatuses } from '../redux/taskSlice';
+import PrioritySelect from './forms/PrioritySelect';
 
 const { Dragger } = Upload;
 const props: UploadProps = {
@@ -108,40 +109,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                     {/* Priority Row */}
                     <Row gutter={16}>
                          <Col span={12}>
-                              <Form.Item
-                                   name="priority"
-                                   label="Priority"
-                                   rules={[{ required: true, message: 'Please select priority' }]}
-                              >
-                                   <Select placeholder="Please select priority owner">
-                                        <Option value="high">
-                                             <div className="flex gap-2">
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/high.svg" width="16px" height="16px" /> */}
-
-                                                  <UpCircleTwoTone twoToneColor={'#FF5630'} style={{ fontSize: '16px' }} />
-                                                  High
-                                             </div>
-
-                                        </Option>
-                                        <Option value="medium">
-                                             <div className="flex gap-2">
-                                                  <MinusCircleTwoTone twoToneColor={'#FFAB00'} style={{ fontSize: '16px' }} />
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/medium.svg" width="16px" height="16px" /> */}
-                                                  Medium
-                                             </div>
-
-                                        </Option>
-                                        <Option value="low">
-                                             <div className="flex gap-2">
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/low.svg" width="16px" height="16px" /> */}
-
-                                                  <DownCircleTwoTone twoToneColor={'#2684FF'} style={{ fontSize: '16px' }} />
-                                                  Low
-                                             </div>
-
-                                        </Option>
-                                   </Select>
-                              </Form.Item>
+                              <PrioritySelect />
                          </Col>
                          <Col span={12}>
                               <Form.Item
@@ -154,7 +122,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                              return (
                                                   <Option key={status._id} value={status._id}>
                                                        <div className="flex gap-2">
-                                                       <MinusOutlined style={{ color: status?.color }} />
+                                                            <MinusOutlined style={{ color: status?.color }} />
                                                             {status.label}
                                                        </div>
                                                   </Option>

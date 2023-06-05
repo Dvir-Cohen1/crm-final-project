@@ -98,6 +98,12 @@ interface IUser {
   pinned_items?: [];
 }
 
+export type UserPinnedItems = {
+  _id: string;
+  title: string;
+  description: string;
+};
+
 // Tasks
 interface ITasks {
   id: number;

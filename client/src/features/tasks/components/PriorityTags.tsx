@@ -47,7 +47,7 @@ const PriorityTags = ({ priorityTitle }: { priorityTitle: string }) => {
                break;
      }
      return (
-          <div>{component}</div>
+          <span className='mx-2'>{component}</span>
      )
 }
 
