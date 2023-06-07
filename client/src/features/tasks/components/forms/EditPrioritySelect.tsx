@@ -9,10 +9,10 @@ const EditPrioritySelect = ({ defaultValue = 'low', handleEditTask }: { defaultV
      };
 
      return (
-          <div className='edit-priority-select'>
+          <div className='edit-task-select'>
                <Select
                     defaultValue={defaultValue}
-                    className='edit-priority-select'
+                    className='edit-task-select'
                     placeholder="Select a person"
                     onChange={onChange}
                     // onSearch={onSearch}

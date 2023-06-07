@@ -63,7 +63,7 @@ const TasksTable = ({ tasks, handleDelete,tableKey,setTableKey }: any) => {
                dataIndex: 'status',
                key: 'status',
                render: (_, record) =>
-                    <StatusDropDown status={record.status} taskId={record._id} getTask={getTask} setTableKey={setTableKey}  />
+                    <StatusDropDown status={record.status} taskId={record._id}  getTask={getTask} setTableKey={setTableKey}  />
           },
           {
                title: 'Created by',

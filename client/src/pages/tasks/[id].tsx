@@ -21,6 +21,9 @@ import { Input } from 'antd';
 import PriorityTags from '@/features/tasks/components/PriorityTags';
 import PrioritySelect from '@/features/tasks/components/forms/PrioritySelect';
 import EditPrioritySelect from '@/features/tasks/components/forms/EditPrioritySelect';
+import EditAssigneeSelect from '@/features/tasks/components/forms/EditAssigneeSelect';
+
+
 
 const { Panel } = Collapse;
 
@@ -55,7 +58,7 @@ const Task = () => {
   };
 
   // Performe edit task when clicking enter inside the inputs
-  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>, isEditPriority = false) => {
+  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>, isEditPriority = false, isEditAssignee = false) => {
 
     const taskId = task?._id
     let inputName;
@@ -64,8 +67,10 @@ const Task = () => {
     if (isEditPriority) {
       inputName = 'priority';
       inputValue = e;
-      console.log(inputName,inputValue)
 
+    } else if (isEditAssignee) {
+      inputName = 'assignee';
+      inputValue = e;
     } else {
       inputName = e.currentTarget?.name;
       inputValue = e.currentTarget?.value;
@@ -73,7 +78,7 @@ const Task = () => {
       if (!inputName || !inputValue || inputValue.length <= 3) return;
     }
 
-    message.loading("loading...")
+    // message.loading("loading...")
 
     const taskData = {
       [inputName]: inputValue
@@ -81,12 +86,23 @@ const Task = () => {
 
     await dispatch<any>(editTask({ taskId, taskData }))
     await dispatch<any>(getTask(id))
-    message.destroy()
+    // message.destroy()
   };
+
+
+
+
+  const mainTaskActionButtons = [
+    { title: 'Attach', icon: <PaperClipOutlined /> },
+    { title: 'Link issue', icon: <ClusterOutlined /> },
+    { title: 'Reports', icon: <FilePdfOutlined /> },
+    { title: 'Export', icon: <ExportOutlined /> },
+  ]
 
   return (
     <Layout>
-      <div className='flex place-items-center gap-2'>
+      {/* Task title section */}
+      <section className='flex place-items-center gap-2'>
         <Button
           className='mb-4'
           key={task?._id}
@@ -102,27 +118,30 @@ const Task = () => {
           }
         />
         <h1 className='text-2xl'>
-
           <Input style={{ color: "#000" }} name='title' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
             className='edit-task-input text-xl' placeholder={task?.title} />
         </h1>
+      </section>
 
-      </div>
-
-      <div className='flex justify-between gap-3 mb-5'>
+      {/* Main actions section */}
+      <section className='flex justify-between gap-3 mb-5'>
         <div className='flex gap-3'>
-          <Button type="default" className='font-semibold' icon={<PaperClipOutlined />}>Attach </Button>
-          <Button type="default" className='font-semibold' icon={<ClusterOutlined />}>Link issue </Button>
-          <Button type="default" className='font-semibold' icon={<FilePdfOutlined />}>Reports </Button>
-          <Button type="default" className='font-semibold' icon={<ExportOutlined />}>Export </Button>
+          {
+            mainTaskActionButtons.map((item, indexId) => {
+              return (
+                <Button key={indexId} type="default" className='font-semibold' icon={item.icon}>{item.title} </Button>
+              )
+            })
+          }
         </div>
         <div>
           <TaskSetting taskId={task?._id} taskTitle={task?.title} />
         </div>
-      </div>
+      </section>
 
       <hr className='mb-6' />
 
+      {/* Left Col */}
       <Row>
         <Col span={18} push={0}>
           <section>
@@ -132,7 +151,7 @@ const Task = () => {
                 <Input name='description' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
                   className='edit-task-input' placeholder={task?.description} />
 
-                {/* {task?.description} */}
+
               </p>
             </div>
             <div className="task-attachments">
@@ -140,55 +159,67 @@ const Task = () => {
             </div>
           </section>
         </Col>
+
+
+        {/* right Col */}
         <Col span={6} pull={0}>
           <section>
+
             <div className='mb-5'>
-              <StatusDropDown status={task?.status} taskId={task?._id} getTask={getTask} />
-              <Button type="default" className='font-semibold' icon={<SlidersOutlined />}>Actions </Button>
+              <StatusDropDown
+                status={task?.status}
+                taskId={task?._id}
+                getTask={getTask}
+              />
+              <Button
+                type="default"
+                className='font-semibold'
+                icon={<SlidersOutlined />}
+              >
+                Actions
+              </Button>
             </div>
 
             <Collapse defaultActiveKey={['1']} onChange={onChange}>
               <Panel header="Details" key="1">
-                <p className='flex align-middle place-items-center gap-2'>
-                  Priority:
-                  {/* <PriorityTags priorityTitle={task?.priority}></PriorityTags> */}
-                  {/* <PrioritySelect required={false} showLabel={true}/> */}
-                  <EditPrioritySelect handleEditTask={handleEditTask} defaultValue={task?.priority} />
-                </p>
-                <p>
-                  Created by: <span className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</span>
-                </p>
-                <p>
-                  Assignee:
-                  <span className="font-semibold mx-2">
-                    {
-                      task?.assignee?.map((item: { _id: string, imgSRC: string }, indexId: string) => {
-                        return (
-                          <Link key={indexId} href={`/users/${item._id}`}>
-                            <Avatar src={item.imgSRC} size={32} />
-                          </Link>
-                        )
-                      })
-                    }
-                  </span>
-                </p>
-                <p>
-                  Followers:
-                  <span className="font-semibold mx-2">
-                    {
-                      task?.followers?.map((item: { _id: string, imgSRC: string }, indexId: string) => {
-                        return (
-                          <Link key={indexId} href={`/users/${item._id}`}>
-                            <Avatar src={item.imgSRC} size={32} />
-                          </Link>
-                        )
-                      })
-                    }
-                  </span>
-                </p>
-                <p>
-                  Due Date: <span className="font-semibold">{task?.due_date}</span>
-                </p>
+                <Col className='task-details-ul' >
+                  {/* Assignee */}
+                  <Row>
+                    <Col span={6} >
+                      Assignee:
+                    </Col>
+                    <Col span={18} >
+                      <EditAssigneeSelect assignee={task?.assignee} handleEditTask={handleEditTask} />
+                    </Col>
+                  </Row>
+                  {/* Priority */}
+                  <Row>
+                    <Col span={6} >
+                      Priority:
+                    </Col>
+                    <Col span={18} >
+                      <EditPrioritySelect handleEditTask={handleEditTask} defaultValue={task?.priority} />
+                    </Col>
+                  </Row>
+                  {/* Created by */}
+                  <Row>
+                    <Col span={6} >
+                      Created by:
+                    </Col>
+                    <Col span={18} >
+                      <div className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</div>
+                    </Col>
+                  </Row>
+                  {/* Due Date */}
+                  <Row>
+                    <Col span={6} >
+                      Due Date:
+                    </Col>
+                    <Col span={18} >
+                      <div className="font-semibold">{task?.due_date}</div>
+                    </Col>
+                  </Row>
+                </Col>
               </Panel>
             </Collapse>
             <div className='mx-2 my-3 text-xs'>
