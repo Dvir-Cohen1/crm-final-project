@@ -1,7 +1,6 @@
 import { allUsers } from '@/features/users/redux/userSlice';
 import { IUser, RootState } from '@/types/global';
-import { Avatar, Form, Select } from 'antd'
-import Link from 'next/link'
+import { Avatar, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { AnyAction } from 'redux';
@@ -23,9 +22,7 @@ const EditAssigneeSelect = ({ assignee, handleEditTask }: { assignee: any, handl
      const avatarSize = 25;
 
      const onChange = async (e: any) => {
-          console.log(e)
-          const response = await handleEditTask(e, false, true)
-          console.log(response)
+          await handleEditTask(e, "assignee")
      };
 
      return (

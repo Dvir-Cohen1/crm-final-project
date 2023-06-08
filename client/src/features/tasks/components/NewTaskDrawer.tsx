@@ -63,12 +63,12 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                onClose={onClose}
                open={open}
                bodyStyle={{ paddingBottom: 80 }}
-          // extra={
-          //      <Space>
-          //           <Button fontSize='xs' variant="default" >Automation</Button>
-          //           {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
-          //      </Space>
-          // }
+               extra={
+                    <Space>
+                         <Button fontSize='sm' variant="default" >Manage fields</Button>
+                         {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
+                    </Space>
+               }
           >
                <Form layout="vertical" onFinish={onSubmit} form={form}>
                     {/* Title Row */}
@@ -148,7 +148,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )
                                         })}
-                                        {/* <Option value="644ed8ce3f32bd976e2f6ad4">Israel Israeli</Option> */}
                                    </Select>
                               </Form.Item>
                          </Col>
@@ -215,8 +214,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                         },
                                    ]}
                               >
-
-
                                    <Dragger {...props}>
                                         <div className="p-5">
                                              <p className="ant-upload-drag-icon">

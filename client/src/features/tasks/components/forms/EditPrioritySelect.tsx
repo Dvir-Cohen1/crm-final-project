@@ -3,11 +3,9 @@ import { Select } from 'antd';
 import { UpCircleTwoTone, DownCircleTwoTone, MinusCircleTwoTone } from '@ant-design/icons';
 
 const EditPrioritySelect = ({ defaultValue = 'low', handleEditTask }: { defaultValue: string, handleEditTask: Function }) => {
-
      const onChange = async (e: any) => {
-          await handleEditTask(e, true)
+          await handleEditTask(e, "priority")
      };
-
      return (
           <div className='edit-task-select'>
                <Select

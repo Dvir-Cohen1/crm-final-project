@@ -14,12 +14,14 @@ const Users = () => {
 
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
      useEffect(() => {
+          // dispatch the list of users from redux & set local users state
           dispatch<any>(allUsers()).then((res: any) => setUsers(res.payload))
      }, [dispatch])
 
-     const handleDelete = (userId: string) => {
+     // DELETE USER
+     const handleDeleteUser = (userId: string) => {
           dispatch(deleteUser(userId)).then(() => {
-               // After the user is deleted, fetch the updated list of users
+               // After the user is deleted, dispatch the updated list of users
                dispatch<any>(allUsers()).then((res: { payload: [] }) => setUsers(res.payload));
           });
      };
@@ -36,7 +38,7 @@ const Users = () => {
                     <div className='text-3xl font-semibold'>Users</div>
                     <div><Link href={'/users/newUser'}><Button className='px-5' fontSize='sm' >New</Button></Link></div>
                </div>
-               <CustomTable data={users} dataSource={users} handleDelete={handleDelete} />
+               <CustomTable data={users} dataSource={users} handleDeleteUser={handleDeleteUser} />
           </Layout>
      )
 }

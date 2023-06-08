@@ -58,25 +58,41 @@ const Task = () => {
   };
 
   // Performe edit task when clicking enter inside the inputs
-  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>, isEditPriority = false, isEditAssignee = false) => {
+  const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>, fieldName?: string) => {
 
     const taskId = task?._id
     let inputName;
     let inputValue;
 
-    if (isEditPriority) {
-      inputName = 'priority';
-      inputValue = e;
+    switch (fieldName) {
+      case "priority":
+        inputName = "priority";
+        inputValue = e;
+        break;
+      case "assignee":
+        inputName = "assignee";
+        inputValue = e;
+        break;
 
-    } else if (isEditAssignee) {
-      inputName = 'assignee';
-      inputValue = e;
-    } else {
-      inputName = e.currentTarget?.name;
-      inputValue = e.currentTarget?.value;
-
-      if (!inputName || !inputValue || inputValue.length <= 3) return;
+      default:
+        inputName = e.currentTarget?.name;
+        inputValue = e.currentTarget?.value;
+        break;
     }
+
+    if (!inputName || !inputValue || String(inputValue).length <= 3) return;
+    // if (isEditPriority) {
+    //   inputName = 'priority';
+    //   inputValue = e;
+
+    // } else if (isEditAssignee) {
+    //   inputName = 'assignee';
+    //   inputValue = e;
+    // } else {
+    //   inputName = e.currentTarget?.name;
+    //   inputValue = e.currentTarget?.value;
+
+    // }
 
     // message.loading("loading...")
 
