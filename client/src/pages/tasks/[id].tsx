@@ -22,6 +22,7 @@ import PriorityTags from '@/features/tasks/components/PriorityTags';
 import PrioritySelect from '@/features/tasks/components/forms/PrioritySelect';
 import EditPrioritySelect from '@/features/tasks/components/forms/EditPrioritySelect';
 import EditAssigneeSelect from '@/features/tasks/components/forms/EditAssigneeSelect';
+import EditDueDate from '@/features/tasks/components/forms/EditDueDate';
 
 
 
@@ -76,20 +77,16 @@ const Task = () => {
           inputValue = e;
         }
         break;
-
+      case "due_date":
+        inputName = "due_date";
+        inputValue = e;
+        break;
       default:
         inputName = e.currentTarget?.name;
         inputValue = e.currentTarget?.value;
         if (!inputName || !inputValue || String(inputValue).length <= 3) return;
         break;
     }
-
-    // if (!inputName) return;
-    // if (inputValue !== typeof Array) {
-    //   if (!inputName || !inputValue || String(inputValue).length <= 3) return;
-    // }
-
-    // message.loading("loading...")
 
     const taskData = {
       [inputName]: inputValue
@@ -101,15 +98,12 @@ const Task = () => {
   };
 
 
-
-
   const mainTaskActionButtons = [
     { title: 'Attach', icon: <PaperClipOutlined /> },
     { title: 'Link issue', icon: <ClusterOutlined /> },
     { title: 'Reports', icon: <FilePdfOutlined /> },
     { title: 'Export', icon: <ExportOutlined /> },
   ]
-
 
   return (
     <Layout>
@@ -213,29 +207,40 @@ const Task = () => {
                       <EditPrioritySelect handleEditTask={handleEditTask} defaultValue={task?.priority} />
                     </Col>
                   </Row>
-                  {/* Created by */}
-                  <Row>
-                    <Col span={6} >
-                      Created by:
-                    </Col>
-                    <Col span={18} >
-                      <div className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</div>
-                    </Col>
-                  </Row>
+
+
+
+
+
                   {/* Due Date */}
                   <Row>
                     <Col span={6} >
                       Due Date:
                     </Col>
                     <Col span={18} >
-                      <div className="font-semibold">{task?.due_date}</div>
+                      <EditDueDate dueDate={task?.due_date} handleEditTask={handleEditTask} />
+                      {/* <div className="font-semibold">{task?.due_date}</div> */}
                     </Col>
                   </Row>
+
+
+
+
+                  {/* Created by */}
+                  <Row>
+                    <Col span={6} >
+                      Reporter:
+                    </Col>
+                    <Col span={18} >
+                      <div className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</div>
+                    </Col>
+                  </Row>
+
                 </Col>
               </Panel>
             </Collapse>
             <div className='mx-2 my-3 text-xs'>
-              Created: {task?.created_by?.firstName}
+              Created by: <span className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</span>
             </div>
             <div className='mx-2 my-3 text-xs'>
               Updated: {task?.created_by?.firstName}

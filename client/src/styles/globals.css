@@ -242,9 +242,9 @@ a {
 .edit-task-select .ant-select .ant-select-selector {
 	border-radius: 3px;
 	border: 1px solid transparent !important;
-	/* padding: 200px; */
 	box-shadow: none !important;
 	outline: none !important;
+	border-radius: 3px;
 }
 
 
@@ -278,6 +278,17 @@ a {
 }
 
 
-.task-details-ul>div:not(:first-child,:last-child) {
+.task-details-ul>div:not(:first-child, :last-child) {
 	margin: 1.5rem 0;
+}
+
+
+/* Date picker input */
+.edit-task-dueDatePicker {
+	width: -webkit-fill-available;
+}
+
+.edit-task-dueDatePicker:hover {
+	background-color: #091e420f !important;
+
 }

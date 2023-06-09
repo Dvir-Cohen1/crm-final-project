@@ -171,6 +171,7 @@ export interface ITaskDataType {
   record: any;
   priority: string;
   status: {
+    _id:string;
     label: string;
     color: string;
   };
