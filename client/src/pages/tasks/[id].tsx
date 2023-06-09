@@ -207,11 +207,6 @@ const Task = () => {
                       <EditPrioritySelect handleEditTask={handleEditTask} defaultValue={task?.priority} />
                     </Col>
                   </Row>
-
-
-
-
-
                   {/* Due Date */}
                   <Row>
                     <Col span={6} >
@@ -222,10 +217,6 @@ const Task = () => {
                       {/* <div className="font-semibold">{task?.due_date}</div> */}
                     </Col>
                   </Row>
-
-
-
-
                   {/* Created by */}
                   <Row>
                     <Col span={6} >
@@ -235,7 +226,6 @@ const Task = () => {
                       <div className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</div>
                     </Col>
                   </Row>
-
                 </Col>
               </Panel>
             </Collapse>
