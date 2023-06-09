@@ -27,8 +27,8 @@ const EditAssigneeSelect = ({ assignee, handleEditTask }: { assignee: any, handl
 
      return (
           <div className='edit-task-select'>
-               <Select onChange={onChange} className='edit-task-select' defaultValue={assignee[0]._id} placeholder="Please choose the assignee">
-                    <Option>
+               <Select onChange={onChange} className='edit-task-select' defaultValue={assignee?.length ? assignee[0]._id : null} placeholder="Please choose the assignee">
+                    <Option value={null}>
                          <Avatar className='mx-5' size={avatarSize} icon={<UserOutlined />} />
                          <span className="mx-5">Unassigned</span>
                     </Option>

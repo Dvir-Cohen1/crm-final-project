@@ -51,7 +51,7 @@ const Task = () => {
 
   useEffect(() => {
     // Listen for any changes in task data and get updated data
-  }, [task,])
+  }, [task])
 
   const onChange = (key: string | string[]) => {
     console.log(key);
@@ -59,7 +59,6 @@ const Task = () => {
 
   // Performe edit task when clicking enter inside the inputs
   const handleEditTask = async (e: React.KeyboardEvent<HTMLInputElement>, fieldName?: string) => {
-
     const taskId = task?._id
     let inputName;
     let inputValue;
@@ -71,27 +70,23 @@ const Task = () => {
         break;
       case "assignee":
         inputName = "assignee";
-        inputValue = e;
+        if (e === null) {
+          inputValue = [];
+        } else {
+          inputValue = e;
+        }
         break;
 
       default:
         inputName = e.currentTarget?.name;
         inputValue = e.currentTarget?.value;
+        if (!inputName || !inputValue || String(inputValue).length <= 3) return;
         break;
     }
 
-    if (!inputName || !inputValue || String(inputValue).length <= 3) return;
-    // if (isEditPriority) {
-    //   inputName = 'priority';
-    //   inputValue = e;
-
-    // } else if (isEditAssignee) {
-    //   inputName = 'assignee';
-    //   inputValue = e;
-    // } else {
-    //   inputName = e.currentTarget?.name;
-    //   inputValue = e.currentTarget?.value;
-
+    // if (!inputName) return;
+    // if (inputValue !== typeof Array) {
+    //   if (!inputName || !inputValue || String(inputValue).length <= 3) return;
     // }
 
     // message.loading("loading...")
@@ -114,6 +109,7 @@ const Task = () => {
     { title: 'Reports', icon: <FilePdfOutlined /> },
     { title: 'Export', icon: <ExportOutlined /> },
   ]
+
 
   return (
     <Layout>

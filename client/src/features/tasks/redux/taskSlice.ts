@@ -35,6 +35,7 @@ export const newTask = createAsyncThunk("task/newTask", async (values: any) => {
 export const editTask = createAsyncThunk(
   "task/editTask",
   async (values: any) => {
+    console.log("Asdasd")
     const data = await editTaskApi(values);
     return data;
   }
