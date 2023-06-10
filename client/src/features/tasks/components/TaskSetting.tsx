@@ -49,7 +49,7 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           {
                type: 'divider',
           },
-          ...(taskFollowers.length
+          ...(taskFollowers?.length
                ? taskFollowers.map((item: any, indexId: string) => ({
                     key: item._id, // Add a unique key for each follower
                     label: (
