@@ -12,6 +12,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { allUsers } from '@/features/users/redux/userSlice';
 import { getTasksStatuses } from '../redux/taskSlice';
+import PrioritySelect from './forms/PrioritySelect';
 
 const { Dragger } = Upload;
 const props: UploadProps = {
@@ -62,12 +63,12 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                onClose={onClose}
                open={open}
                bodyStyle={{ paddingBottom: 80 }}
-          // extra={
-          //      <Space>
-          //           <Button fontSize='xs' variant="default" >Automation</Button>
-          //           {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
-          //      </Space>
-          // }
+               extra={
+                    <Space>
+                         <Button fontSize='sm' variant="default" >Manage fields</Button>
+                         {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
+                    </Space>
+               }
           >
                <Form layout="vertical" onFinish={onSubmit} form={form}>
                     {/* Title Row */}
@@ -108,40 +109,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                     {/* Priority Row */}
                     <Row gutter={16}>
                          <Col span={12}>
-                              <Form.Item
-                                   name="priority"
-                                   label="Priority"
-                                   rules={[{ required: true, message: 'Please select priority' }]}
-                              >
-                                   <Select placeholder="Please select priority owner">
-                                        <Option value="high">
-                                             <div className="flex gap-2">
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/high.svg" width="16px" height="16px" /> */}
-
-                                                  <UpCircleTwoTone twoToneColor={'#FF5630'} style={{ fontSize: '16px' }} />
-                                                  High
-                                             </div>
-
-                                        </Option>
-                                        <Option value="medium">
-                                             <div className="flex gap-2">
-                                                  <MinusCircleTwoTone twoToneColor={'#FFAB00'} style={{ fontSize: '16px' }} />
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/medium.svg" width="16px" height="16px" /> */}
-                                                  Medium
-                                             </div>
-
-                                        </Option>
-                                        <Option value="low">
-                                             <div className="flex gap-2">
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/low.svg" width="16px" height="16px" /> */}
-
-                                                  <DownCircleTwoTone twoToneColor={'#2684FF'} style={{ fontSize: '16px' }} />
-                                                  Low
-                                             </div>
-
-                                        </Option>
-                                   </Select>
-                              </Form.Item>
+                              <PrioritySelect />
                          </Col>
                          <Col span={12}>
                               <Form.Item
@@ -154,7 +122,7 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                              return (
                                                   <Option key={status._id} value={status._id}>
                                                        <div className="flex gap-2">
-                                                       <MinusOutlined style={{ color: status?.color }} />
+                                                            <MinusOutlined style={{ color: status?.color }} />
                                                             {status.label}
                                                        </div>
                                                   </Option>
@@ -180,7 +148,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )
                                         })}
-                                        {/* <Option value="644ed8ce3f32bd976e2f6ad4">Israel Israeli</Option> */}
                                    </Select>
                               </Form.Item>
                          </Col>
@@ -247,8 +214,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                         },
                                    ]}
                               >
-
-
                                    <Dragger {...props}>
                                         <div className="p-5">
                                              <p className="ant-upload-drag-icon">

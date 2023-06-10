@@ -1,24 +1,17 @@
-
 import React from 'react'
 import { ColumnsType } from 'antd/es/table';
 import { Button, Avatar, Space } from 'antd';
 import { UserOutlined, DeleteOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
 import Link from 'next/link';
-import { ITaskDataType, IUser, RootState, UserState } from '@/types/global';
+import { ITaskDataType } from '@/types/global';
 import PopConfirm from '@/components/common/PopConfirm';
 import PriorityTags from '../PriorityTags';
 import { isItemPinned } from '../../utils/task.util';
+import StatusDropDown from '../StatusDropDown';
+import { getTask } from '@/features/tasks/redux/taskSlice';
 
-type TableColumnsProps = {
-     user: IUser,
-     handlePinItem: Function
-     handleDelete: Function
-
-}
-
-const TableColumns = ({ user, handlePinItem, handleDelete }: TableColumnsProps) => {
-
-     return const Columns: ColumnsType<ITaskDataType> = [
+const getColumns = ({ handlePinItem, handleDelete, setTableKey, user }: { handlePinItem: Function, handleDelete: Function, setTableKey: Function, user: any }) => {
+     const columns: ColumnsType<ITaskDataType> = [
           {
                title: 'Title',
                dataIndex: 'title',
@@ -27,29 +20,55 @@ const TableColumns = ({ user, handlePinItem, handleDelete }: TableColumnsProps) 
                // specify the condition of filtering result
                // here is that finding the name started with `value`
                // onFilter: (value: string, record) => record.name.indexOf(value) === 0,
-               sorter: (a, b) => a.title.length - b.title.length,
-               sortDirections: ['descend'],
+               sorter: (a, b) => a.title.localeCompare(b.title),
+               // sortDirections: ['descend'],
           },
           {
                title: 'Description',
                dataIndex: 'description',
                key: 'description',
+               sorter: (a, b) => a.description.localeCompare(b.description),
+               // sortDirections: ['descend'],
           },
           {
                title: 'Priority',
                dataIndex: 'priority',
                key: 'priority',
+               sorter: (a, b) => a.priority?.localeCompare(b.priority),
+               // sortDirections: ['descend'],
                render: (_, record) => <PriorityTags priorityTitle={record?.priority} />,
           },
           {
                title: 'Due date',
                dataIndex: 'due_date',
                key: 'due_date',
+               sorter: (a, b) => {
+                    const dateA = new Date(a.due_date);
+                    const dateB = new Date(b.due_date);
+                    return dateA.getTime() - dateB.getTime();
+               },
+               // sortDirections: ['descend'],
+               render: (_, record) => {
+                    const date = new Date(record.due_date);
+                    const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+                    return formattedDate;
+               },
           },
           {
-               title: 'Created by',
+               title: 'Status',
+               dataIndex: 'status',
+               key: 'status',
+               sorter: (a, b) => a.status.label.localeCompare(b.status.label),
+               // sortDirections: ['descend'],
+               render: (_, record) =>
+                    <StatusDropDown status={record.status} taskId={record._id} getTask={getTask} setTableKey={setTableKey} />
+          },
+          {
+               title: '@ Reporter',
                dataIndex: 'created_by',
                key: 'created_by',
+               sorter: (a, b) => a.created_by.firstName.localeCompare(b.created_by.firstName),
+               // sortDirections: ['descend'],
                render: (_, { created_by }) =>
                     <Link key={created_by?._id} href={`/users/${created_by?._id}`}>
                          <Avatar src={created_by?.imgSRC} size={32} icon={<UserOutlined />} />
@@ -59,6 +78,8 @@ const TableColumns = ({ user, handlePinItem, handleDelete }: TableColumnsProps) 
                title: 'Assignee',
                key: 'assignee',
                dataIndex: 'assignee',
+               sorter: (a, b) => a.assignee[0]?.firstName.localeCompare(b.assignee[0]?.firstName),
+               // sortDirections: ['descend'],
                render: (_, { assignee }) => (assignee?.map((item: any, indexId) => {
                     return (
                          <Link key={indexId} href={`/users/${item._id}`}>
@@ -68,9 +89,11 @@ const TableColumns = ({ user, handlePinItem, handleDelete }: TableColumnsProps) 
                }))
           },
           {
-               title: 'Followers',
+               title: 'Watchers',
                key: 'followers',
                dataIndex: 'followers',
+               sorter: (a, b) => a.followers[0]?.firstName.localeCompare(b.followers[0]?.firstName),
+               // sortDirections: ['descend'],
                render: (_, { followers }) => (followers?.map((item: any, indexId) => {
                     return (
                          <Link key={indexId} href={`/users/${item._id}`}>
@@ -110,7 +133,7 @@ const TableColumns = ({ user, handlePinItem, handleDelete }: TableColumnsProps) 
           },
      ];
 
-     return <Columns/>
+     return columns
 }
 
-export default TableColumns
+export default getColumns 

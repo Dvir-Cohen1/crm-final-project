@@ -4,12 +4,8 @@ import type { ColumnsType } from 'antd/es/table';
 import Link from 'next/link';
 import { RootState } from '@/types/global';
 import { useSelector } from 'react-redux';
-import { deleteUser } from '@/features/users/redux/userSlice';
-import { useDispatch } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import { UserOutlined } from '@ant-design/icons';
-import Image from 'next/image'
+
 interface DataType {
      key: string;
      name: string;
@@ -18,18 +14,11 @@ interface DataType {
      role: string;
 }
 
-
-const CustomTable = ({ data, handleDelete }: any) => {
+const CustomTable = ({ data, handleDeleteUser }: any) => {
      const role = useSelector((state: RootState) => state.auth?.user?.role || {});
-     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
-     // const dispatch = useDispatch()
-
-     // const handleDelete = (userId: string) => {
-     //      dispatch(deleteUser(userId))
-     // }
-
 
      // let color = role?.toLocaleLowerCase() === "member" ? 'geekblue' : 'green';
+
      const usersColumns: ColumnsType<DataType> = [
           {
                title: 'id',
@@ -65,15 +54,9 @@ const CustomTable = ({ data, handleDelete }: any) => {
                render: (_, { role }) => (
                     <>
                          {
-                              // let color = item.length > 5 ? 'geekblue' : 'green';
-
-                              // console.log(item)
-                              // role === 'loser' ? color = 'volcano' : ''}
-
                               <Tag color={role.length > 5 ? 'geekblue' : 'green'} key={role}>
                                    {role.toUpperCase()}
                               </Tag>
-
                          }
                     </>
                ),
@@ -84,7 +67,7 @@ const CustomTable = ({ data, handleDelete }: any) => {
                render: (_, record: any) => (
                     role == "admin" ?
                          <Space size="middle">
-                              <button onClick={() => handleDelete(record._id)}>Delete</button>
+                              <button onClick={() => handleDeleteUser(record._id)}>Delete</button>
                          </Space>
                          : 'Only Admins can perform actions'
                ),

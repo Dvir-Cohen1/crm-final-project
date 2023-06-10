@@ -6,6 +6,7 @@ import {
   getTaskApi,
   getTasksStatusesApi,
   editTaskApi,
+  cloneTaskApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 
@@ -39,10 +40,18 @@ export const editTask = createAsyncThunk(
   }
 );
 
+export const cloneTask = createAsyncThunk(
+  "task/cloneTask",
+  async (values: any) => {
+    const data = await cloneTaskApi(values);
+    return data;
+  }
+);
+
 export const deleteTask = createAsyncThunk(
   "task/deleteTask",
-  async (userId: string) => {
-    const data = await deleteTaskApi(userId);
+  async (taskId: string) => {
+    const data = await deleteTaskApi(taskId);
     return data;
   }
 );
@@ -126,6 +135,22 @@ export const taskSlice = createSlice({
         state.isLoading = false;
         state.isError = null;
         state.error = "Task edited!";
+        state.task = payload.data;
+      })
+
+      .addCase(cloneTask.pending, (state, action) => {
+        // state.isLoading = true;
+      })
+      .addCase(cloneTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(cloneTask.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        state.error = "Task Cloned!";
+        // console.log(payload.data)
         state.task = payload.data;
       })
 

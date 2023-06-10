@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { isLoginByToken, logoutByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { RootState } from '@/types/global';
+import { ITaskDataType, ITaskState, RootState, UserPinnedItems, UserState } from '@/types/global';
 import Search from './Search';
 import { DeleteOutlined, CloseOutlined } from '@ant-design/icons'
 import { pinItem } from '@/features/users/redux/userSlice';
@@ -53,14 +53,16 @@ function SecondaryItems() {
                     }
                </div>
                <ul>
-                    {user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: any, indexId) => {
+                    {user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: UserPinnedItems) => {
                          return (
                               <div className='my-2 font-semibold flex justify-between' key={pinItem._id}>
                                    <div>
                                         <Link href={`/tasks/${pinItem._id}`}>
-                                             <li>{pinItem.title}</li>
+                                             <li>
+                                             {createSubString(pinItem.title)}
+                                             </li>
                                         </Link>
-                                        <li>{createSubWords(pinItem.description)}</li>
+                                        <li>{createSubString(pinItem.description)}</li>
                                    </div>
                                    <Button size={'small'} onClick={() => handlePinItem(pinItem._id)} type='text'><CloseOutlined /></Button>
                               </div>

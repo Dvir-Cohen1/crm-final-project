@@ -194,7 +194,6 @@ export const removeAllPinItems = async (
         return
       } 
 
-
       user.pinned_items = []; // Set pinned_items to an empty array
       await user.save(); // Save the updated user object
 

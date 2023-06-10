@@ -1,5 +1,7 @@
 import { api } from "@/utils/api";
-
+//
+// Get all Tasks API
+//
 export async function allTasksApi() {
   try {
     const response = await api.get(
@@ -12,7 +14,9 @@ export async function allTasksApi() {
     );
   }
 }
-
+//
+// Get Task API
+//
 export async function getTaskApi(taskId: string) {
   try {
     const response = await api.get(
@@ -25,7 +29,9 @@ export async function getTaskApi(taskId: string) {
     );
   }
 }
-
+//
+// Create Task API
+//
 export async function newTaskApi(data: {}) {
   try {
     const response = await api.post(
@@ -39,8 +45,10 @@ export async function newTaskApi(data: {}) {
     );
   }
 }
-
-export async function editTaskApi(data:any) {
+//
+// Edit Task API
+//
+export async function editTaskApi(data: any) {
   // console.log(taskData)
   try {
     const response = await api.put(
@@ -48,8 +56,6 @@ export async function editTaskApi(data:any) {
       data.taskData
     );
 
-
-
     return response.data;
   } catch (error: any) {
     return Promise.reject(
@@ -57,10 +63,30 @@ export async function editTaskApi(data:any) {
     );
   }
 }
-export async function deleteTaskApi(userId: string) {
+//
+// Clone Task API
+//
+export async function cloneTaskApi(data: any) {
+  try {
+    const response = await api.post(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `tasks/clone/${data.taskId}`,
+      {
+        cloneOptions: data.cloneOptions,
+        clonedTaskTitle: data.clonedTaskTitle,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+export async function deleteTaskApi(taskId: string) {
   try {
     const response = await api.delete(
-      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${userId}`
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${taskId}`
     );
     return response.data;
   } catch (error: any) {
@@ -69,8 +95,9 @@ export async function deleteTaskApi(userId: string) {
     );
   }
 }
-
+//
 // Tasks statuses
+//
 export async function getTasksStatusesApi() {
   try {
     const response = await api.get(
