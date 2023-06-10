@@ -20,7 +20,8 @@ html {
 }
 
 body {
-	background-color: #FAFBFC;
+	/* background-color: #FAFBFC; */
+	background-color: #fff;
 	color: #172B4D;
 }
 
@@ -273,13 +274,20 @@ a {
 	margin: 0 0.5rem 0 0;
 }
 
+
+.task-details-ul h6 {
+	font-size: 0.8rem;
+	margin: 0;
+	padding: 0;
+}
+
 .task-details-ul li:not(:first-child, :last-child) {
 	margin: 1rem 0;
 }
 
 
 .task-details-ul>div:not(:first-child, :last-child) {
-	margin: 1.5rem 0;
+	margin: 1rem 0;
 }
 
 
@@ -291,4 +299,120 @@ a {
 .edit-task-dueDatePicker:hover {
 	background-color: #091e420f !important;
 
+}
+
+
+/* custom ant design button */
+
+.custom-ghost-button {
+	background-color: #F1F2F4;
+	color: #172B4D;
+	border: 0;
+	border-radius: 3px;
+}
+
+.custom-ghost-button:hover {
+	background-color: #dcdfe4;
+	color: #172b4d;
+
+}
+
+.custom-ghost-button:active {
+	background-color: #b3b9c4;
+	color: #172b4d;
+
+}
+
+/* collape */
+
+.ant-collapse {
+	background-color: #fff;
+}
+
+.ant-btn {
+	border-radius: 3px;
+}
+
+.ant-dropdown .ant-dropdown-menu,
+.ant-dropdown-menu-submenu .ant-dropdown-menu {
+	padding: 7px 0;
+	border-radius: 3px;
+	min-width: 160px;
+}
+
+.ant-table-wrapper .ant-table-thead>tr>th,
+.ant-table-wrapper .ant-table-thead>tr>td {
+	position: relative;
+	color: #626f86;
+	font-weight: 400;
+	text-align: start;
+	background: #ffffff;
+	border-bottom: 1px solid #091e420f;
+	transition: background 0.2s ease;
+	box-shadow: 0 6px 4px -4px #091e420f;
+}
+
+
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu .ant-dropdown-menu .ant-dropdown-menu-item,
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-submenu-title,
+.ant-dropdown-menu-submenu .ant-dropdown-menu .ant-dropdown-menu-submenu-title {
+
+	color: #172b4d;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 1.971429;
+}
+
+.share-items-dropdown ul {
+	min-width: 200px !important;
+}
+
+.followers-items-dropdown ul {
+	min-width: 300px !important;
+}
+
+/* .followers-items-dropdown ul>li:nth-child(3):hover {
+	background-color: transparent !important;
+	cursor: auto;
+} */
+
+.ant-btn.css-dev-only-do-not-override-1vtf12y.ant-btn-text.ant-btn-icon-only.ant-dropdown-trigger.font-semibold.ant-dropdown-open {
+	background: #e9f2ff;
+
+}
+
+.ant-btn.css-dev-only-do-not-override-1vtf12y.ant-btn-text.ant-btn-icon-only.ant-dropdown-trigger.font-semibold.ant-dropdown-open span {
+	color: #0c66e4 !important;
+}
+
+.setting-buttons-container {
+	display: flex;
+}
+
+
+.setting-buttons-container .ant-dropdown-open {
+	background: #e9f2ff;
+	color: #0c66e4;
+}
+
+
+.ant-tooltip .ant-tooltip-inner {
+	min-width: 26px;
+	min-height: 26px;
+	padding: 4px 8px;
+	color: #fff;
+	text-align: start;
+	text-decoration: none;
+	word-wrap: break-word;
+	background-color: #44546f;
+	border-radius: 6px;
+	/* box-shadow: 0 6px 16px 0 #44546f,0 3px 6px -4px #44546f,0 9px 28px 8px rgba(0, 0, 0, 0.05); */
+}
+
+.ant-tooltip .ant-tooltip-arrow {
+	display: none;
+	color: #44546f !important;
+	/* background-color: #44546f; */
 }

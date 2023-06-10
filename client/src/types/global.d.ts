@@ -167,9 +167,11 @@ export interface ITaskDataType {
   _id: string;
   key: string;
   title: string;
+  description:string;
   firstName: string;
   record: any;
   priority: string;
+  due_date: string;
   status: {
     _id:string;
     label: string;

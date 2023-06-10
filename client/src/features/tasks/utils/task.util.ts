@@ -14,3 +14,12 @@ export const normalizeStatusesArray = (tasksStatuses: any) => {
   });
   return statuses;
 };
+
+export const isLoggedInUserFollower = (
+  taskFollowers: [],
+  userId: string | undefined
+) => {
+  return taskFollowers?.some(
+    (follower: { _id: string }) => follower._id === userId
+  );
+};
