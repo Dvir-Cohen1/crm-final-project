@@ -9,6 +9,7 @@ import PriorityTags from '../PriorityTags';
 import { isItemPinned } from '../../utils/task.util';
 import StatusDropDown from '../StatusDropDown';
 import { getTask } from '@/features/tasks/redux/taskSlice';
+import { formatDateTimeToString } from '@/utils/date';
 
 const getColumns = ({ handlePinItem, handleDelete, setTableKey, user }: { handlePinItem: Function, handleDelete: Function, setTableKey: Function, user: any }) => {
      const columns: ColumnsType<ITaskDataType> = [
@@ -48,11 +49,7 @@ const getColumns = ({ handlePinItem, handleDelete, setTableKey, user }: { handle
                     return dateA.getTime() - dateB.getTime();
                },
                // sortDirections: ['descend'],
-               render: (_, record) => {
-                    const date = new Date(record.due_date);
-                    const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
-                    return formattedDate;
-               },
+               render: (_, record) => formatDateTimeToString(record.due_date),
           },
           {
                title: 'Status',
