@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Empty, Menu, Popover } from 'antd';
+import React, { useState } from 'react'
+import { Button, Empty, Menu, Popover,MenuProps } from 'antd';
 import { FaBell, FaQuestionCircle, FaStar, FaUser } from "react-icons/fa";
-import { MenuProps, Input } from 'antd';
 import Tooltip from '@/components/common/Tooltip';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { isLoginByToken, logoutByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { ITaskDataType, ITaskState, RootState, UserPinnedItems, UserState } from '@/types/global';
+import { RootState, UserPinnedItems } from '@/types/global';
 import Search from './Search';
-import { DeleteOutlined, CloseOutlined } from '@ant-design/icons'
+import { CloseOutlined } from '@ant-design/icons'
 import { pinItem } from '@/features/users/redux/userSlice';
-import { createSubString, createSubWords } from '@/utils/text';
+import { createSubString } from '@/utils/text';
 import { removeAllPinItemsApi } from '@/features/users/services/users.service';
 
 function SecondaryItems() {
@@ -36,7 +35,6 @@ function SecondaryItems() {
           // setCurrent(e.key);
      };
 
-
      const pinnedDropDownContent = (
           <div className='w-48'>
                <div className='flex justify-between place-items-center mb-3'>
@@ -53,21 +51,26 @@ function SecondaryItems() {
                     }
                </div>
                <ul>
-                    {user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: UserPinnedItems) => {
-                         return (
-                              <div className='my-2 font-semibold flex justify-between' key={pinItem._id}>
-                                   <div>
-                                        <Link href={`/tasks/${pinItem._id}`}>
-                                             <li>
-                                             {createSubString(pinItem.title)}
-                                             </li>
-                                        </Link>
-                                        <li>{createSubString(pinItem.description)}</li>
+                    {
+                         user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: UserPinnedItems, indexId: number) => {
+                              const isLastItem = indexId === (user?.pinned_items ?? []).length - 1;
+                              return (
+                                   <div key={indexId}>
+                                        <div className='my-2 font-semibold flex justify-between' key={pinItem._id}>
+                                             <div>
+                                                  <Link href={`/tasks/${pinItem._id}`}>
+                                                       <li>
+                                                            {createSubString(pinItem.title)}
+                                                       </li>
+                                                  </Link>
+                                                  <li className='text-xs'>{createSubString(pinItem.description)}</li>
+                                             </div>
+                                             <Button size={'small'} onClick={() => handlePinItem(pinItem._id)} type='text'><CloseOutlined /></Button>
+                                        </div>
+                                        {!isLastItem && <hr className='my-4' />}
                                    </div>
-                                   <Button size={'small'} onClick={() => handlePinItem(pinItem._id)} type='text'><CloseOutlined /></Button>
-                              </div>
-                         )
-                    }) : <Empty />}
+                              )
+                         }) : <Empty />}
                </ul>
           </div>
      );
@@ -82,9 +85,6 @@ function SecondaryItems() {
                <p> No notifications </p>
           </div>
      );
-
-
-
      const profileItems: MenuProps['items'] = [
 
           {
@@ -101,7 +101,7 @@ function SecondaryItems() {
 
                     </div>
                ),
-               key: 'SubMenu',
+               key: 'SubMenu2134',
                children: [
                     {
                          type: 'group',
@@ -144,8 +144,6 @@ function SecondaryItems() {
           },
 
      ];
-
-
 
 
      return (

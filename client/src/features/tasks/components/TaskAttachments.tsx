@@ -64,7 +64,7 @@ const TaskAttachments = () => {
    
   return (
      <>
-     <h1>Attachments</h1>
+     <h1 className='mb-4'>Attachments</h1>
      <Upload
        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
        listType="picture-card"

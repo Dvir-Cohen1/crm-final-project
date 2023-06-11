@@ -1,7 +1,7 @@
 /**
  * Create sub string by given min and max number
  */
-export function createSubString(string: string, min = 0, max = 15) {
+export function createSubString(string: string, min = 0, max = 23) {
   // Check if the type of the argument is string
   if (typeof string !== "string" || !string) {
     return;
@@ -19,7 +19,6 @@ export function createSubString(string: string, min = 0, max = 15) {
  * Create sub words by given min and max number
  */
 export function createSubWords(string: string, min = 0, max = 4) {
-
   if (typeof string !== "string" || !string) {
     return;
   }
@@ -29,7 +28,7 @@ export function createSubWords(string: string, min = 0, max = 4) {
     // Join the first 10 words and add three dots
     return (string = words?.slice(min, max).join(" ") + "...");
   }
-  console.log(string)
+  console.log(string);
   return string;
 }
 
@@ -37,19 +36,16 @@ export function createSubWords(string: string, min = 0, max = 4) {
  * Capitalize first letters of each word
  */
 export function capitalizeFirstLetters(text: string) {
-
   // Split the text into an array of words
   let words = text?.split(" ");
-  
+
   // Capitalize the first letter of each word
-  let capitalizedWords = words?.map(function(word) {
+  let capitalizedWords = words?.map(function (word) {
     return word?.charAt(0).toUpperCase() + word.slice(1);
   });
-  
+
   // Join the modified words back into a string
   let capitalizedText = capitalizedWords?.join(" ");
-  
+
   return capitalizedText;
 }
-
-
