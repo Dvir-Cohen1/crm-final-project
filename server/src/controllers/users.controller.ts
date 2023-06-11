@@ -3,6 +3,7 @@ import {
   BadRequestError,
   NotFoundError,
   ServerError,
+  UnauthorizeError,
 } from "../errors/Errors.js";
 import {
   SELECTED_PINNED_ITEMS_FIELDS,
@@ -189,18 +190,17 @@ export const removeAllPinItems = async (
     );
 
     if (user) {
-
       if(!user.pinned_items.length) {
         return
       } 
 
-      user.pinned_items = []; // Set pinned_items to an empty array
+      user.pinned_items = []; // Set user pinned_items to an empty array
       await user.save(); // Save the updated user object
 
       res.status(200).send({ error: false, data: user, message: "All pinned items removed" });
     } else {
-      // Handle case when user is not found
-      res.status(404).send({ error: true, message: "User not found" });
+      // Handle case when user is not found which means hes unauthorized 
+      return next(new UnauthorizeError("Unauthorized"));
     }
   } catch (error) {
     console.log(error);

@@ -53,7 +53,7 @@ const items: MenuProps['items'] = [
                     children: [
                          {
                               label: 'New Task',
-                              key: '/',
+                              key: '/1245',
                          },
                          {
                               label: 'New Group Tasks',
@@ -100,6 +100,7 @@ const MainItems = () => {
           <>
                <AppLogo fontSize='lg' title="CRM" />
                <Menu
+               key={"123"}
                     className='hidden border-0 bg-transparent app-navbar lg:flex place-items-center flex-auto'
                     style={{ minWidth: 0, flex: "auto" }}
                     onClick={onClick}

@@ -98,10 +98,6 @@ export const createTask = async (
 
     // Creating new slug for easy url's
     const slug = String(title).toLowerCase().replace(/\s+/g, "_");
-    // console.log(req.body);
-    // console.log(assignee);
-    // console.log(followers);
-    // return res.end()
 
     // Creating the Task
     const newTask = await Task.create({
@@ -135,6 +131,7 @@ export const editTask = async (
 ) => {
   try {
     const { taskId } = req.params;
+    console.log(req.body)
     const editedTask = await Task.findByIdAndUpdate(
       taskId,
       {
@@ -242,6 +239,7 @@ export const deleteTask = async (
 
   res.status(201).send({ error: false, data: deletedTask });
 };
+
 /*
 /* Task Statuses
 */

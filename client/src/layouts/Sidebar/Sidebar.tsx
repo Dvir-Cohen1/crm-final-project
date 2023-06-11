@@ -24,7 +24,7 @@ const items: MenuItem[] = [
      getItem('Users', 'sub4', <UserOutlined />, [
           getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
           getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
-          getItem((<NextLink href={"/users"}>Departments</NextLink>), '6'),
+          getItem((<NextLink href={"/users/1"}>Departments</NextLink>), '6'),
 
      ]),
      getItem('Customers', 'sub5', <CalendarOutlined />, [
@@ -101,7 +101,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
      return (
           <aside
                className='hidden lg:block border-r border-[#091e4224] transition-all duration-100 relative'
-               style={{ width: isSidebarToggeld ? minSidebarWidth : maxSidebarWidth, height: 'calc(100vh - 64px)', background: '#F6F7FB' }}
+               style={{ width: isSidebarToggeld ? minSidebarWidth : maxSidebarWidth, height: 'calc(100vh - 64px)' }}
           >
                <button
                     onClick={() => handleToggleSidebar()}
@@ -116,7 +116,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
                     <Menu
                          className={`mt-8 ${className}`}
                          // onClick={(e) => console.log(e.key)}
-                         style={{ background: '#F6F7FB', border: 0 }}
+                         style={{  border: 0 }}
                          mode="vertical"
                          triggerSubMenuAction='click'
                          items={items}

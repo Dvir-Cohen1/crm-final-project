@@ -7,6 +7,7 @@ import {
   isLogin,
   logout,
 } from "../services/authentication.service";
+import router from "next/router";
 
 export const registerByPayload = createAsyncThunk(
   "authentication/registerByPayload",
@@ -111,6 +112,7 @@ export const authSlice = createSlice({
         state.error = action.error.message;
         state.isAuthenticated = false;
         state.user = null;
+        router.push("/authentication/login");
       })
       .addCase(isLoginByToken.fulfilled, (state, { payload }: any) => {
         state.isLoading = false;

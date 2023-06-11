@@ -12,7 +12,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 //  Ant Design
 import {
-  StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, SlidersOutlined
+  StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, SlidersOutlined, LockOutlined, UnlockOutlined
 } from '@ant-design/icons';
 import StatusDropDown from '@/features/tasks/components/StatusDropDown';
 import { Collapse, Col, Row, Button, Dropdown, MenuProps, Space } from 'antd';
@@ -23,6 +23,8 @@ import EditPrioritySelect from '@/features/tasks/components/forms/EditPrioritySe
 import EditAssigneeSelect from '@/features/tasks/components/forms/EditAssigneeSelect';
 import EditDueDate from '@/features/tasks/components/forms/EditDueDate';
 import useEditTask from '@/features/tasks/hooks/useEditTask';
+import { formatDateTimeToString } from '@/utils/date';
+import TypeTags from '@/features/tasks/components/TypeTags';
 
 const { Panel } = Collapse;
 
@@ -69,6 +71,8 @@ const Task = () => {
   const onMenuClick: MenuProps['onClick'] = (e) => {
     console.log('click', e);
   };
+
+
   return (
     <Layout>
       {/* Task title section */}
@@ -87,15 +91,20 @@ const Task = () => {
               <StarOutlined style={{ marginBottom: "10px", color: 'black' }} />
           }
         />
+
+        <TypeTags type={task?.type} handleEditTask={handleEditTask} />
+
         <h1 className='text-2xl'>
-          <Input style={{ color: "#000" }} name='title' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
-            className='edit-task-input text-xl' placeholder={task?.title} />
+          <Input style={{ color: "#000" }} name='title' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+            className='edit-task-input text-xl' defaultValue={task?.title} />
         </h1>
+
+
       </section>
 
       {/* Main actions section */}
-      <section className='flex justify-between gap-3 mb-3'>
-        <Space>
+      <section className='flex justify-between flex-wrap gap-3 mb-3'>
+        <div className='flex flex-wrap gap-3'>
           {
             mainTaskActionButtons.map((item, indexId) => {
               return (
@@ -103,35 +112,33 @@ const Task = () => {
               )
             })
           }
-        </Space>
+        </div>
 
         <TaskSetting taskId={task?._id} taskTitle={task?.title} taskFollowers={task?.followers} handleEditTask={handleEditTask} />
       </section>
 
       <hr className='mb-6' />
 
-      {/* Left Col */}
       <Row>
-        <Col span={16} push={0}>
+        {/* Left Col */}
+        <Col span={16} xs={24} md={16} >
           <section>
             <div className="task-description">
-              <h1>Description</h1>
+              <h1 className='mb-3'>Description</h1>
               <p>
-                <Input name='description' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
-                  className='edit-task-input' placeholder={task?.description} />
-
-
+                <Input name='description' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+                  className='edit-task-input' defaultValue={task?.description} />
               </p>
             </div>
             <div className="task-attachments">
               <TaskAttachments />
             </div>
+            <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>
         </Col>
 
-
         {/* right Col */}
-        <Col span={8} pull={0}>
+        <Col span={8} xs={24} md={8} >
           <section>
 
             <div className='mb-5'>
@@ -184,7 +191,6 @@ const Task = () => {
                     </Col>
                     <Col span={18} >
                       <EditDueDate dueDate={task?.due_date} handleEditTask={handleEditTask} />
-                      {/* <div className="font-semibold">{task?.due_date}</div> */}
                     </Col>
                   </Row>
                   {/* Created by */}
@@ -201,11 +207,11 @@ const Task = () => {
                 </Col>
               </Panel>
             </Collapse>
-            <div className='mx-2 my-3 text-xs'>
-              Created by: <span className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</span>
+            <div className='mx-4 mt-4 text-xs tect-[#626f86]'>
+              Created {formatDateTimeToString(task?.createdAt)}
             </div>
-            <div className='mx-2 my-3 text-xs'>
-              Updated: {task?.created_by?.firstName}
+            <div className='mx-4 md:my-2 mt-2 mb-5 text-xs tect-[#626f86]'>
+              Updated {formatDateTimeToString(task?.updatedAt)}
             </div>
           </section>
         </Col>
