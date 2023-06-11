@@ -88,8 +88,8 @@ const Task = () => {
           }
         />
         <h1 className='text-2xl'>
-          <Input style={{ color: "#000" }} name='title' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
-            className='edit-task-input text-xl' placeholder={task?.title} />
+          <Input style={{ color: "#000" }} name='title' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+            className='edit-task-input text-xl' defaultValue={task?.title} />
         </h1>
       </section>
 
@@ -117,10 +117,8 @@ const Task = () => {
             <div className="task-description">
               <h1>Description</h1>
               <p>
-                <Input name='description' onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
-                  className='edit-task-input' placeholder={task?.description} />
-
-
+                <Input name='description' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+                  className='edit-task-input' defaultValue={task?.description} />
               </p>
             </div>
             <div className="task-attachments">

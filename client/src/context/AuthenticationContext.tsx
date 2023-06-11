@@ -37,7 +37,7 @@ export function AuthProvider({ children }: AuthContextProps) {
   useEffect(() => {
     if (isAuthenticated === false) {
       // Redirect the user to the login page if they are not authenticated
-      router.replace('/authentication/login');
+      router.push('/authentication/login');
     }
   }, [isAuthenticated, isRegister, isError, router])
 
