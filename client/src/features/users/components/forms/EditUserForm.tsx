@@ -1,6 +1,6 @@
 import Input from '@/components/common/Input'
 import React from 'react'
-import { isUserCanEdit } from '../../utils/user.utils'
+import { isUserCanEdit } from '../../utils/user.util'
 import { Button } from '@/components/common/Button'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'

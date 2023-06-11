@@ -5,6 +5,7 @@ import { Menu } from 'antd';
 import NextLink from 'next/link';
 import { Button } from '@/components/common/Button';
 import { FaCaretDown } from 'react-icons/fa';
+import router from 'next/router';
 
 
 const items: MenuProps['items'] = [
@@ -18,18 +19,11 @@ const items: MenuProps['items'] = [
                     </NextLink>
                </div>
           ),
-          key: 'dashboard1',
+          key: '/',
      },
      {
-          label: (
-               <div>
-
-                    <NextLink href="/" rel="noopener noreferrer">
-                         My Work
-                    </NextLink>
-               </div>
-          ),
-          key: 'mainProject',
+          label: "My Work",
+          key: '/myWork',
      },
      {
           label: (
@@ -40,7 +34,7 @@ const items: MenuProps['items'] = [
                     </NextLink>
                </div>
           ),
-          key: 'starred',
+          key: '/myWork/1',
      },
 
      {
@@ -59,11 +53,11 @@ const items: MenuProps['items'] = [
                     children: [
                          {
                               label: 'New Task',
-                              key: 'setting:1',
+                              key: '/',
                          },
                          {
                               label: 'New Group Tasks',
-                              key: 'setting:2',
+                              key: '/1',
                          },
                     ],
                },
@@ -73,11 +67,21 @@ const items: MenuProps['items'] = [
                     children: [
                          {
                               label: 'New Project',
-                              key: 'setting:3',
+                              key: '/2',
                          },
                          {
                               label: 'New Group Projects',
-                              key: 'setting:4',
+                              key: '/3',
+                         },
+                    ],
+               },
+               {
+                    type: 'group',
+                    label: 'Users',
+                    children: [
+                         {
+                              label: 'New User',
+                              key: '/users/newUser',
                          },
                     ],
                },
@@ -86,11 +90,10 @@ const items: MenuProps['items'] = [
 
 ];
 
-
 const MainItems = () => {
      const [current, setCurrent] = useState('mail');
      const onClick: MenuProps['onClick'] = (e) => {
-          // console.log('click ', e);
+          router.push(e.key)
           setCurrent(e.key);
      };
      return (

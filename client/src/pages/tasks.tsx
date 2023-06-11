@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { ITasks } from '@/types/global';
 import Layout from '@/layouts/Layout'
-import TasksTable from '@/features/tasks/components/TasksTable'
 import { ThunkDispatch } from 'redux-thunk';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AnyAction } from 'redux';
-import { ITasks, RootState } from '@/types/global';
+import TasksTable from '@/features/tasks/components/tables/TasksTable'
 import { allTasks, deleteTask, newTask } from '@/features/tasks/redux/taskSlice';
-import Link from 'next/link';
-// import { Button } from '@/components/common/Button';
 import NewTaskDrawer from '@/features/tasks/components/NewTaskDrawer';
 import { Button, message } from 'antd';
-import { pinItem } from '@/features/users/redux/userSlice';
-
 
 const Tasks = () => {
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
@@ -20,7 +16,11 @@ const Tasks = () => {
 
 
   useEffect(() => {
-    dispatch<any>(allTasks()).then((res: any) => setTasks(res.payload))
+    dispatch<any>(allTasks()).then((res: any) => {
+      // const tasks = res.payload.filter((task: any) => task.status.label !== "Done")
+      // console.log(tasks)
+      setTasks(res.payload)
+    })
   }, [dispatch])
 
   const handleDelete = (userId: string) => {
@@ -31,7 +31,7 @@ const Tasks = () => {
   };
 
   useEffect(() => {
-    // Listen for changes to the `users` state variable and update the table
+    // Listen for changes to the `tasks` state variable and update the table
     // Note that this will only run when the `users` variable changes
   }, [tasks]);
 
@@ -48,10 +48,17 @@ const Tasks = () => {
 
   const onSubmit = (data: any) => {
     dispatch(newTask(data))
-    console.log("asd")
     dispatch<any>(allTasks()).then((res: any) => setTasks(res.payload))
     onClose()
   };
+
+  // Table key 
+  const [tableKey, setTableKey] = useState(Date.now().toString());
+
+  useEffect(() => {
+    // Listen for changes to the `tableKey` state variable and update the table
+    dispatch<any>(allTasks()).then((res: any) => setTasks(res.payload))
+  }, [dispatch, tableKey])
 
   return (
     <Layout>
@@ -60,7 +67,7 @@ const Tasks = () => {
         <div><Button type='primary' onClick={showDrawer}>New</Button></div>
       </div>
       <NewTaskDrawer open={open} onClose={onClose} onSubmit={onSubmit} />
-      <TasksTable handleDelete={handleDelete} tasks={tasks} />
+      <TasksTable tableKey={tableKey} setTableKey={setTableKey} handleDelete={handleDelete} tasks={tasks} />
     </Layout>
   )
 }

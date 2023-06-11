@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Task from "../models/task.model.js";
 import { BadRequestError, NotFoundError } from "../errors/Errors.js";
+import TaskStatuses from "../models/taskStatus.model.js";
 
 // Get all
 export const allTasks = async (
@@ -20,6 +21,10 @@ export const allTasks = async (
     .populate({
       path: "followers",
       select: ["firstName", "lastName", "email", "role", "imgSRC"],
+    })
+    .populate({
+      path: "status",
+      select: ["_id", "label", "color"],
     });
   res.status(201).send(tasks);
 };
@@ -34,23 +39,32 @@ export const getTask = async (
     return next(new BadRequestError("Not provided task id"));
   }
 
-  const task = await Task.findById(taskId)
-  .populate({
-    path: "created_by",
-    select: ["firstName", "lastName", "email", "role", "imgSRC"],
-  })
-  .populate({
-    path: "assignee",
-    select: ["firstName", "lastName", "email", "role", "imgSRC"],
-  })
-  .populate({
-    path: "followers",
-    select: ["firstName", "lastName", "email", "role", "imgSRC"],
-  });
-  if (!task) {
-    return next(new NotFoundError(`Task: "${taskId}" not found`));
+  try {
+    const task = await Task.findById(taskId)
+      .populate({
+        path: "created_by",
+        select: ["firstName", "lastName", "email", "role", "imgSRC"],
+      })
+      .populate({
+        path: "assignee",
+        select: ["firstName", "lastName", "email", "role", "imgSRC"],
+      })
+      .populate({
+        path: "followers",
+        select: ["firstName", "lastName", "email", "role", "imgSRC"],
+      })
+      .populate({
+        path: "status",
+        select: ["_id", "label", "color"],
+      });
+    if (!task) {
+      return next(new NotFoundError(`Task: "${taskId}" not found`));
+    }
+    res.status(200).send(task);
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
   }
-  res.status(200).send(task);
 };
 
 interface ICreateTaskPropsType extends Request {
@@ -63,10 +77,18 @@ export const createTask = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, type, description, due_date, priority, assignee, followers } =
-    req.body;
+  const {
+    title,
+    type,
+    description,
+    due_date,
+    priority,
+    assignee,
+    followers,
+    status,
+  } = req.body;
 
-  if (!title || !type || !description || !due_date || !priority) {
+  if (!title || !type || !description || !due_date || !priority || !status) {
     return next(new BadRequestError());
   }
 
@@ -91,6 +113,7 @@ export const createTask = async (
       priority,
       assignee,
       followers,
+      status,
       created_by: createdByUserId,
     });
     // If theres new assignee/followers push them to model
@@ -110,44 +133,95 @@ export const editTask = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {
-    title,
-    description,
-    due_date,
-    priority,
-    assignee,
-    followers,
-    created_by,
-  } = req.body;
+  try {
+    const { taskId } = req.params;
+    const editedTask = await Task.findByIdAndUpdate(
+      taskId,
+      {
+        ...req.body,
+      },
+      { new: true }
+    );
 
-  if (
-    !title ||
-    !description ||
-    !due_date ||
-    !priority ||
-    !assignee ||
-    !followers ||
-    !created_by
-  ) {
-    return next(new BadRequestError());
+    res.status(200).send({ error: false, data: editedTask });
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
   }
+};
 
-  const { taskId } = req.params;
-  const editedTask = await Task.findByIdAndUpdate(
-    taskId,
-    {
-      title,
-      description,
-      due_date,
-      priority,
-      assignee,
-      followers,
-      created_by,
-    },
-    { new: true }
-  );
+// clone task
+export const cloneTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { taskId } = req.params;
+    const taskToBeCloned = await Task.findById(taskId).select([
+      "slug",
+      "title",
+      "type",
+      "status",
+      "description",
+      "due_date",
+      "priority",
+      "assignee",
+      "followers",
+    ]);
 
-  res.status(200).send({ error: false, data: editedTask });
+    // Get the user id who perfome the action
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    // Get clone options
+    const { cloneAssignee, cloneFollowers, clonePriority } =
+      req.body.cloneOptions;
+
+    // Get the new task title if changed else stay the same as original
+    const { clonedTaskTitle } = req.body;
+
+    const clonedTask: any = new Task();
+
+    // Create new task slug (for situation when the title changed..)
+    const slug = String(clonedTaskTitle).toLowerCase().replace(/\s+/g, "_");
+
+    // Set cloned task properties
+    clonedTask.slug = slug;
+    clonedTask.title = clonedTaskTitle;
+    clonedTask.type = taskToBeCloned?.type;
+    clonedTask.description = taskToBeCloned?.description;
+    clonedTask.due_date = taskToBeCloned?.due_date;
+    clonedTask.created_by = createdByUserId;
+    clonedTask.status = taskToBeCloned?.status;
+
+    if (cloneAssignee) {
+      let assignees: [] | any = [];
+      taskToBeCloned?.assignee.forEach((item: any) => {
+        assignees.push(item);
+      });
+
+      clonedTask.assignee = assignees;
+    }
+
+    if (cloneFollowers) {
+      let followers: [] | any = [];
+      taskToBeCloned?.followers.forEach((item: any) => {
+        followers.push(item);
+      });
+
+      clonedTask.followers = followers;
+    }
+
+    if (clonePriority) {
+      clonedTask.priority = taskToBeCloned?.priority;
+    }
+
+    await clonedTask.save();
+    res.status(201).send({ error: false, data: clonedTask });
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
+  }
 };
 
 // Delete
@@ -160,11 +234,64 @@ export const deleteTask = async (
   if (!taskId) {
     return next(new BadRequestError("Not provided task id"));
   }
-
+  // return console.log(taskId)
   const deletedTask = await Task.findByIdAndRemove(taskId, { new: true });
   if (!deletedTask) {
     return next(new NotFoundError(`Task: "${taskId}" not found`));
   }
 
   res.status(201).send({ error: false, data: deletedTask });
+};
+/*
+/* Task Statuses
+*/
+export const getTaskStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const taskStatuses = await TaskStatuses.find();
+    res.status(200).send({ error: false, data: taskStatuses });
+  } catch (error) {
+    next(new BadRequestError(String(error)));
+  }
+};
+
+export const createTaskStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { label, color } = req.body;
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    const newTaskStatus = await TaskStatuses.create({
+      label,
+      color,
+      created_by: createdByUserId,
+    });
+    res.status(200).send({ error: false, data: newTaskStatus });
+  } catch (error) {
+    next(new BadRequestError(String(error)));
+  }
+};
+
+export const removeTaskStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { statusId } = req.params;
+    if (!statusId) {
+      return next(new BadRequestError());
+    }
+
+    const removedTaskStatus = await TaskStatuses.findByIdAndDelete(statusId);
+    res.status(200).send({ error: false, data: removedTaskStatus });
+  } catch (error) {
+    next(new BadRequestError(String(error)));
+  }
 };

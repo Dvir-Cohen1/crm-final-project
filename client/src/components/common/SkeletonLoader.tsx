@@ -17,7 +17,7 @@ const SkeletonLoader = ({ isLoading, amount = 1 }: LoaderProps) => {
                     loading={isLoading}
                     active
                     paragraph={{ rows: 4 }}
-                    avatar
+                    avatar={false}
                />
           );
      }

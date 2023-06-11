@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { MinusOutlined } from '@ant-design/icons';
+
 import { Button } from '@/components/common/Button';
 import { InboxOutlined, UnlockOutlined, LockOutlined, DownOutlined, UpOutlined, UpCircleTwoTone, DownCircleTwoTone, MinusCircleTwoTone } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { UploadProps } from 'antd';
-import { IUser, RootState } from '@/types/global';
+import { ITaskState, IUser, RootState } from '@/types/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { allUsers } from '@/features/users/redux/userSlice';
+import { getTasksStatuses } from '../redux/taskSlice';
+import PrioritySelect from './forms/PrioritySelect';
 
 const { Dragger } = Upload;
 const props: UploadProps = {
@@ -31,8 +35,6 @@ const props: UploadProps = {
      },
 };
 
-
-
 const { Option } = Select;
 
 const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
@@ -46,6 +48,12 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
           dispatch<any>(allUsers()).then((res: any) => setUsers(res.payload))
      }, [dispatch])
 
+     const { taskStatuses }: ITaskState = useSelector((state: RootState) => state.task);
+
+     // Get all task statuses when component mount
+     useEffect(() => {
+          dispatch<any>(getTasksStatuses())
+     }, [dispatch])
 
      return (
           <Drawer
@@ -55,14 +63,13 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                onClose={onClose}
                open={open}
                bodyStyle={{ paddingBottom: 80 }}
-          // extra={
-          //      <Space>
-          //           <Button fontSize='xs' variant="default" >Automation</Button>
-          //           {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
-          //      </Space>
-          // }
+               extra={
+                    <Space>
+                         <Button fontSize='sm' variant="default" >Manage fields</Button>
+                         {/* <Button htmlType="submit" fontSize='sm' >Create</Button> */}
+                    </Space>
+               }
           >
-
                <Form layout="vertical" onFinish={onSubmit} form={form}>
                     {/* Title Row */}
                     <Row gutter={16}>
@@ -82,7 +89,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                    rules={[{ required: true, message: 'Please enter type' }]}
                               >
                                    <Select placeholder="Please choose type">
-
                                         <Option value="private">
                                              <div className="flex gap-2">
                                                   <LockOutlined />
@@ -94,51 +100,41 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                                   <UnlockOutlined />
                                                   Public
                                              </div>
-
-
                                         </Option>
                                    </Select>
                               </Form.Item>
                          </Col>
                     </Row>
+
                     {/* Priority Row */}
                     <Row gutter={16}>
                          <Col span={12}>
+                              <PrioritySelect />
+                         </Col>
+                         <Col span={12}>
                               <Form.Item
-                                   name="priority"
-                                   label="Priority"
-                                   rules={[{ required: true, message: 'Please select priority' }]}
+                                   name="status"
+                                   label="Status"
+                                   rules={[{ required: true, message: 'Please select status' }]}
                               >
-                                   <Select placeholder="Please select priority owner">
-                                        <Option value="high">
-                                             <div className="flex gap-2">
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/high.svg" width="16px" height="16px" /> */}
-
-                                                  <UpCircleTwoTone twoToneColor={'#FF5630'} style={{ fontSize: '16px' }} />
-                                                  High
-                                             </div>
-
-                                        </Option>
-                                        <Option value="medium">
-                                             <div className="flex gap-2">
-                                                  <MinusCircleTwoTone twoToneColor={'#FFAB00'} style={{ fontSize: '16px' }} />
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/medium.svg" width="16px" height="16px" /> */}
-                                                  Medium
-                                             </div>
-
-                                        </Option>
-                                        <Option value="low">
-                                             <div className="flex gap-2">
-                                                  {/* <img className="sc-19ime50-1 jPnJkx" src="https://dvircohen.atlassian.net/images/icons/priorities/low.svg" width="16px" height="16px" /> */}
-
-                                                  <DownCircleTwoTone twoToneColor={'#2684FF'} style={{ fontSize: '16px' }} />
-                                                  Low
-                                             </div>
-
-                                        </Option>
+                                   <Select placeholder="Please select task status">
+                                        {taskStatuses?.map((status: any) => {
+                                             return (
+                                                  <Option key={status._id} value={status._id}>
+                                                       <div className="flex gap-2">
+                                                            <MinusOutlined style={{ color: status?.color }} />
+                                                            {status.label}
+                                                       </div>
+                                                  </Option>
+                                             )
+                                        })}
                                    </Select>
                               </Form.Item>
                          </Col>
+
+                    </Row>
+
+                    <Row gutter={16}>
                          <Col span={12}>
                               <Form.Item
                                    name="assignee"
@@ -152,7 +148,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                                   <Option key={user._id} value={user._id}> <Avatar size={20} src={user.imgSRC}> </Avatar> {user.email} </Option>
                                              )
                                         })}
-                                        {/* <Option value="644ed8ce3f32bd976e2f6ad4">Israel Israeli</Option> */}
                                    </Select>
                               </Form.Item>
                          </Col>
@@ -219,8 +214,6 @@ const NewTaskDrawer = ({ open, onClose, onSubmit }: any) => {
                                         },
                                    ]}
                               >
-
-
                                    <Dragger {...props}>
                                         <div className="p-5">
                                              <p className="ant-upload-drag-icon">

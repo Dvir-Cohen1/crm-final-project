@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Empty, Menu, Popover } from 'antd';
 import { FaBell, FaQuestionCircle, FaStar, FaUser } from "react-icons/fa";
 import { MenuProps, Input } from 'antd';
@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { isLoginByToken, logoutByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { RootState } from '@/types/global';
+import { ITaskDataType, ITaskState, RootState, UserPinnedItems, UserState } from '@/types/global';
 import Search from './Search';
 import { DeleteOutlined, CloseOutlined } from '@ant-design/icons'
 import { pinItem } from '@/features/users/redux/userSlice';
+import { createSubString, createSubWords } from '@/utils/text';
+import { removeAllPinItemsApi } from '@/features/users/services/users.service';
 
 function SecondaryItems() {
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
@@ -23,19 +25,45 @@ function SecondaryItems() {
           dispatch(isLoginByToken())
      };
 
+     const handleRemoveAllPinItems = async () => {
+          await removeAllPinItemsApi()
+          dispatch(isLoginByToken())
+     };
 
      const [current, setCurrent] = useState('mail');
      const onClick: MenuProps['onClick'] = (e) => {
           // console.log('click ', e);
           // setCurrent(e.key);
      };
+
+
      const pinnedDropDownContent = (
-          <div>
+          <div className='w-48'>
+               <div className='flex justify-between place-items-center mb-3'>
+                    <span className='font-semibold'>
+                         Pinned items
+                    </span>
+
+                    {user?.pinned_items?.length ?
+                         <Button type='link' onClick={() => handleRemoveAllPinItems()} className='text-xs'>
+                              Clear All
+                         </Button>
+                         :
+                         ""
+                    }
+               </div>
                <ul>
-                    {user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: any, indexId) => {
+                    {user?.pinned_items?.length ? user?.pinned_items?.map((pinItem: UserPinnedItems) => {
                          return (
                               <div className='my-2 font-semibold flex justify-between' key={pinItem._id}>
-                                   <li>{pinItem.title}</li>
+                                   <div>
+                                        <Link href={`/tasks/${pinItem._id}`}>
+                                             <li>
+                                             {createSubString(pinItem.title)}
+                                             </li>
+                                        </Link>
+                                        <li>{createSubString(pinItem.description)}</li>
+                                   </div>
                                    <Button size={'small'} onClick={() => handlePinItem(pinItem._id)} type='text'><CloseOutlined /></Button>
                               </div>
                          )
@@ -127,7 +155,7 @@ function SecondaryItems() {
 
 
                <Tooltip arrow={false} title="Pinned Items">
-                    <Popover placement="bottomRight" content={pinnedDropDownContent} title="Pinned Items" trigger="click">
+                    <Popover placement="bottomRight" content={pinnedDropDownContent} trigger="click">
                          <div className='menu-actions-svg-container'>
                               <FaStar />
                          </div>

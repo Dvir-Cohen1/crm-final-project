@@ -1,32 +1,16 @@
+import React from 'react'
 import { ColumnsType } from 'antd/es/table';
-import React, { useEffect, useState } from 'react'
-import { Button, Tooltip, Avatar, Space, Table, message, } from 'antd';
+import { Button, Avatar, Space } from 'antd';
 import { UserOutlined, DeleteOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
 import Link from 'next/link';
-import { ITaskDataType, RootState } from '@/types/global';
+import { ITaskDataType } from '@/types/global';
 import PopConfirm from '@/components/common/PopConfirm';
-import { pinItem } from '@/features/users/redux/userSlice';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
-import { useDispatch, useSelector } from 'react-redux';
-import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
+import PriorityTags from '../PriorityTags';
+import { isItemPinned } from '../../utils/task.util';
+import StatusDropDown from '../StatusDropDown';
+import { getTask } from '@/features/tasks/redux/taskSlice';
 
-const TasksTable = ({ tasks, handleDelete }: any) => {
-     const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
-     const { user } = useSelector((state: RootState) => state.auth);
-
-     // is item pinned? changne the star icon color
-     const isItemPinned = (recordId: any) => {
-          return user?.pinned_items?.some((item: any) => item._id === recordId);
-     };
-
-     // Pin Task
-     const handlePinItem = async (itemId: any) => {
-          await dispatch(pinItem(itemId))
-          dispatch(isLoginByToken())
-     };
-
-     // Table Columns
+const getColumns = ({ handlePinItem, handleDelete, setTableKey, user }: { handlePinItem: Function, handleDelete: Function, setTableKey: Function, user: any }) => {
      const columns: ColumnsType<ITaskDataType> = [
           {
                title: 'Title',
@@ -36,28 +20,55 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                // specify the condition of filtering result
                // here is that finding the name started with `value`
                // onFilter: (value: string, record) => record.name.indexOf(value) === 0,
-               sorter: (a, b) => a.title.length - b.title.length,
-               sortDirections: ['descend'],
+               sorter: (a, b) => a.title.localeCompare(b.title),
+               // sortDirections: ['descend'],
           },
           {
                title: 'Description',
                dataIndex: 'description',
                key: 'description',
+               sorter: (a, b) => a.description.localeCompare(b.description),
+               // sortDirections: ['descend'],
           },
           {
                title: 'Priority',
                dataIndex: 'priority',
                key: 'priority',
+               sorter: (a, b) => a.priority?.localeCompare(b.priority),
+               // sortDirections: ['descend'],
+               render: (_, record) => <PriorityTags priorityTitle={record?.priority} />,
           },
           {
                title: 'Due date',
                dataIndex: 'due_date',
                key: 'due_date',
+               sorter: (a, b) => {
+                    const dateA = new Date(a.due_date);
+                    const dateB = new Date(b.due_date);
+                    return dateA.getTime() - dateB.getTime();
+               },
+               // sortDirections: ['descend'],
+               render: (_, record) => {
+                    const date = new Date(record.due_date);
+                    const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+                    return formattedDate;
+               },
           },
           {
-               title: 'Created by',
+               title: 'Status',
+               dataIndex: 'status',
+               key: 'status',
+               sorter: (a, b) => a.status.label.localeCompare(b.status.label),
+               // sortDirections: ['descend'],
+               render: (_, record) =>
+                    <StatusDropDown status={record.status} taskId={record._id} getTask={getTask} setTableKey={setTableKey} />
+          },
+          {
+               title: '@ Reporter',
                dataIndex: 'created_by',
                key: 'created_by',
+               sorter: (a, b) => a.created_by.firstName.localeCompare(b.created_by.firstName),
+               // sortDirections: ['descend'],
                render: (_, { created_by }) =>
                     <Link key={created_by?._id} href={`/users/${created_by?._id}`}>
                          <Avatar src={created_by?.imgSRC} size={32} icon={<UserOutlined />} />
@@ -67,6 +78,8 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                title: 'Assignee',
                key: 'assignee',
                dataIndex: 'assignee',
+               sorter: (a, b) => a.assignee[0]?.firstName.localeCompare(b.assignee[0]?.firstName),
+               // sortDirections: ['descend'],
                render: (_, { assignee }) => (assignee?.map((item: any, indexId) => {
                     return (
                          <Link key={indexId} href={`/users/${item._id}`}>
@@ -76,9 +89,11 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                }))
           },
           {
-               title: 'Followers',
+               title: 'Watchers',
                key: 'followers',
                dataIndex: 'followers',
+               sorter: (a, b) => a.followers[0]?.firstName.localeCompare(b.followers[0]?.firstName),
+               // sortDirections: ['descend'],
                render: (_, { followers }) => (followers?.map((item: any, indexId) => {
                     return (
                          <Link key={indexId} href={`/users/${item._id}`}>
@@ -99,7 +114,7 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
                               type="text"
                               shape="default"
                               icon={
-                                   isItemPinned(record._id)
+                                   isItemPinned(user?.pinned_items, record._id)
                                         ?
                                         <StarFilled style={{ color: '#ffbe0b' }} />
                                         :
@@ -118,26 +133,7 @@ const TasksTable = ({ tasks, handleDelete }: any) => {
           },
      ];
 
-     // rowSelection object indicates the need for row selection
-     const rowSelection = {
-          onChange: (selectedRowKeys: React.Key[], selectedRows: ITaskDataType[]) => {
-               console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          },
-          getCheckboxProps: (record: ITaskDataType) => ({
-               disabled: record.key === 'Disabled User', // Column configuration not to be checked
-               key: record.key,
-          }),
-     };
-
-     return (
-          <Table
-               size='small'
-               scroll={{ x: 1500 }} bordered
-               rowSelection={{
-                    type: "checkbox",
-                    ...rowSelection,
-               }} columns={columns} dataSource={tasks} />
-     )
+     return columns
 }
 
-export default TasksTable
+export default getColumns 

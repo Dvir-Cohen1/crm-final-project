@@ -95,7 +95,14 @@ interface IUser {
   phoneNumber?: Number | undefined | string;
   email: string;
   role: string;
+  pinned_items?: [];
 }
+
+export type UserPinnedItems = {
+  _id: string;
+  title: string;
+  description: string;
+};
 
 // Tasks
 interface ITasks {
@@ -116,12 +123,13 @@ export interface ITaskState {
   error: any;
   tasks?: [] | any;
   task?: any;
+  assignee?: [string];
+  taskStatuses?: [];
   // {
   //   _id: string;
   //   title: string;
   //   priority: string;
   //   due_date: string;
-  //   assignee?: [] | null;
   //   followers?: [] | null;
   // } | null | {};
 }
@@ -155,29 +163,35 @@ export interface TaskState {
   // } | null | {};
 }
 
-
-
 export interface ITaskDataType {
   _id: string;
   key: string;
   title: string;
+  description:string;
   firstName: string;
   record: any;
+  priority: string;
+  due_date: string;
+  status: {
+    _id:string;
+    label: string;
+    color: string;
+  };
   created_by: {
-       _id: string
-       firstName: string
-       imgSRC: string
-  }
+    _id: string;
+    firstName: string;
+    imgSRC: string;
+  };
   assignee: [
-       {
-            firstName: string
-            imgSRC: string
-       }
+    {
+      firstName: string;
+      imgSRC: string;
+    }
   ];
   followers: [
-       {
-            firstName: string
-            imgSRC: string
-       }
+    {
+      firstName: string;
+      imgSRC: string;
+    }
   ];
 }
