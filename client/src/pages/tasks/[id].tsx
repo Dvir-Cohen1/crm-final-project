@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect } from 'react'
 import Layout from "@/layouts/Layout"
 import { useRouter } from 'next/router';
@@ -141,12 +143,13 @@ const Task = () => {
         <Col span={8} xs={24} md={8} >
           <section>
 
-            <div className='mb-5'>
+            <div className='mb-5 flex gap-3'>
               <StatusDropDown
                 status={task?.status}
                 taskId={task?._id}
                 getTask={getTask}
               />
+
               <Button
                 type="default"
                 className='font-semibold'

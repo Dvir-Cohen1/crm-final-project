@@ -2,6 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import Task from "../models/task.model.js";
 import { BadRequestError, NotFoundError } from "../errors/Errors.js";
 import TaskStatuses from "../models/taskStatus.model.js";
+import { ICreateTaskPropsType } from "../types/global.js";
+import {
+  TASK_CLONE_SELECTED_FIELD,
+  TASK_POPULATE_SELECTED_FIELDS,
+  TASK_POPULATE_STATUS_SELECTED_FIELDS,
+} from "../config/constants/task.constants.js";
+import { createSlugFromText } from "../utils/text.util.js";
 
 // Get all
 export const allTasks = async (
@@ -43,19 +50,19 @@ export const getTask = async (
     const task = await Task.findById(taskId)
       .populate({
         path: "created_by",
-        select: ["firstName", "lastName", "email", "role", "imgSRC"],
+        select: TASK_POPULATE_SELECTED_FIELDS,
       })
       .populate({
         path: "assignee",
-        select: ["firstName", "lastName", "email", "role", "imgSRC"],
+        select: TASK_POPULATE_SELECTED_FIELDS,
       })
       .populate({
         path: "followers",
-        select: ["firstName", "lastName", "email", "role", "imgSRC"],
+        select: TASK_POPULATE_SELECTED_FIELDS,
       })
       .populate({
         path: "status",
-        select: ["_id", "label", "color"],
+        select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
       });
     if (!task) {
       return next(new NotFoundError(`Task: "${taskId}" not found`));
@@ -66,10 +73,6 @@ export const getTask = async (
     next(new BadRequestError(String(error)));
   }
 };
-
-interface ICreateTaskPropsType extends Request {
-  userId: string;
-}
 
 // Create
 export const createTask = async (
@@ -131,7 +134,6 @@ export const editTask = async (
 ) => {
   try {
     const { taskId } = req.params;
-    console.log(req.body)
     const editedTask = await Task.findByIdAndUpdate(
       taskId,
       {
@@ -155,17 +157,10 @@ export const cloneTask = async (
 ) => {
   try {
     const { taskId } = req.params;
-    const taskToBeCloned = await Task.findById(taskId).select([
-      "slug",
-      "title",
-      "type",
-      "status",
-      "description",
-      "due_date",
-      "priority",
-      "assignee",
-      "followers",
-    ]);
+
+    const taskToBeCloned = await Task.findById(taskId).select(
+      TASK_CLONE_SELECTED_FIELD
+    );
 
     // Get the user id who perfome the action
     const { userId: createdByUserId } = req as ICreateTaskPropsType;
@@ -180,7 +175,7 @@ export const cloneTask = async (
     const clonedTask: any = new Task();
 
     // Create new task slug (for situation when the title changed..)
-    const slug = String(clonedTaskTitle).toLowerCase().replace(/\s+/g, "_");
+    const slug = createSlugFromText(clonedTaskTitle);
 
     // Set cloned task properties
     clonedTask.slug = slug;
@@ -240,9 +235,8 @@ export const deleteTask = async (
   res.status(201).send({ error: false, data: deletedTask });
 };
 
-/*
-/* Task Statuses
-*/
+// Task Statuses
+
 export const getTaskStatus = async (
   req: Request,
   res: Response,

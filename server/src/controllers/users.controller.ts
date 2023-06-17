@@ -12,6 +12,7 @@ import {
 import User from "../models/user.model.js";
 import { deleteFile, uploadFile } from "../utils/files.util.js";
 import { IRequestUserId, IUser } from "../types/global";
+import { returnResponseObject } from "../utils/response.util.js";
 
 export const allUsers = async (
   req: Request,
@@ -169,10 +170,10 @@ export const pinItem = async (
       await user?.unpinItem(itemId);
       return res
         .status(200)
-        .send({ error: false, data: user, message: "Item unpinned" });
+        .send(returnResponseObject(false, user, "Item unpinned"));
     }
 
-    res.status(200).send({ error: false, data: user, message: "Item pinned" });
+    res.status(200).send(returnResponseObject(false, user, "Item pinned"));
   } catch (error) {
     return next(new ServerError(String(error)));
   }
@@ -185,21 +186,21 @@ export const removeAllPinItems = async (
 ) => {
   const { userId }: IRequestUserId = req;
   try {
-    const user = await User.findById(userId).select(
-      SELECTED_USER_FIELDS
-    );
+    const user = await User.findById(userId).select(SELECTED_USER_FIELDS);
 
     if (user) {
-      if(!user.pinned_items.length) {
-        return
-      } 
+      if (!user.pinned_items.length) {
+        return;
+      }
 
       user.pinned_items = []; // Set user pinned_items to an empty array
       await user.save(); // Save the updated user object
 
-      res.status(200).send({ error: false, data: user, message: "All pinned items removed" });
+      res
+        .status(200)
+        .send(returnResponseObject(false, user, "All pinned items removed"));
     } else {
-      // Handle case when user is not found which means hes unauthorized 
+      // Handle case when user is not found which means hes unauthorized
       return next(new UnauthorizeError("Unauthorized"));
     }
   } catch (error) {

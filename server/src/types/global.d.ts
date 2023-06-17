@@ -24,3 +24,8 @@ export interface IRequestUserId extends Request {
   userId?: string | null | undefined;
   itemId?: string | null | undefined;
 }
+
+
+interface ICreateTaskPropsType extends Request {
+  userId: string;
+}

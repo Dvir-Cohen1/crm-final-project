@@ -17,3 +17,11 @@ export const sendApiError = (res: Response, error: Error, message?: string) => {
     message: message || "Internal Server Error",
   });
 };
+
+export const returnResponseObject = (
+  error: boolean,
+  data: any,
+  message: string
+) => {
+  return { error: error, data: data, message: message };
+};
