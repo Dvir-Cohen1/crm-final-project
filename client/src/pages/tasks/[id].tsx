@@ -77,7 +77,7 @@ const Task = () => {
     console.log('click', e);
   };
 
-
+  const attachmentsCount = task?.attachments?.length
   return (
     <Layout>
       {/* Task title section */}
@@ -127,7 +127,7 @@ const Task = () => {
       <Row>
         {/* Left Col */}
         <Col span={16} xs={24} md={16} >
-          <section>
+          <section className='me-14'>
             <div className="task-description">
               <h1 className='mb-3'>Description</h1>
               <p>
@@ -136,9 +136,9 @@ const Task = () => {
               </p>
             </div>
             <div className="task-attachments">
-              <TaskAttachments taskId={task?._id} />
+              <TaskAttachments taskId={task?._id} attachmentsCount={attachmentsCount} />
 
-              <div className='flex flex-wrap gap-3 my-4'>
+              <div className='flex flex-wrap justify-between gap-3 my-4'>
                 {task?.attachments?.map((item: any, indexId: any) => {
                   return (
                     <Image className='rounded' width={150} height={100} key={indexId} src={item} alt="da" />

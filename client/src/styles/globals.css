@@ -25,6 +25,16 @@ body {
 	color: #172B4D;
 }
 
+footer {
+	margin-top: auto;
+
+}
+
+footer p {
+	font-size: 0.8rem !important;
+	color: #626f86;
+}
+
 
 a {
 	color: #0052cc;
@@ -395,7 +405,8 @@ a {
 }
 
 
-.setting-buttons-container .ant-dropdown-open {
+.setting-buttons-container .ant-dropdown-open,
+.attachments-setting-dropdown-container .ant-dropdown-open {
 	background: #e9f2ff;
 	color: #0c66e4;
 }
@@ -426,26 +437,25 @@ a {
 @media (max-width: 575px) {
 	.edit-task-input {
 		width: -webkit-fill-available;
-	 }
-   }
-   
-   /* Styles for screens between 576px and 767px (small) */
-   @media (min-width: 576px) and (max-width: 767px) {
+	}
+}
+
+/* Styles for screens between 576px and 767px (small) */
+@media (min-width: 576px) and (max-width: 767px) {
 	/* Add your styles here */
-   }
-   
-   /* Styles for screens between 768px and 991px (medium) */
-   @media (min-width: 768px) and (max-width: 991px) {
+}
+
+/* Styles for screens between 768px and 991px (medium) */
+@media (min-width: 768px) and (max-width: 991px) {
 	/* Add your styles here */
-   }
-   
-   /* Styles for screens between 992px and 1199px (large) */
-   @media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Styles for screens between 992px and 1199px (large) */
+@media (min-width: 992px) and (max-width: 1199px) {
 	/* Add your styles here */
-   }
-   
-   /* Styles for screens larger than 1200px (extra large) */
-   @media (min-width: 1200px) {
+}
+
+/* Styles for screens larger than 1200px (extra large) */
+@media (min-width: 1200px) {
 	/* Add your styles here */
-   }
-   
+}
