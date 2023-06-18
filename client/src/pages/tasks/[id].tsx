@@ -1,4 +1,3 @@
-"use client"
 
 import React, { useEffect } from 'react'
 import Layout from "@/layouts/Layout"
@@ -99,12 +98,10 @@ const Task = () => {
 
         <TypeTags type={task?.type} handleEditTask={handleEditTask} />
 
-        <h1 className='text-2xl'>
+        <h2 className='text-2xl'>
           <Input style={{ color: "#000" }} name='title' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
             className='edit-task-input text-xl' defaultValue={task?.title} />
-        </h1>
-
-
+        </h2>
       </section>
 
       {/* Main actions section */}
@@ -129,7 +126,7 @@ const Task = () => {
         <Col span={16} xs={24} md={16} >
           <section className='me-14'>
             <div className="task-description">
-              <h1 className='mb-3'>Description</h1>
+              <h2 className='mb-3'>Description</h2>
               <p>
                 <Input name='description' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
                   className='edit-task-input' defaultValue={task?.description} />
@@ -139,11 +136,11 @@ const Task = () => {
               <TaskAttachments taskId={task?._id} attachmentsCount={attachmentsCount} />
 
               <div className='flex flex-wrap justify-between gap-3 my-4'>
-                {task?.attachments?.map((item: any, indexId: any) => {
-                  return (
-                    <Image className='rounded' width={150} height={100} key={indexId} src={item} alt="da" />
-                  )
-                })}
+                <Image.PreviewGroup >
+                  {task?.attachments?.map((item: any, indexId: any) => (
+                    <Image className='rounded' width={170} height={110} key={indexId} src={item} alt={`task-attachments-${task?._id}`} />
+                  ))}
+                </Image.PreviewGroup>
               </div>
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
@@ -221,6 +218,8 @@ const Task = () => {
                 </Col>
               </Panel>
             </Collapse>
+
+
             <div className='mx-4 mt-4 text-xs tect-[#626f86]'>
               Created {formatDateTimeToString(task?.createdAt)}
             </div>

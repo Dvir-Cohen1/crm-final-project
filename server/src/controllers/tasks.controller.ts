@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import sharp from "sharp";
 import Task from "../models/task.model.js";
 import { BadRequestError, NotFoundError } from "../errors/Errors.js";
 import TaskStatuses from "../models/taskStatus.model.js";
@@ -301,7 +302,7 @@ export const uploadAttachments = async (
 
     if (!files || !taskId) return next(new BadRequestError());
 
-    const filesNames = uploadTasksAttachments(next, files, taskId);
+    const filesNames = await uploadTasksAttachments(next, files, taskId);
     const task = await Task.findById(taskId)
       .populate({
         path: "created_by",

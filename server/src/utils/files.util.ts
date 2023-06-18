@@ -2,6 +2,7 @@ import { NextFunction } from "express";
 import { BadRequestError } from "../errors/Errors.js";
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
 
 type File = {
   filename: string;
@@ -29,46 +30,48 @@ export function deleteFile(filename: string) {
   return filename;
 }
 
-export function uploadTasksAttachments(
+export async function uploadTasksAttachments(
   next: NextFunction,
-  files: {} | undefined,
-  folderName: string
+  files: Express.Multer.File | {} | undefined,
+  folderId: string
 ) {
   try {
     if (!files) {
       return next(new BadRequestError("File not provided"));
     }
 
-    // Check if the folder exists
-    const folderPath = path.join("./public", folderName);
+    const folderPath = path.join("./public", folderId);
     const folderExists = fs.existsSync(folderPath);
 
     if (!folderExists) {
-      // Create the folder if it doesn't exist
       fs.mkdirSync(folderPath);
     }
 
-    const uploadedPaths: string[] = [];
+    const uploadPromises: Promise<string>[] = [];
 
-    // Upload files to the folder
-    Object.values(files).forEach((file: any) => {
+    Object.values(files).forEach((file: Express.Multer.File) => {
       const filePath = path.join(folderPath, file.filename);
-
-      // Create a readable stream from the temporary file path
       const readStream = fs.createReadStream(file.path);
-
-      // Create a writable stream to the destination file path
       const writeStream = fs.createWriteStream(filePath);
 
-      // Pipe the data from the read stream to the write stream
-      readStream.pipe(writeStream);
+      const uploadPromise = new Promise<string>((resolve, reject) => {
+        readStream
+          .pipe(
+            sharp().resize(1920).on("error", reject) // Resize images with sharp
+          )
+          .pipe(
+            writeStream
+              .on("finish", () => resolve(file.filename))
+              .on("error", reject)
+          );
+      });
 
-      uploadedPaths.push(file?.filename);
+      uploadPromises.push(uploadPromise);
     });
 
+    const uploadedPaths = await Promise.all(uploadPromises);
+
     return uploadedPaths;
-    // Perform any necessary operations with the uploaded files
-    // ...
   } catch (error) {
     next();
   }
