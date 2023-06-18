@@ -38,7 +38,6 @@ export const getUserById = async (
     path: "pinned_items",
     select: SELECTED_PINNED_ITEMS_FIELDS,
   });
-  console.log(user?.pinned_items);
   if (!user) return next(new NotFoundError("User not found"));
   res.status(200).send(user);
 };
@@ -89,7 +88,7 @@ export const uploadProfileImage = async (
     const file = req.file;
     const { userId } = req.params;
     const user: any = await User.findById(userId);
-
+    console.log(file)
     uploadFile(next, file);
 
     user.imgSRC = `${process.env.BASE_ENDPOINT}${file?.filename}`;

@@ -17,7 +17,7 @@ import {
   StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, SlidersOutlined, LockOutlined, UnlockOutlined
 } from '@ant-design/icons';
 import StatusDropDown from '@/features/tasks/components/StatusDropDown';
-import { Collapse, Col, Row, Button, Dropdown, MenuProps, Space } from 'antd';
+import { Collapse, Col, Row, Button, Dropdown, MenuProps, Space, Image } from 'antd';
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
 import { Input } from 'antd';
@@ -46,10 +46,13 @@ const Task = () => {
   // Get logged in user state from redux slices
   const { user }: AuthState = useSelector((state: RootState) => state.auth);
 
+  const fetchTaskData = async () => {
+    return await dispatch<any>(getTask(id))
+  }
 
   useEffect(() => {
+    fetchTaskData()
     // Listen for changes in the task id - (for query and page change)
-    dispatch<any>(getTask(id))
   }, [dispatch, id])
 
   useEffect(() => {
@@ -133,7 +136,15 @@ const Task = () => {
               </p>
             </div>
             <div className="task-attachments">
-              <TaskAttachments />
+              <TaskAttachments taskId={task?._id} />
+
+              <div className='flex flex-wrap gap-3 my-4'>
+                {task?.attachments?.map((item: any, indexId: any) => {
+                  return (
+                    <Image className='rounded' width={150} height={100} key={indexId} src={item} alt="da" />
+                  )
+                })}
+              </div>
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>

@@ -9,6 +9,7 @@ import {
   TASK_POPULATE_STATUS_SELECTED_FIELDS,
 } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
+import { uploadTasksAttachments } from "../utils/files.util.js";
 
 // Get all
 export const allTasks = async (
@@ -284,6 +285,58 @@ export const removeTaskStatus = async (
     const removedTaskStatus = await TaskStatuses.findByIdAndDelete(statusId);
     res.status(200).send({ error: false, data: removedTaskStatus });
   } catch (error) {
+    next(new BadRequestError(String(error)));
+  }
+};
+
+export const uploadAttachments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // const { taskId, attachments } = req.body;
+    const { taskId } = req.params;
+    const files = req.files;
+
+    if (!files || !taskId) return next(new BadRequestError());
+
+    const filesNames = uploadTasksAttachments(next, files, taskId);
+    const task = await Task.findById(taskId)
+      .populate({
+        path: "created_by",
+        select: TASK_POPULATE_SELECTED_FIELDS,
+      })
+      .populate({
+        path: "assignee",
+        select: TASK_POPULATE_SELECTED_FIELDS,
+      })
+      .populate({
+        path: "followers",
+        select: TASK_POPULATE_SELECTED_FIELDS,
+      })
+      .populate({
+        path: "status",
+        select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
+      });
+
+    filesNames?.forEach((item) => {
+      const filePaths = `${process.env.BASE_ENDPOINT}${taskId}/${item}`;
+      const isFileExist = task?.attachments.some((item) => item === filePaths);
+
+      if (isFileExist) {
+        return;
+      }
+
+      // push attachments to task
+      task?.attachments.push(filePaths);
+    });
+
+    task?.save();
+
+    res.status(200).send({ error: false, data: task });
+  } catch (error) {
+    console.log(error);
     next(new BadRequestError(String(error)));
   }
 };

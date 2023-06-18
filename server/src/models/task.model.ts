@@ -8,12 +8,12 @@ const taskSchema = new Schema(
     },
     title: {
       type: String,
-      require: true,
+      require: [true, "Field title is requierd!"],
     },
     type: {
       type: String,
       enum: ["private", "public"],
-      require: true,
+      require: [true, "Field type is requierd!"],
     },
     status: {
       type: Schema.Types.ObjectId,
@@ -30,7 +30,6 @@ const taskSchema = new Schema(
     },
     priority: {
       type: String,
-      // ref: "Priority",
       unique: false,
     },
     assignee: {
@@ -48,6 +47,10 @@ const taskSchema = new Schema(
     created_by: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      unique: false,
+    },
+    attachments: {
+      type: [String], // URL or file path
       unique: false,
     },
   },
