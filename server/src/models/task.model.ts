@@ -51,6 +51,7 @@ const taskSchema = new Schema(
     },
     attachments: {
       type: [String], // URL or file path
+      default: [],
       unique: false,
     },
   },

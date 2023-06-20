@@ -8,6 +8,7 @@ import {
   editTaskApi,
   cloneTaskApi,
   uploadTaskAttachmentsApi,
+  deleteAllTaskAttachmentsApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 import { message } from "antd";
@@ -75,6 +76,14 @@ export const uploadAttachments = createAsyncThunk(
     return data;
   }
 );
+// Upload Task attachments
+export const deleteAllTaskAttachments = createAsyncThunk(
+  "task/deleteAllTaskAttachments",
+  async (values: any) => {
+    const data = await deleteAllTaskAttachmentsApi(values);
+    return data;
+  }
+);
 
 export const taskSlice = createSlice({
   name: "task",
@@ -100,7 +109,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(allTasks.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         // state.isLoading = false;
         state.isError = null;
         state.error = "";
@@ -115,7 +123,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(getTask.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
         state.isError = null;
         state.error = "";
@@ -130,7 +137,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(newTask.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
         state.isError = false;
         state.error = "Task created!";
@@ -146,7 +152,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(editTask.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
         state.isError = null;
         state.error = "Task edited!";
@@ -162,7 +167,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(cloneTask.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
         state.isError = null;
         state.error = "Task Cloned!";
@@ -179,7 +183,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(deleteTask.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
         state.isError = false;
         state.error = "Task deleted!";
@@ -195,7 +198,6 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(getTasksStatuses.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
         state.isError = null;
         state.taskStatuses = payload.data;
@@ -210,12 +212,29 @@ export const taskSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(uploadAttachments.fulfilled, (state, { payload }: any) => {
-        message.destroy();
         state.isLoading = false;
-        state.isError = null;
-        // state.error = "Files uploaded successfully";
+        state.isError = false;
+        state.error = "Files uploaded successfully";
         state.task = payload.data;
-      });
+      })
+      // Delete all task attachments
+      .addCase(deleteAllTaskAttachments.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteAllTaskAttachments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(
+        deleteAllTaskAttachments.fulfilled,
+        (state, { payload }: any) => {
+          state.isLoading = false;
+          state.isError = false;
+          state.error = "Done 😃";
+          state.task = payload.data;
+        }
+      );
   },
 });
 

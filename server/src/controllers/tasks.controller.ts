@@ -1,16 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 import sharp from "sharp";
 import Task from "../models/task.model.js";
-import { BadRequestError, NotFoundError } from "../errors/Errors.js";
-import TaskStatuses from "../models/taskStatus.model.js";
-import { ICreateTaskPropsType } from "../types/global.js";
 import {
-  TASK_CLONE_SELECTED_FIELD,
-  TASK_POPULATE_SELECTED_FIELDS,
-  TASK_POPULATE_STATUS_SELECTED_FIELDS,
-} from "../config/constants/task.constants.js";
+  BadRequestError,
+  NotFoundError,
+  ServerError,
+} from "../errors/Errors.js";
+import TaskStatuses from "../models/taskStatus.model.js";
+import { ICreateTaskPropsType, TTaskDataType } from "../types/global.js";
+import { TASK_CLONE_SELECTED_FIELD } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
-import { uploadTasksAttachments } from "../utils/files.util.js";
+import {
+  deleteAllTaskAttachments,
+  uploadTasksAttachments,
+} from "../utils/files.util.js";
+import {
+  getAllPopulateTasks,
+  getPopulateTask,
+} from "../services/tasks.service.js";
 
 // Get all
 export const allTasks = async (
@@ -18,23 +25,7 @@ export const allTasks = async (
   res: Response,
   next: NextFunction
 ) => {
-  const tasks = await Task.find()
-    .populate({
-      path: "created_by",
-      select: ["firstName", "lastName", "email", "role", "imgSRC"],
-    })
-    .populate({
-      path: "assignee",
-      select: ["firstName", "lastName", "email", "role", "imgSRC"],
-    })
-    .populate({
-      path: "followers",
-      select: ["firstName", "lastName", "email", "role", "imgSRC"],
-    })
-    .populate({
-      path: "status",
-      select: ["_id", "label", "color"],
-    });
+  const tasks = await getAllPopulateTasks();
   res.status(201).send(tasks);
 };
 // Get one
@@ -49,23 +40,7 @@ export const getTask = async (
   }
 
   try {
-    const task = await Task.findById(taskId)
-      .populate({
-        path: "created_by",
-        select: TASK_POPULATE_SELECTED_FIELDS,
-      })
-      .populate({
-        path: "assignee",
-        select: TASK_POPULATE_SELECTED_FIELDS,
-      })
-      .populate({
-        path: "followers",
-        select: TASK_POPULATE_SELECTED_FIELDS,
-      })
-      .populate({
-        path: "status",
-        select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
-      });
+    const task = await getPopulateTask(taskId);
     if (!task) {
       return next(new NotFoundError(`Task: "${taskId}" not found`));
     }
@@ -138,9 +113,7 @@ export const editTask = async (
     const { taskId } = req.params;
     const editedTask = await Task.findByIdAndUpdate(
       taskId,
-      {
-        ...req.body,
-      },
+      { ...req.body },
       { new: true }
     );
 
@@ -303,23 +276,7 @@ export const uploadAttachments = async (
     if (!files || !taskId) return next(new BadRequestError());
 
     const filesNames = await uploadTasksAttachments(next, files, taskId);
-    const task = await Task.findById(taskId)
-      .populate({
-        path: "created_by",
-        select: TASK_POPULATE_SELECTED_FIELDS,
-      })
-      .populate({
-        path: "assignee",
-        select: TASK_POPULATE_SELECTED_FIELDS,
-      })
-      .populate({
-        path: "followers",
-        select: TASK_POPULATE_SELECTED_FIELDS,
-      })
-      .populate({
-        path: "status",
-        select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
-      });
+    const task = await getPopulateTask(taskId);
 
     filesNames?.forEach((item) => {
       const filePaths = `${process.env.BASE_ENDPOINT}${taskId}/${item}`;
@@ -336,6 +293,33 @@ export const uploadAttachments = async (
     task?.save();
 
     res.status(200).send({ error: false, data: task });
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
+  }
+};
+
+export const deleteAllAttachments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { taskId } = req.params;
+    const isAllDeleted = deleteAllTaskAttachments(taskId);
+
+    const task: any = await getPopulateTask(taskId);
+
+    if (task !== undefined) {
+      task.attachments = [];
+      task.save();
+    }
+
+    if (isAllDeleted === null) {
+      return next(new BadRequestError("No files to delete"));
+    }
+
+    res.status(200).send({ error: !isAllDeleted, data: task });
   } catch (error) {
     console.log(error);
     next(new BadRequestError(String(error)));

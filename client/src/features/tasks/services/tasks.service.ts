@@ -118,7 +118,7 @@ export async function uploadTaskAttachmentsApi({ taskId, attachments }: any) {
     const response = await api.post(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
         `tasks/task/uploadAttachments/${taskId}`,
-        attachments,
+      attachments,
       {
         headers: {
           "Content-Type": "multipart/form-data", // set the appropriate content type
@@ -126,6 +126,22 @@ export async function uploadTaskAttachmentsApi({ taskId, attachments }: any) {
       }
     );
 
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+
+export async function deleteAllTaskAttachmentsApi({ taskId }: any) {
+  try {
+    const response = await api.delete(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `tasks/task/uploadAttachments/${taskId}`
+    );
+console.log(response.data)
     return response.data;
   } catch (error: any) {
     console.log(error);

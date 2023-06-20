@@ -4,7 +4,7 @@ import { Button, Dropdown, MenuProps } from 'antd';
 import { AnyAction } from 'redux';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { uploadAttachments } from '../redux/taskSlice';
+import { deleteAllTaskAttachments, uploadAttachments } from '../redux/taskSlice';
 
 const TaskAttachments = ({ taskId, attachmentsCount }: { taskId: string; attachmentsCount: number }) => {
   const [files, setFiles] = useState<File[]>([]);
@@ -24,6 +24,10 @@ const TaskAttachments = ({ taskId, attachmentsCount }: { taskId: string; attachm
       formData.append('attachments', files[i]);
     }
     await dispatch<any>(uploadAttachments({ taskId: taskId, attachments: formData }));
+  }
+
+  async function handleDeleteAll() {
+    await dispatch<any>(deleteAllTaskAttachments({ taskId: taskId }));
   }
 
   useEffect(() => {
@@ -47,7 +51,7 @@ const TaskAttachments = ({ taskId, attachmentsCount }: { taskId: string; attachm
     },
     {
       key: '3',
-      label: <span>Delete all</span>,
+      label: <span onClick={() => handleDeleteAll()}>Delete all</span>,
     },
   ];
 

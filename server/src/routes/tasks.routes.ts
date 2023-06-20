@@ -10,11 +10,12 @@ import {
   getTaskStatus,
   removeTaskStatus,
   uploadAttachments,
+  deleteAllAttachments,
 } from "../controllers/tasks.controller.js";
 import { upload } from "../config/multerConfig.js";
-// import multer from "multer";
+
 const router = express.Router();
-// const upload = multer({ dest: "uploads/" });
+
 // All tasks routes
 router.get("/", allTasks);
 router.post("/", createTask);
@@ -22,11 +23,14 @@ router.put("/:taskId", editTask);
 router.delete("/:taskId", deleteTask);
 router.get("/:taskId", getTask);
 router.post("/clone/:taskId", cloneTask);
+
+// Tasks Attachments
 router.post(
   "/task/uploadAttachments/:taskId",
   upload.array("attachments"),
   uploadAttachments
 );
+router.delete("/task/uploadAttachments/:taskId", deleteAllAttachments);
 
 // Task Statuses
 router.get("/task/statuses", getTaskStatus);

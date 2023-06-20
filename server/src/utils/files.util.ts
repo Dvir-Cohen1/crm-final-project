@@ -76,3 +76,24 @@ export async function uploadTasksAttachments(
     next();
   }
 }
+
+export function deleteAllTaskAttachments(folderId: string) {
+  try {
+    const folderPath = `./public/${folderId}`;
+    const files = fs.readdirSync(folderPath);
+
+    if (!files || files.length <= 0) {
+      return null;
+    }
+
+    files.forEach((file) => {
+      const filePath = `./public/${folderId}/${file}`;
+      fs.unlinkSync(filePath);
+    });
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}

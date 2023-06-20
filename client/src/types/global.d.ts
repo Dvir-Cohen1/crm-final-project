@@ -142,7 +142,7 @@ export type AddTaskRegisterInputs = {
   assignee?: [];
   followers?: [];
   due_date?: string;
-  Attachments?: [];
+  attachments?: [];
 };
 
 export interface TaskState {
