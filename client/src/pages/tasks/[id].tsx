@@ -20,14 +20,9 @@ import { Collapse, Col, Row, Button, Dropdown, MenuProps, Space, Image } from 'a
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
 import { Input } from 'antd';
-import EditPrioritySelect from '@/features/tasks/components/forms/EditPrioritySelect';
-import EditAssigneeSelect from '@/features/tasks/components/forms/EditAssigneeSelect';
-import EditDueDate from '@/features/tasks/components/forms/EditDueDate';
 import useEditTask from '@/features/tasks/hooks/useEditTask';
-import { formatDateTimeToString } from '@/utils/date';
 import TypeTags from '@/features/tasks/components/TypeTags';
-
-const { Panel } = Collapse;
+import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
 
 const Task = () => {
   const router = useRouter();
@@ -58,9 +53,6 @@ const Task = () => {
     // Listen for any changes in task data and get updated data
   }, [task])
 
-  const onChange = (key: string | string[]) => {
-    console.log(key);
-  };
 
   // Performe edit task when clicking enter inside the inputs
   const { handleEditTask } = useEditTask();
@@ -72,11 +64,6 @@ const Task = () => {
     { title: 'Export', icon: <ExportOutlined /> },
   ]
 
-  const onMenuClick: MenuProps['onClick'] = (e) => {
-    console.log('click', e);
-  };
-
-  const attachmentsCount = task?.attachments?.length
   return (
     <Layout>
       {/* Task title section */}
@@ -133,15 +120,7 @@ const Task = () => {
               </p>
             </div>
             <div className="task-attachments">
-              <TaskAttachments taskId={task?._id} attachmentsCount={attachmentsCount} />
-
-              <div className='flex flex-wrap justify-between gap-3 my-4'>
-                <Image.PreviewGroup >
-                  {task?.attachments?.map((item: any, indexId: any) => (
-                    <Image className='rounded' width={170} height={110} key={indexId} src={item} alt={`task-attachments-${task?._id}`} />
-                  ))}
-                </Image.PreviewGroup>
-              </div>
+              <TaskAttachments taskId={task?._id} attachments={task?.attachments} />
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>
@@ -149,84 +128,7 @@ const Task = () => {
 
         {/* right Col */}
         <Col span={8} xs={24} md={8} >
-          <section>
-
-            <div className='mb-5 flex gap-3'>
-              <StatusDropDown
-                status={task?.status}
-                taskId={task?._id}
-                getTask={getTask}
-              />
-
-              <Button
-                type="default"
-                className='font-semibold'
-                icon={<SlidersOutlined />}
-              >
-                Actions
-              </Button>
-
-            </div>
-
-            <Collapse defaultActiveKey={['1']} onChange={onChange}>
-              <Panel header="Details" key="1">
-                <Col className='task-details-ul' >
-                  {/* Assignee */}
-                  <Row>
-                    <Col span={6} >
-                      <h6>
-                        Assignee:
-                      </h6>
-                    </Col>
-                    <Col span={18} >
-                      <EditAssigneeSelect assignee={task?.assignee} handleEditTask={handleEditTask} />
-                    </Col>
-                  </Row>
-                  {/* Priority */}
-                  <Row>
-                    <Col span={6} >
-                      <h6>
-                        Priority:
-                      </h6>
-                    </Col>
-                    <Col span={18} >
-                      <EditPrioritySelect handleEditTask={handleEditTask} defaultValue={task?.priority} />
-                    </Col>
-                  </Row>
-                  {/* Due Date */}
-                  <Row>
-                    <Col span={6} >
-                      <h6>
-                        Due date:
-                      </h6>
-                    </Col>
-                    <Col span={18} >
-                      <EditDueDate dueDate={task?.due_date} handleEditTask={handleEditTask} />
-                    </Col>
-                  </Row>
-                  {/* Created by */}
-                  <Row>
-                    <Col span={6} >
-                      <h6>
-                        Reporter:
-                      </h6>
-                    </Col>
-                    <Col span={18} >
-                      <div className="font-semibold">{task?.created_by?.firstName} {task?.created_by?.lastName}</div>
-                    </Col>
-                  </Row>
-                </Col>
-              </Panel>
-            </Collapse>
-
-
-            <div className='mx-4 mt-4 text-xs tect-[#626f86]'>
-              Created {formatDateTimeToString(task?.createdAt)}
-            </div>
-            <div className='mx-4 md:my-2 mt-2 mb-5 text-xs tect-[#626f86]'>
-              Updated {formatDateTimeToString(task?.updatedAt)}
-            </div>
-          </section>
+          <TaskDetailsWidget task={task} handleEditTask={handleEditTask} />
         </Col>
       </Row>
     </Layout>

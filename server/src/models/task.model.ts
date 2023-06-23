@@ -1,5 +1,35 @@
 import { Schema, model } from "mongoose";
 
+const fileSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    path: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: Number,
+      required: true,
+    },
+    uploadedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  {
+    _id: false, // Disable generating an _id for each file object
+    timestamps: true,
+  }
+);
+
 const taskSchema = new Schema(
   {
     slug: {
@@ -50,7 +80,7 @@ const taskSchema = new Schema(
       unique: false,
     },
     attachments: {
-      type: [String], // URL or file path
+      type: [fileSchema],
       default: [],
       unique: false,
     },

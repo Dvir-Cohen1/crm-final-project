@@ -459,3 +459,12 @@ a {
 @media (min-width: 1200px) {
 	/* Add your styles here */
 }
+
+.attachment-details-container {
+	font-size: 12px;
+	padding: 7px;
+	border-radius: 0 0 5px 5px;
+	border: solif black;
+	border-width: 0 1px 1px 1px;
+	max-width: 200px;
+}

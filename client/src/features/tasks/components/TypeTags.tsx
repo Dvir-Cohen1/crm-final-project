@@ -20,7 +20,6 @@ const TypeTags = ({ type, handleEditTask }: { type: string, handleEditTask: Func
                     />
                </Tooltip>
           </span>
-
      )
 }
 

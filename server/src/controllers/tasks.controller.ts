@@ -10,10 +10,7 @@ import TaskStatuses from "../models/taskStatus.model.js";
 import { ICreateTaskPropsType, TTaskDataType } from "../types/global.js";
 import { TASK_CLONE_SELECTED_FIELD } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
-import {
-  deleteAllTaskAttachments,
-  uploadTasksAttachments,
-} from "../utils/files.util.js";
+import { deleteAllTaskAttachments, uploadfiles } from "../utils/files.util.js";
 import {
   getAllPopulateTasks,
   getPopulateTask,
@@ -269,28 +266,45 @@ export const uploadAttachments = async (
   next: NextFunction
 ) => {
   try {
-    // const { taskId, attachments } = req.body;
     const { taskId } = req.params;
-    const files = req.files;
+    const { userId } = req as ICreateTaskPropsType;
+    const files: any = req.files;
 
-    if (!files || !taskId) return next(new BadRequestError());
-
-    const filesNames = await uploadTasksAttachments(next, files, taskId);
+    if (!files || !files.length || !taskId) return next(new BadRequestError());
     const task = await getPopulateTask(taskId);
 
-    filesNames?.forEach((item) => {
-      const filePaths = `${process.env.BASE_ENDPOINT}${taskId}/${item}`;
-      const isFileExist = task?.attachments.some((item) => item === filePaths);
+    // Get and filter the files that allready existed in the task
+    const existingFileNames = task?.attachments.map((obj: any) => obj.name);
+    const filteredFiles = files.filter(
+      (file: any) => !existingFileNames?.includes(file.originalname)
+    );
 
-      if (isFileExist) {
-        return;
-      }
+    if (filteredFiles.length === 0) {
+      return next(
+        new BadRequestError(files.length > 1 ? "files exist" : "file exist")
+      );
+    }
 
-      // push attachments to task
-      task?.attachments.push(filePaths);
+    // Upload the files
+    const uploadedFiles: any = await uploadfiles(next, filteredFiles, taskId);
+
+    // Push uploaded files to task attachments
+    if (uploadedFiles?.isError) {
+      return next(new BadRequestError(String(uploadedFiles)));
+    }
+
+    uploadedFiles?.forEach((item: any) => {
+      const filePath = `${process.env.BASE_ENDPOINT}${taskId}/${item.name}`;
+      task?.attachments.push({
+        name: item.name,
+        type: item.type,
+        size: item.size,
+        path: filePath,
+        uploadedBy: userId,
+      });
     });
 
-    task?.save();
+    await task?.save();
 
     res.status(200).send({ error: false, data: task });
   } catch (error) {

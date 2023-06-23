@@ -32,7 +32,7 @@ export function deleteFile(filename: string) {
 }
 
 // Upload Files
-export async function uploadTasksAttachments(
+export async function uploadfiles(
   next: NextFunction,
   files: Express.Multer.File | {} | undefined,
   folderId: string
@@ -49,25 +49,36 @@ export async function uploadTasksAttachments(
       fs.mkdirSync(folderPath);
     }
 
-    const uploadPromises: Promise<string>[] = [];
+    type fileData = {
+      name: string;
+      type: string;
+      size: number;
+    };
+
+    const uploadPromises: Promise<fileData>[] = [];
 
     Object.values(files).forEach((file: Express.Multer.File) => {
       const filePath = path.join(folderPath, file.filename);
       const readStream = fs.createReadStream(file.path);
       const writeStream = fs.createWriteStream(filePath);
 
-      const uploadPromise = new Promise<string>((resolve, reject) => {
+      const fileData = {
+        name: file.filename,
+        type: file.mimetype,
+        size: file.size,
+      };
+
+      const uploadPromise = new Promise<fileData>((resolve, reject) => {
         readStream
           .pipe(
             sharp().resize(1920).on("error", reject) // Resize images with sharp
           )
           .pipe(
             writeStream
-              .on("finish", () => resolve(file.filename))
+              .on("finish", () => resolve(fileData))
               .on("error", reject)
           );
       });
-
       uploadPromises.push(uploadPromise);
     });
 
@@ -75,7 +86,7 @@ export async function uploadTasksAttachments(
 
     return uploadedPaths;
   } catch (error) {
-    console.log(error);
+    return { isError: true, error };
   }
 }
 

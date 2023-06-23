@@ -1,12 +1,25 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Dropdown, MenuProps } from 'antd';
+import { Button, Dropdown, MenuProps, Image } from 'antd';
 import { AnyAction } from 'redux';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { deleteAllTaskAttachments, uploadAttachments } from '../redux/taskSlice';
 
-const TaskAttachments = ({ taskId, attachmentsCount }: { taskId: string; attachmentsCount: number }) => {
+
+
+
+
+// Redux
+
+
+
+import { formatDateTimeToString } from '@/utils/date';
+
+
+const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments: [] }) => {
+  const attachmentsCount = attachments?.length
+
   const [files, setFiles] = useState<File[]>([]);
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +58,7 @@ const TaskAttachments = ({ taskId, attachmentsCount }: { taskId: string; attachm
       key: '2',
       label: (
         <span>
-          Download all {attachmentsCount !== 0 && `(${attachmentsCount})`}
+          Download all .zip {attachmentsCount !== 0 && `(${attachmentsCount})`}
         </span>
       ),
     },
@@ -83,6 +96,19 @@ const TaskAttachments = ({ taskId, attachmentsCount }: { taskId: string; attachm
             />
           </span>
         </div>
+      </div>
+      <div className='flex flex-wrap justify-between gap-3 my-4'>
+        <Image.PreviewGroup >
+          {attachments?.map((item: any, indexId: any) => (
+            <div key={indexId}>
+              <Image className='rounded' width={200} height={110} key={indexId} src={item.path} alt={`task-attachments-${taskId}`} />
+              <div className="attachment-details-container">
+                <div className='font-semibold'>{item.name}</div>
+                <div>{formatDateTimeToString(item.createdAt)}</div>
+              </div>
+            </div>
+          ))}
+        </Image.PreviewGroup>
       </div>
     </>
   );
