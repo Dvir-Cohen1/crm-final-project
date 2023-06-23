@@ -1,8 +1,9 @@
 import { NextFunction } from "express";
 import { BadRequestError } from "../errors/Errors.js";
-import fs from "fs";
+import fs, { createReadStream } from "fs";
 import path from "path";
 import sharp from "sharp";
+import archiver from "archiver";
 
 type File = {
   filename: string;
@@ -30,6 +31,7 @@ export function deleteFile(filename: string) {
   return filename;
 }
 
+// Upload Files
 export async function uploadTasksAttachments(
   next: NextFunction,
   files: Express.Multer.File | {} | undefined,
@@ -73,10 +75,11 @@ export async function uploadTasksAttachments(
 
     return uploadedPaths;
   } catch (error) {
-    next();
+    console.log(error);
   }
 }
 
+// Delete all files
 export function deleteAllTaskAttachments(folderId: string) {
   try {
     const folderPath = `./public/${folderId}`;
@@ -97,3 +100,41 @@ export function deleteAllTaskAttachments(folderId: string) {
     return false;
   }
 }
+
+// // Download all files as .zip
+// export function downloadAllTaskAttachments(folderId: string) {
+//   try {
+//     const folderPath = `./public/${folderId}`;
+//     const files = fs.readdirSync(folderPath);
+
+//     if (!files || files.length <= 0) {
+//       return null;
+//     }
+
+//     const zipFilePath = `./public/${folderId}.zip`;
+//     const output = fs.createWriteStream(zipFilePath);
+//     const archive = archiver("zip", { zlib: { level: 9 } });
+
+//     output.on("close", () => {
+//       console.log("Zip file created:", zipFilePath);
+//     });
+
+//     archive.on("error", (err: any) => {
+//       throw err;
+//     });
+
+//     archive.pipe(output);
+
+//     files.forEach((file) => {
+//       const filePath = path.join(folderPath, file);
+//       archive.file(filePath, { name: file });
+//     });
+
+//     archive.finalize();
+
+//     return zipFilePath;
+//   } catch (error) {
+//     console.log(error);
+//     return null;
+//   }
+// }

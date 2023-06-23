@@ -1,19 +1,20 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import AuthNavbar from './AuthNavbar'
 import Image from 'next/image'
 import store from '@/redux/store';
 import { LayoutProps } from '@/types/global';
 import { useRouter } from 'next/router';
-import { getCookie } from '@/utils/cookies';
-import { withAuth } from '@/withAuth';
+
 import Link from 'next/link';
 
 const AuthLayout = ({ children }: LayoutProps) => {
+
      const router = useRouter();
      const { isAuthenticated } = store.getState().auth
+
+     // Redirect the user to home page if authenticated
      useEffect(() => {
           if (isAuthenticated === true) {
-               // Redirect the user to the login page if they are not authenticated
                router.replace('/');
           }
      }, [isAuthenticated])
@@ -47,6 +48,5 @@ const AuthLayout = ({ children }: LayoutProps) => {
           </section>
      )
 }
-
 
 export default AuthLayout;

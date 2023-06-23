@@ -37,7 +37,7 @@ const Task = () => {
 
   const handlePinItem = async (itemId: any) => {
     await dispatch(pinItem(itemId))
-    dispatch(isLoginByToken())
+    await dispatch(isLoginByToken())
   };
 
   // Get the task state from redux slices

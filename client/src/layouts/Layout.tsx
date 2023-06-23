@@ -6,7 +6,7 @@ import SkeletonLoader from '@/components/common/SkeletonLoader';
 import { LayoutProps } from '@/types/global';
 import { AuthProvider } from '@/context/AuthenticationContext';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
-import Footer from './Footer/footer';
+import Footer from './Footer/Footer';
 
 
 

@@ -141,7 +141,6 @@ export async function deleteAllTaskAttachmentsApi({ taskId }: any) {
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
         `tasks/task/uploadAttachments/${taskId}`
     );
-console.log(response.data)
     return response.data;
   } catch (error: any) {
     console.log(error);

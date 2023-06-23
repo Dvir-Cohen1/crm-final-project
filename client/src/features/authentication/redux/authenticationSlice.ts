@@ -92,13 +92,14 @@ export const authSlice = createSlice({
         state.isError = true;
       })
       .addCase(loginByPayload.fulfilled, (state, { payload }: any) => {
+        setCookie("ac-token", payload.token);
         state.isLoading = false;
         state.isRegister = true;
         state.error = "";
         state.isError = false;
         state.user = payload.data;
         state.isAuthenticated = true;
-        setCookie("ac-token", payload.token);
+        router.push("/")
       })
       // Handle isLogin?
       .addCase(isLoginByToken.pending, (state, action) => {
@@ -121,6 +122,7 @@ export const authSlice = createSlice({
         state.error = "";
         state.user = payload.user;
         state.isAuthenticated = payload.isAuthenticated;
+        
       })
       // Handle logout
       .addCase(logoutByToken.pending, (state, action) => {

@@ -306,7 +306,7 @@ export const deleteAllAttachments = async (
 ) => {
   try {
     const { taskId } = req.params;
-    const isAllDeleted = deleteAllTaskAttachments(taskId);
+    const isAllDeleted: boolean | null = deleteAllTaskAttachments(taskId);
 
     const task: any = await getPopulateTask(taskId);
 

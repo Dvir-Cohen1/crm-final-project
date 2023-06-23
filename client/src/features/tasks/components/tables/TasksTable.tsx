@@ -20,7 +20,7 @@ const TasksTable = ({ tasks, handleDelete, tableKey, setTableKey }: any) => {
      // Handle Pin Task dispatch to redux
      const handlePinItem = async (itemId: any) => {
           await dispatch(pinItem(itemId))
-          dispatch(isLoginByToken())
+          await dispatch(isLoginByToken())
      };
 
      const columns = getColumns({
