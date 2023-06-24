@@ -464,10 +464,12 @@ a {
 .attachment-details-container {
 	font-size: 12px;
 	padding: 7px;
+	color: #172b4d;
 	border-radius: 0 0 5px 5px;
-	border: solif black;
+	border: solid #d2d8e1;
 	border-width: 0 1px 1px 1px;
 	max-width: 200px;
+	min-height: 60px;
 }
 
 .attachments-preview-group{
@@ -499,3 +501,10 @@ a {
 .attachment-card:hover .attachment-actions-button {
 	display: flex;
 }
+
+
+@media print {
+	.no-print {
+	  display: none !important;
+	}
+   }

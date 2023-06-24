@@ -11,6 +11,7 @@ import {
   removeTaskStatus,
   uploadAttachments,
   deleteAllAttachments,
+  deleteOneAttachment,
 } from "../controllers/tasks.controller.js";
 import { upload } from "../config/multerConfig.js";
 
@@ -30,7 +31,8 @@ router.post(
   upload.array("attachments"),
   uploadAttachments
 );
-router.delete("/task/uploadAttachments/:taskId", deleteAllAttachments);
+router.delete("/task/deleteAllAttachments/:taskId", deleteAllAttachments);
+router.delete("/task/deleteOneAttachment/:taskId/:fileName", deleteOneAttachment);
 
 // Task Statuses
 router.get("/task/statuses", getTaskStatus);

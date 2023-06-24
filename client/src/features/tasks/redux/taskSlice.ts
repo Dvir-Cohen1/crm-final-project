@@ -9,6 +9,7 @@ import {
   cloneTaskApi,
   uploadTaskAttachmentsApi,
   deleteAllTaskAttachmentsApi,
+  deleteOneTaskAttachmentApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 import { message } from "antd";
@@ -76,11 +77,19 @@ export const uploadAttachments = createAsyncThunk(
     return data;
   }
 );
-// Upload Task attachments
+// Delete all task attachments
 export const deleteAllTaskAttachments = createAsyncThunk(
   "task/deleteAllTaskAttachments",
   async (values: any) => {
     const data = await deleteAllTaskAttachmentsApi(values);
+    return data;
+  }
+);
+// Delete one task attachment
+export const deleteOneTaskAttachment = createAsyncThunk(
+  "task/deleteOneTaskAttachment",
+  async (values: any) => {
+    const data = await deleteOneTaskAttachmentApi(values);
     return data;
   }
 );
@@ -234,7 +243,25 @@ export const taskSlice = createSlice({
           state.error = "Done 😃";
           state.task = payload.data;
         }
-      );
+      )
+      // Delete One task attachments
+      .addCase(deleteOneTaskAttachment.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteOneTaskAttachment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(
+        deleteOneTaskAttachment.fulfilled,
+        (state, { payload }: any) => {
+          state.isLoading = false;
+          state.isError = false;
+          state.error = "Done 😃";
+          state.task = payload.data;
+        }
+      )
   },
 });
 

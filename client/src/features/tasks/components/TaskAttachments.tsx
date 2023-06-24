@@ -1,43 +1,22 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PlusOutlined, EllipsisOutlined, DeleteOutlined, CloudDownloadOutlined } from '@ant-design/icons';
-import { Button, Dropdown, MenuProps, Image } from 'antd';
-import { AnyAction } from 'redux';
-import { useDispatch } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { deleteAllTaskAttachments, uploadAttachments } from '../redux/taskSlice';
+import { Button, Dropdown, MenuProps, Image, Tooltip, Popconfirm } from 'antd';
 import { formatDateTimeToString } from '@/utils/date';
+import useAttachments from '../hooks/useAttachments';
+import { convertFileSizeToKB } from '@/utils/general';
 
 const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments: [] }) => {
-  const attachmentsCount = attachments?.length
 
-  const [files, setFiles] = useState<File[]>([]);
-  const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // show all files logic
+  const [showAllAttachments, setShowAllAttachments] = useState(false);
+  const visibleAttachments = showAllAttachments ? attachments : attachments?.slice(0, 5);
+  const remainingAttachmentsCount = attachments?.length - visibleAttachments?.length;
+  const handleToggleAttachments = () => {
+    setShowAllAttachments(!showAllAttachments);
+  };
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files) {
-      const fileList = Array.from(event.target.files);
-      setFiles(fileList);
-    }
-  }
-
-  async function handleUpload() {
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append('attachments', files[i]);
-    }
-    await dispatch<any>(uploadAttachments({ taskId: taskId, attachments: formData }));
-  }
-
-  async function handleDeleteAll() {
-    await dispatch<any>(deleteAllTaskAttachments({ taskId: taskId }));
-  }
-
-  useEffect(() => {
-    if (files.length > 0) {
-      handleUpload();
-    }
-  }, [files]);
+  // files upload - custom hook
+  const { fileInputRef, handleFileChange, handleDeleteAll, handleDeleteOne, handleImageDownload } = useAttachments({ taskId });
 
   const attachmentsSettingDropDown: MenuProps['items'] = [
     {
@@ -48,13 +27,16 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
       key: '2',
       label: (
         <span>
-          Download all .zip {attachmentsCount !== 0 && `(${attachmentsCount})`}
+          Download all .zip {attachments?.length !== 0 && `(${attachments?.length})`}
         </span>
       ),
     },
     {
       key: '3',
-      label: <span onClick={() => handleDeleteAll()}>Delete all</span>,
+      label: <span onClick={() => handleDeleteAll()}>
+        Delete all
+      
+      </span>,
     },
   ];
 
@@ -62,10 +44,10 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
     <>
       <div className="flex justify-between place-items-center attachments-setting-dropdown-container">
         <h2 className="mb-4">
-          Attachments {attachmentsCount !== 0 && `(${attachmentsCount})`}
+          Attachments {attachments?.length !== 0 && `(${attachments?.length})`}
         </h2>
         <div>
-          <span className="flex gap-3">
+          <div className="flex gap-3">
             <Dropdown
               overlayClassName="share-items-dropdown"
               menu={{ items: attachmentsSettingDropDown }}
@@ -84,31 +66,51 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
               style={{ display: 'none' }}
               onChange={handleFileChange}
             />
-          </span>
+          </div>
         </div>
       </div>
       <div className='attachments-preview-group flex flex-wrap gap-3 my-4'>
         <Image.PreviewGroup >
-          {attachments?.map((item: any, indexId: any) => (
+          {visibleAttachments?.map((item: any, indexId: any) => (
             <div className='relative attachment-card' key={indexId}>
-              <Image className='rounded' width={200} height={110} key={indexId} src={item.path} alt={`task-attachments-${taskId}`} />
-
-              <div className='attachment-actions-button mt-auto flex gap-2 absolute top-0 right-0 p-2 z-50'>
-                <Button size='small' type='ghost'>
-                  <DeleteOutlined />
-                </Button>
-                <Button size='small' type='ghost'>
-                  <CloudDownloadOutlined />
-                </Button>
-              </div>
-              <div className="attachment-details-container">
-                <div className='font-semibold'>{item.name}</div>
-                <div>{formatDateTimeToString(item.createdAt)}</div>
-              </div>
+              <Tooltip placement='bottom' title={item.name}>
+                <Image className='rounded' width={200} height={110} key={indexId} src={item.path} alt={`task-attachments-${taskId}`} />
+                <div className='attachment-actions-button mt-auto flex gap-2 absolute top-0 right-0 p-2 z-50'>
+                  <Popconfirm
+                    title={`Delete ${item.name}`}
+                    description="Are you sure to delete this attachment?"
+                    onConfirm={() => handleDeleteOne(item.name)}
+                    // onCancel={() => {}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button size='small' type='ghost'>
+                      <DeleteOutlined />
+                    </Button>
+                  </Popconfirm>
+                  <Button size='small' type='ghost' onClick={() => handleImageDownload(item.path, item.name)}>
+                    <CloudDownloadOutlined />
+                  </Button>
+                </div>
+                <div className="attachment-details-container flex justify-between">
+                  <div className='flex flex-col'>
+                    <div className='font-semibold mb-2'>{item.name}</div>
+                    <div>{formatDateTimeToString(item.createdAt)}</div>
+                  </div>
+                  <div className="mt-auto">{convertFileSizeToKB(item.size)}KB</div>
+                </div>
+              </Tooltip>
             </div>
           ))}
         </Image.PreviewGroup>
       </div>
+      {attachments?.length > 5 && (
+        <div>
+          <Button onClick={handleToggleAttachments}>
+            {showAllAttachments ? 'Hide' : `Show all (${remainingAttachmentsCount})`}
+          </Button>
+        </div>
+      )}
     </>
   );
 };

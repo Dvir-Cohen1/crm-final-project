@@ -48,7 +48,7 @@ export async function newTaskApi(data: {}) {
 //
 // Edit Task API
 //
-export async function editTaskApi(data: any) {
+export async function editTaskApi(data: { taskId: string; taskData: {} }) {
   // console.log(taskData)
   try {
     const response = await api.put(
@@ -66,7 +66,11 @@ export async function editTaskApi(data: any) {
 //
 // Clone Task API
 //
-export async function cloneTaskApi(data: any) {
+export async function cloneTaskApi(data: {
+  taskId: string;
+  cloneOptions: {};
+  clonedTaskTitle: boolean;
+}) {
   try {
     const response = await api.post(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
@@ -113,7 +117,13 @@ export async function getTasksStatusesApi() {
 //
 // Upload task attachments
 //
-export async function uploadTaskAttachmentsApi({ taskId, attachments }: any) {
+export async function uploadTaskAttachmentsApi({
+  taskId,
+  attachments,
+}: {
+  taskId: string;
+  attachments: [];
+}) {
   try {
     const response = await api.post(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
@@ -135,11 +145,35 @@ export async function uploadTaskAttachmentsApi({ taskId, attachments }: any) {
   }
 }
 
-export async function deleteAllTaskAttachmentsApi({ taskId }: any) {
+export async function deleteAllTaskAttachmentsApi({
+  taskId,
+}: {
+  taskId: string;
+}) {
   try {
     const response = await api.delete(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
-        `tasks/task/uploadAttachments/${taskId}`
+        `tasks/task/deleteAllAttachments/${taskId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+export async function deleteOneTaskAttachmentApi({
+  taskId,
+  fileName,
+}: {
+  taskId: string;
+  fileName: string;
+}) {
+  try {
+    const response = await api.delete(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `tasks/task/deleteOneAttachment/${taskId}/${fileName}`
     );
     return response.data;
   } catch (error: any) {

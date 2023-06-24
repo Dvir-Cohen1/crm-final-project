@@ -9,7 +9,11 @@ import TaskStatuses from "../models/taskStatus.model.js";
 import { ICreateTaskPropsType } from "../types/global.js";
 import { TASK_CLONE_SELECTED_FIELD } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
-import { deleteAllTaskAttachments, uploadfiles } from "../utils/files.util.js";
+import {
+  deleteAllTaskAttachments,
+  deleteOneTaskAttachment,
+  uploadfiles,
+} from "../utils/files.util.js";
 import {
   getAllPopulateTasks,
   getPopulateTask,
@@ -272,6 +276,7 @@ export const uploadAttachments = async (
     const files: any = req.files;
 
     if (!files || !files.length || !taskId) return next(new BadRequestError());
+
     const task = await getPopulateTask(taskId);
 
     // Get and filter the files that allready existed in the task
@@ -335,6 +340,42 @@ export const deleteAllAttachments = async (
     }
 
     res.status(200).send({ error: !isAllDeleted, data: task });
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
+  }
+};
+export const deleteOneAttachment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { taskId, fileName } = req.params;
+
+    if (!taskId || !fileName) {
+      return next(new BadRequestError("TaskId / fileName not provided"));
+    }
+
+    const isOneDeleted: boolean | null = deleteOneTaskAttachment(
+      taskId,
+      fileName
+    );
+
+    const task: any = await getPopulateTask(taskId);
+
+    if (task !== undefined) {
+      task.attachments = task.attachments.filter(
+        (attachment: { name: string }) => attachment.name !== fileName
+      );
+      task.save();
+    }
+
+    if (isOneDeleted === null) {
+      return next(new BadRequestError("No files to delete"));
+    }
+
+    res.status(200).send({ error: !isOneDeleted, data: task });
   } catch (error) {
     console.log(error);
     next(new BadRequestError(String(error)));

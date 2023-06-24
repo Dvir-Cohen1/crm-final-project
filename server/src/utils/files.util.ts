@@ -111,6 +111,27 @@ export function deleteAllTaskAttachments(folderId: string) {
     return false;
   }
 }
+export function deleteOneTaskAttachment(folderId: string, fileName: string) {
+  try {
+    const folderPath = `./public/${folderId}`;
+    const files = fs.readdirSync(folderPath);
+
+    if (!files || files.length <= 0) {
+      return null;
+    }
+
+    const filePath = `./public/${folderId}/${fileName}`;
+    fs.unlinkSync(filePath);
+    // files.forEach((file) => {
+
+    // });
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 
 // // Download all files as .zip
 // export function downloadAllTaskAttachments(folderId: string) {

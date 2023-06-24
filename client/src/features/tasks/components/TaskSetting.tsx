@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Dropdown, Image, Space } from 'antd';
-import { EllipsisOutlined, ShareAltOutlined, EyeFilled, PlusOutlined, WhatsAppOutlined, MailOutlined, LinkOutlined, EyeOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, ShareAltOutlined, EyeFilled, PlusOutlined, WhatsAppOutlined, MailOutlined, LinkOutlined, EyeOutlined, PhoneOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import PopConfirm from '@/components/common/PopConfirm';
 import Link from 'next/link';
@@ -170,7 +170,17 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
 
      return (
           <Space size="middle" className='setting-buttons-container' wrap>
-               <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel}/>
+               <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel} />
+
+               <a href="tel:+4733378901">
+                    <Button
+                         size='middle'
+                         type="text"
+                         className='font-semibold'
+                         icon={<PhoneOutlined />}
+                    />
+               </a>
+
                {/* followers dropdown */}
                <Dropdown overlayClassName='followers-items-dropdown' placement="bottomRight" menu={{ items: followersItems }} trigger={['click']}>
                     {taskFollowers?.length >= 1 ?

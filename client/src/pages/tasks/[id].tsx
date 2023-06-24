@@ -13,16 +13,17 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 //  Ant Design
 import {
-  StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, SlidersOutlined, LockOutlined, UnlockOutlined
+  StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, PlusOutlined
 } from '@ant-design/icons';
-import StatusDropDown from '@/features/tasks/components/StatusDropDown';
-import { Collapse, Col, Row, Button, Dropdown, MenuProps, Space, Image } from 'antd';
+
+import { Col, Row, Button } from 'antd';
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
 import { Input } from 'antd';
 import useEditTask from '@/features/tasks/hooks/useEditTask';
 import TypeTags from '@/features/tasks/components/TypeTags';
 import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
+import useFileUpload from '@/features/tasks/hooks/useAttachments';
 
 const Task = () => {
   const router = useRouter();
@@ -58,18 +59,17 @@ const Task = () => {
   const { handleEditTask } = useEditTask();
 
   const mainTaskActionButtons = [
-    { title: 'Attach', icon: <PaperClipOutlined /> },
     { title: 'Link issue', icon: <ClusterOutlined /> },
     { title: 'Reports', icon: <FilePdfOutlined /> },
     { title: 'Export', icon: <ExportOutlined /> },
   ]
-
+  const { fileInputRef, handleFileChange, handleDeleteAll } = useFileUpload({ taskId: id });
   return (
     <Layout>
       {/* Task title section */}
       <section className='flex place-items-center gap-2'>
         <Button
-          className='mb-4'
+          className='mb-4 no-print'
           key={task?._id}
           onClick={() => handlePinItem(task?._id)}
           type="text"
@@ -85,15 +85,33 @@ const Task = () => {
 
         <TypeTags type={task?.type} handleEditTask={handleEditTask} />
 
-        <h2 className='text-2xl'>
+        <h2 className='text-2xl w-full'>
           <Input style={{ color: "#000" }} name='title' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
             className='edit-task-input text-xl' defaultValue={task?.title} />
         </h2>
       </section>
 
       {/* Main actions section */}
-      <section className='flex justify-between flex-wrap gap-3 mb-3'>
+      <section className='flex justify-between flex-wrap gap-3 mb-3 no-print'>
         <div className='flex flex-wrap gap-3'>
+          <Button 
+          id='upload-attachments' 
+          type='ghost' 
+          className='font-semibold custom-ghost-button' 
+          icon={<PaperClipOutlined />} 
+          onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
+          >
+            Attach
+          </Button>
+        <input
+          id="file-upload"
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept="*"
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+        />
           {
             mainTaskActionButtons.map((item, indexId) => {
               return (
@@ -101,7 +119,10 @@ const Task = () => {
               )
             })
           }
+          
         </div>
+
+
 
         <TaskSetting taskId={task?._id} taskTitle={task?.title} taskFollowers={task?.followers} handleEditTask={handleEditTask} />
       </section>
@@ -131,7 +152,7 @@ const Task = () => {
           <TaskDetailsWidget task={task} handleEditTask={handleEditTask} />
         </Col>
       </Row>
-    </Layout>
+    </Layout >
   )
 }
 
