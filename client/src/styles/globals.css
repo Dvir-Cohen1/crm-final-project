@@ -213,12 +213,10 @@ a {
 .edit-task-input {
 	border: 1px solid transparent;
 	border-radius: 3px;
-	/* border: 0; */
 	border-color: transparent;
 	background: transparent;
-	/* font-size: 20px; */
-	width: 400px;
-	/* padding: 3px; */
+	width: -webkit-fill-available;
+
 }
 
 .edit-task-input::placeholder {
@@ -460,6 +458,9 @@ a {
 	/* Add your styles here */
 }
 
+
+/* task attachments */
+
 .attachment-details-container {
 	font-size: 12px;
 	padding: 7px;
@@ -467,4 +468,34 @@ a {
 	border: solif black;
 	border-width: 0 1px 1px 1px;
 	max-width: 200px;
+}
+
+.attachments-preview-group{
+	gap: 24px;
+}
+.attachments-preview-group .ant-image .ant-image-mask {
+	background-color: #091e427d;
+}
+
+
+.attachments-preview-group .ant-image-mask-info {
+	display: none !important;
+}
+
+.attachment-actions-button button {
+	color: #44546F;
+	background-color: #ffffff;
+}
+
+.attachment-actions-button button:hover {
+	color: #44546F;
+	background-color: #e6e6e6;
+}
+
+.attachment-card .attachment-actions-button {
+	display: none;
+}
+
+.attachment-card:hover .attachment-actions-button {
+	display: flex;
 }

@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import sharp from "sharp";
 import Task from "../models/task.model.js";
 import {
   BadRequestError,
@@ -7,7 +6,7 @@ import {
   ServerError,
 } from "../errors/Errors.js";
 import TaskStatuses from "../models/taskStatus.model.js";
-import { ICreateTaskPropsType, TTaskDataType } from "../types/global.js";
+import { ICreateTaskPropsType } from "../types/global.js";
 import { TASK_CLONE_SELECTED_FIELD } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
 import { deleteAllTaskAttachments, uploadfiles } from "../utils/files.util.js";
@@ -138,9 +137,8 @@ export const cloneTask = async (
     const { userId: createdByUserId } = req as ICreateTaskPropsType;
 
     // Get clone options
-    const { cloneAssignee, cloneFollowers, clonePriority } =
+    const { cloneAssignee, cloneFollowers, clonePriority, cloneAttachments } =
       req.body.cloneOptions;
-
     // Get the new task title if changed else stay the same as original
     const { clonedTaskTitle } = req.body;
 
@@ -178,6 +176,9 @@ export const cloneTask = async (
 
     if (clonePriority) {
       clonedTask.priority = taskToBeCloned?.priority;
+    }
+    if (cloneAttachments) {
+      clonedTask.attachments = taskToBeCloned?.attachments;
     }
 
     await clonedTask.save();

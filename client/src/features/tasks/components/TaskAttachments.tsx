@@ -1,21 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { PlusOutlined, EllipsisOutlined, DeleteOutlined, CloudDownloadOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps, Image } from 'antd';
 import { AnyAction } from 'redux';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { deleteAllTaskAttachments, uploadAttachments } from '../redux/taskSlice';
-
-
-
-
-
-// Redux
-
-
-
 import { formatDateTimeToString } from '@/utils/date';
-
 
 const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments: [] }) => {
   const attachmentsCount = attachments?.length
@@ -97,11 +87,20 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
           </span>
         </div>
       </div>
-      <div className='flex flex-wrap justify-between gap-3 my-4'>
+      <div className='attachments-preview-group flex flex-wrap gap-3 my-4'>
         <Image.PreviewGroup >
           {attachments?.map((item: any, indexId: any) => (
-            <div key={indexId}>
+            <div className='relative attachment-card' key={indexId}>
               <Image className='rounded' width={200} height={110} key={indexId} src={item.path} alt={`task-attachments-${taskId}`} />
+
+              <div className='attachment-actions-button mt-auto flex gap-2 absolute top-0 right-0 p-2 z-50'>
+                <Button size='small' type='ghost'>
+                  <DeleteOutlined />
+                </Button>
+                <Button size='small' type='ghost'>
+                  <CloudDownloadOutlined />
+                </Button>
+              </div>
               <div className="attachment-details-container">
                 <div className='font-semibold'>{item.name}</div>
                 <div>{formatDateTimeToString(item.createdAt)}</div>

@@ -170,7 +170,7 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
 
      return (
           <Space size="middle" className='setting-buttons-container' wrap>
-               <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel} />
+               <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel}/>
                {/* followers dropdown */}
                <Dropdown overlayClassName='followers-items-dropdown' placement="bottomRight" menu={{ items: followersItems }} trigger={['click']}>
                     {taskFollowers?.length >= 1 ?

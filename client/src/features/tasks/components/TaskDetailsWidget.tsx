@@ -87,11 +87,13 @@ const TaskDetailsWidget = ({ task, handleEditTask }: { task: any, handleEditTask
                          </Col>
                     </Panel>
                </Collapse>
-               <div className='mx-4 mt-4 text-xs tect-[#626f86]'>
-                    Created {formatDateTimeToString(task?.createdAt)}
-               </div>
-               <div className='mx-4 md:my-2 mt-2 mb-5 text-xs tect-[#626f86]'>
-                    Updated {formatDateTimeToString(task?.updatedAt)}
+               <div className="p-2 flex flex-col gap-2">
+                    <div className='mx-4 mt-4 text-xs tect-[#626f86]'>
+                         Created {formatDateTimeToString(task?.createdAt)}
+                    </div>
+                    <div className='mx-4 md:my-2 mt-2 mb-5 text-xs tect-[#626f86]'>
+                         Updated {formatDateTimeToString(task?.updatedAt)}
+                    </div>
                </div>
           </section>
      )

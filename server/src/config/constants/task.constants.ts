@@ -8,6 +8,7 @@ export const TASK_CLONE_SELECTED_FIELD = [
   "priority",
   "assignee",
   "followers",
+  "attachments",
 ];
 
 export const TASK_POPULATE_SELECTED_FIELDS = [
