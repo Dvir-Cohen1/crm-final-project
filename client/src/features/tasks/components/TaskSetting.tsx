@@ -79,12 +79,12 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           {
                key: '3',
                label: (
-                    <span onClick={() => { }}>
+                    <div onClick={() => { }}>
                          <Space>
                               <PlusOutlined />
                               Add watchers
                          </Space>
-                    </span>
+                    </div>
                ),
           },
      ];
@@ -101,9 +101,9 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
                key: '2',
                label: (
 
-                    <span onClick={openModal}>
+                    <div onClick={openModal}>
                          Clone
-                    </span>
+                    </div>
                ),
           },
           {
@@ -114,7 +114,7 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
                          description='Are you sure you want to delete this task?'
                          confirm={() => handleDeleteTask()}
                     >
-                         <span>Delete</span>
+                         <div>Delete</div>
 
                     </PopConfirm>
                ),
@@ -136,34 +136,34 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           {
                key: '1',
                label: (
-                    <span onClick={() => shareByEmail(pageUrl)}>
+                    <div onClick={() => shareByEmail(pageUrl)}>
                          <Space>
                               <MailOutlined />
                               Share via Email
                          </Space>
-                    </span>
+                    </div>
                ),
           },
           {
                key: '2',
                label: (
-                    <span onClick={() => shareViaWhatsApp(pageUrl)}>
+                    <div onClick={() => shareViaWhatsApp(pageUrl)}>
                          <Space>
                               <WhatsAppOutlined />
                               Share via Whatsapp
                          </Space>
-                    </span>
+                    </div>
                ),
           },
           {
                key: '3',
                label: (
-                    <span onClick={() => { copyPageUrlToClipboard(pageUrl) }}>
+                    <div onClick={() => { copyPageUrlToClipboard(pageUrl) }}>
                          <Space>
                               <LinkOutlined />
                               Copy Link
                          </Space>
-                    </span>
+                    </div>
                ),
           },
      ];

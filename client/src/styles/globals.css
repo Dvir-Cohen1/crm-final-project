@@ -27,7 +27,7 @@ body {
 
 footer {
 	margin-top: auto;
-
+	margin-top: 3rem;
 }
 
 footer p {
@@ -468,17 +468,25 @@ a {
 	border-radius: 0 0 5px 5px;
 	border: solid #d2d8e1;
 	border-width: 0 1px 1px 1px;
-	max-width: 200px;
-	min-height: 60px;
+	max-width: 180px;
+	min-height: 52px;
 }
 
-.attachments-preview-group{
-	gap: 24px;
+.attachments-preview-group {
+	/* gap: 24px; */
+	justify-content: flex-start;
+	column-gap: 3px;
+	row-gap: 10px;
 }
+
 .attachments-preview-group .ant-image .ant-image-mask {
 	background-color: #091e427d;
 }
 
+
+.ant-image-mask-info {
+	display: none !important;
+}
 
 .attachments-preview-group .ant-image-mask-info {
 	display: none !important;
@@ -505,6 +513,6 @@ a {
 
 @media print {
 	.no-print {
-	  display: none !important;
+		display: none !important;
 	}
-   }
+}

@@ -136,7 +136,7 @@ const Task = () => {
             <div className="task-description">
               <h2 className='mb-3'>Description</h2>
               <p>
-                <Input name='description' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
+                <Input style={{fontSize:"14px"}} name='description'onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='large'
                   className='edit-task-input' defaultValue={task?.description} />
               </p>
             </div>
