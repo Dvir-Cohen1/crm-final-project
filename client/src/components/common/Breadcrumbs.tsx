@@ -37,9 +37,9 @@ const Breadcrumbs = () => {
      };
 
      return (
-          <div className='my-5'>
+          <section className='breadcrumb-section my-5'>
                <Breadcrumb itemRender={itemRender} routes={items} />
-          </div>
+          </section>
      )
           ;
 };

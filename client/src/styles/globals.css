@@ -25,6 +25,16 @@ body {
 	color: #172B4D;
 }
 
+footer {
+	margin-top: auto;
+	margin-top: 3rem;
+}
+
+footer p {
+	font-size: 0.8rem !important;
+	color: #626f86;
+}
+
 
 a {
 	color: #0052cc;
@@ -203,12 +213,10 @@ a {
 .edit-task-input {
 	border: 1px solid transparent;
 	border-radius: 3px;
-	/* border: 0; */
 	border-color: transparent;
 	background: transparent;
-	/* font-size: 20px; */
-	width: 400px;
-	/* padding: 3px; */
+	width: -webkit-fill-available;
+
 }
 
 .edit-task-input::placeholder {
@@ -395,7 +403,8 @@ a {
 }
 
 
-.setting-buttons-container .ant-dropdown-open {
+.setting-buttons-container .ant-dropdown-open,
+.attachments-setting-dropdown-container .ant-dropdown-open {
 	background: #e9f2ff;
 	color: #0c66e4;
 }
@@ -420,32 +429,53 @@ a {
 	/* background-color: #44546f; */
 }
 
+/* task attachments */
+
+.attachment-details-container {
+	font-size: 12px;
+	padding: 7px;
+	color: #172b4d;
+	border-radius: 0 0 5px 5px;
+	border: solid #d2d8e1;
+	border-width: 0 1px 1px 1px;
+	max-width: 180px;
+	min-height: 52px;
+}
+
+.attachments-preview-group {
+	gap: 10px;
+	justify-content: flex-start;
+	/* column-gap: 3px;
+	row-gap: 10px; */
+}
+
+.attachments-preview-group .ant-image .ant-image-mask {
+	background-color: #091e427d;
+}
 
 
-/* Styles for screens smaller than 576px (extra small) */
-@media (max-width: 575px) {
-	.edit-task-input {
-		width: -webkit-fill-available;
-	 }
-   }
-   
-   /* Styles for screens between 576px and 767px (small) */
-   @media (min-width: 576px) and (max-width: 767px) {
-	/* Add your styles here */
-   }
-   
-   /* Styles for screens between 768px and 991px (medium) */
-   @media (min-width: 768px) and (max-width: 991px) {
-	/* Add your styles here */
-   }
-   
-   /* Styles for screens between 992px and 1199px (large) */
-   @media (min-width: 992px) and (max-width: 1199px) {
-	/* Add your styles here */
-   }
-   
-   /* Styles for screens larger than 1200px (extra large) */
-   @media (min-width: 1200px) {
-	/* Add your styles here */
-   }
-   
+.ant-image-mask-info {
+	display: none !important;
+}
+
+.attachments-preview-group .ant-image-mask-info {
+	display: none !important;
+}
+
+.attachment-actions-button button {
+	color: #44546F;
+	background-color: #ffffff;
+}
+
+.attachment-actions-button button:hover {
+	color: #44546F;
+	background-color: #e6e6e6;
+}
+
+.attachment-card .attachment-actions-button {
+	display: none;
+}
+
+.attachment-card:hover .attachment-actions-button {
+	display: flex;
+}

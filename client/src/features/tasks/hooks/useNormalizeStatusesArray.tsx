@@ -12,11 +12,11 @@ const useNormalizeStatusesArray = (tasksStatuses: any, handleChangeStatus: Funct
   useEffect(() => {
     const normalizeStatusesArray = (statusesData: any[]): Status[] => {
       let normalizedStatuses: Status[] = [];
-      statusesData.forEach((status) => {
+      statusesData?.forEach((status) => {
         normalizedStatuses.push({
           key: status._id,
           label: (
-            <span className='px-4' onClick={() => handleChangeStatus(status._id)} style={{ borderLeft: `3px solid ${status.color}` }}>
+            <span className='px-4 w-full' onClick={() => handleChangeStatus(status._id)} style={{ borderLeft: `3px solid ${status.color}` }}>
               {status.label}
             </span>
           ),

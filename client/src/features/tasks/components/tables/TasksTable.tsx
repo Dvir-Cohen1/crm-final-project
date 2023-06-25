@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { ITaskDataType, RootState } from '@/types/global';
+import { ITaskDataType, ITaskState, RootState } from '@/types/global';
 import { pinItem } from '@/features/users/redux/userSlice';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
@@ -12,13 +12,15 @@ import { Table } from 'antd';
 const TasksTable = ({ tasks, handleDelete, tableKey, setTableKey }: any) => {
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
+     const { isLoading }: ITaskState = useSelector((state: RootState) => state.task);
+
      // Getting the loggedIn user from redux
      const { user } = useSelector((state: RootState) => state.auth);
 
      // Handle Pin Task dispatch to redux
      const handlePinItem = async (itemId: any) => {
           await dispatch(pinItem(itemId))
-          dispatch(isLoginByToken())
+          await dispatch(isLoginByToken())
      };
 
      const columns = getColumns({
@@ -41,6 +43,7 @@ const TasksTable = ({ tasks, handleDelete, tableKey, setTableKey }: any) => {
                size='small'
                scroll={{ x: 1500 }}
                bordered
+               loading={isLoading}
                rowSelection={{
                     type: "checkbox",
                     ...rowSelection,

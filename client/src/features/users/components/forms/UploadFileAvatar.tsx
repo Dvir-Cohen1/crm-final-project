@@ -30,21 +30,6 @@ const beforeUpload = (file: RcFile) => {
 const UploadFileAvatar = ({ userId }: { userId: string | undefined }) => {
 
      const dispatch = useDispatch()
-     // const [file, setFile] = useState<any>(null);
-     
-     // function handleFileChange(event: any) {
-     //      setFile(event.target.files[0]);
-     // }
-
-     // async function handleSubmit(event: any) {
-     //      message.loading("Loading...");
-     //      event.preventDefault();
-     //      const formData = new FormData();
-     //      formData.append('profileImage', file, file.name);
-     //      await dispatch<any>(uploadProfileImage({ file, userId: userId }))
-     // }
-
-
 
      const [loading, setLoading] = useState(false);
      const [imageUrl, setImageUrl] = useState<string>();

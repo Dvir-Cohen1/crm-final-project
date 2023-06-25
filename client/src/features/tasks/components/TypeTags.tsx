@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Button, Space, Tooltip } from 'antd';
@@ -8,7 +9,7 @@ const TypeTags = ({ type, handleEditTask }: { type: string, handleEditTask: Func
      const icon = type === "public" ? <UnlockOutlined /> : <LockOutlined />
 
      return (
-          <span className='text-sm'>
+          <span className='text-sm no-print'>
                <Tooltip title={capitalizeFirstLetters(type) + ' task'}>
                     <Button
                          onClick={(e) => handleEditTask(type === "public" ? "private" : "public", "type")}
@@ -19,7 +20,6 @@ const TypeTags = ({ type, handleEditTask }: { type: string, handleEditTask: Func
                     />
                </Tooltip>
           </span>
-
      )
 }
 

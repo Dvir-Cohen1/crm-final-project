@@ -24,3 +24,15 @@ export interface IRequestUserId extends Request {
   userId?: string | null | undefined;
   itemId?: string | null | undefined;
 }
+
+interface ICreateTaskPropsType extends Request {
+  userId: string;
+}
+
+export type TTaskDataType = {
+  _id: string;
+  key: string;
+  title: string;
+  description: string;
+  attachments?: [];
+};

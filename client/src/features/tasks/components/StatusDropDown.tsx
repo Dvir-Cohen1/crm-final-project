@@ -16,8 +16,8 @@ type TStatusDropDown = {
           label: string
           color: string
      },
-     taskId:string,
-     getTask:Function,
+     taskId: string,
+     getTask: Function,
      setTableKey?: Function
 }
 
@@ -59,9 +59,20 @@ const StatusDropDown = ({ status, taskId, getTask, setTableKey }: TStatusDropDow
                <Dropdown menu={{ items: normalizedStatuses }} placement="bottomLeft" trigger={['click']}>
                     {
                          status?.label ?
-                              <Button className='font-semibold' type='primary' style={{ backgroundColor: status?.color }}>{capitalizeFirstLetters(status?.label)} <CaretDownOutlined /></Button>
+                              <Button
+                                   className='font-semibold'
+                                   type='primary'
+                                   style={{ backgroundColor: status?.color }}>
+                                   {capitalizeFirstLetters(status?.label)}
+                                   <CaretDownOutlined />
+                              </Button>
                               :
-                              <Button type='default' style={{ backgroundColor: status?.color }} loading={true}> Loading </Button>
+                              <Button
+                                   type='default'
+                                   style={{ backgroundColor: status?.color }}
+                                   loading={true}>
+                                   Loading
+                              </Button>
                     }
                </Dropdown>
           </Space>
