@@ -429,36 +429,6 @@ a {
 	/* background-color: #44546f; */
 }
 
-
-
-/* Styles for screens smaller than 576px (extra small) */
-@media (max-width: 575px) {
-	.edit-task-input {
-		width: -webkit-fill-available;
-	}
-}
-
-/* Styles for screens between 576px and 767px (small) */
-@media (min-width: 576px) and (max-width: 767px) {
-	/* Add your styles here */
-}
-
-/* Styles for screens between 768px and 991px (medium) */
-@media (min-width: 768px) and (max-width: 991px) {
-	/* Add your styles here */
-}
-
-/* Styles for screens between 992px and 1199px (large) */
-@media (min-width: 992px) and (max-width: 1199px) {
-	/* Add your styles here */
-}
-
-/* Styles for screens larger than 1200px (extra large) */
-@media (min-width: 1200px) {
-	/* Add your styles here */
-}
-
-
 /* task attachments */
 
 .attachment-details-container {
@@ -473,10 +443,10 @@ a {
 }
 
 .attachments-preview-group {
-	/* gap: 24px; */
+	gap: 10px;
 	justify-content: flex-start;
-	column-gap: 3px;
-	row-gap: 10px;
+	/* column-gap: 3px;
+	row-gap: 10px; */
 }
 
 .attachments-preview-group .ant-image .ant-image-mask {
@@ -508,11 +478,4 @@ a {
 
 .attachment-card:hover .attachment-actions-button {
 	display: flex;
-}
-
-
-@media print {
-	.no-print {
-		display: none !important;
-	}
 }

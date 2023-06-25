@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import Task from "../models/task.model.js";
+import archiver from "archiver";
+import fs from "fs";
+import { Readable } from "stream";
+
 import {
   BadRequestError,
   NotFoundError,
@@ -10,8 +14,8 @@ import { ICreateTaskPropsType } from "../types/global.js";
 import { TASK_CLONE_SELECTED_FIELD } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
 import {
-  deleteAllTaskAttachments,
-  deleteOneTaskAttachment,
+  deleteAllFiles,
+  deleteOneFile,
   uploadfiles,
 } from "../utils/files.util.js";
 import {
@@ -326,7 +330,7 @@ export const deleteAllAttachments = async (
 ) => {
   try {
     const { taskId } = req.params;
-    const isAllDeleted: boolean | null = deleteAllTaskAttachments(taskId);
+    const isAllDeleted: boolean | null = deleteAllFiles(taskId);
 
     const task: any = await getPopulateTask(taskId);
 
@@ -357,10 +361,7 @@ export const deleteOneAttachment = async (
       return next(new BadRequestError("TaskId / fileName not provided"));
     }
 
-    const isOneDeleted: boolean | null = deleteOneTaskAttachment(
-      taskId,
-      fileName
-    );
+    const isOneDeleted: boolean | null = deleteOneFile(taskId, fileName);
 
     const task: any = await getPopulateTask(taskId);
 
@@ -376,6 +377,64 @@ export const deleteOneAttachment = async (
     }
 
     res.status(200).send({ error: !isOneDeleted, data: task });
+  } catch (error) {
+    console.log(error);
+    next(new BadRequestError(String(error)));
+  }
+};
+
+// Download attachments as zip files
+export const downloadAttachments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { taskId } = req.params;
+    const folderPath = `./public/${taskId}`;
+    const zipFileName = `${taskId}.zip`;
+
+    // Set the appropriate headers for the response
+    res.set({
+      "Content-Type": "application/zip",
+      "Content-Disposition": `attachment; filename=${zipFileName}`,
+    });
+
+    const output = fs.createWriteStream(`./src/tmp/${taskId}.zip`);
+    // Create a new zip archive
+    const archive = archiver("zip", {
+      zlib: { level: 9 }, // Set the compression level (optional)
+    });
+
+    // Read the files in the folder and add them to the archive
+    const files = await fs.promises.readdir(folderPath);
+
+    // Iterate through the files and add them to the archive
+    files.forEach(async (file) => {
+      const filePath = `${folderPath}/${file}`;
+
+      // Add the file to the archive
+      archive.file(filePath, { name: file });
+    });
+
+    // Pipe the archive to the response
+    archive.pipe(res);
+    // Finalize the archive
+    archive.finalize();
+    // Handle any errors during archiving
+    archive.on("error", (err) => {
+      console.log(err);
+      res.status(500).send("Error creating zip file");
+    });
+
+    archive.on("end", async () => {
+      console.log("Zip file created successfully");
+      res.end();
+    });
+    res.once("end", async () => {
+      // Clean up the temporary zip file
+      await fs.promises.unlink(`./src/tmp/${zipFileName}`);
+    });
   } catch (error) {
     console.log(error);
     next(new BadRequestError(String(error)));

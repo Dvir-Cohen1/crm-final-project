@@ -12,6 +12,7 @@ import {
   uploadAttachments,
   deleteAllAttachments,
   deleteOneAttachment,
+  downloadAttachments,
 } from "../controllers/tasks.controller.js";
 import { upload } from "../config/multerConfig.js";
 
@@ -31,6 +32,7 @@ router.post(
   upload.array("attachments"),
   uploadAttachments
 );
+router.post("/task/downloadAttachments/:taskId", downloadAttachments);
 router.delete("/task/deleteAllAttachments/:taskId", deleteAllAttachments);
 router.delete("/task/deleteOneAttachment/:taskId/:fileName", deleteOneAttachment);
 

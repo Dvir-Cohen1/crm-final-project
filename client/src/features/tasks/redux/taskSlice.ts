@@ -10,6 +10,7 @@ import {
   uploadTaskAttachmentsApi,
   deleteAllTaskAttachmentsApi,
   deleteOneTaskAttachmentApi,
+  downloadAllAttachmentsAsZipApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 import { message } from "antd";
@@ -90,6 +91,14 @@ export const deleteOneTaskAttachment = createAsyncThunk(
   "task/deleteOneTaskAttachment",
   async (values: any) => {
     const data = await deleteOneTaskAttachmentApi(values);
+    return data;
+  }
+);
+// Download all attachments as zip
+export const downloadAllAttachmentsAsZip = createAsyncThunk(
+  "task/downloadAllAttachmentsAsZip",
+  async (values: any) => {
+    const data = await downloadAllAttachmentsAsZipApi(values);
     return data;
   }
 );
@@ -253,15 +262,30 @@ export const taskSlice = createSlice({
         state.isError = true;
         state.error = action.error.message;
       })
+      .addCase(deleteOneTaskAttachment.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Done 😃";
+        state.task = payload.data;
+      })
+      // Download all attachments as zip
+      .addCase(downloadAllAttachmentsAsZip.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(downloadAllAttachmentsAsZip.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
       .addCase(
-        deleteOneTaskAttachment.fulfilled,
+        downloadAllAttachmentsAsZip.fulfilled,
         (state, { payload }: any) => {
           state.isLoading = false;
-          state.isError = false;
-          state.error = "Done 😃";
-          state.task = payload.data;
+          state.isError = null;
+          // state.error = "Done 😃";
+          // state.task = payload.data;
         }
-      )
+      );
   },
 });
 

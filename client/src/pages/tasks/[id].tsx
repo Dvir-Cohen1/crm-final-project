@@ -119,20 +119,15 @@ const Task = () => {
               )
             })
           }
-          
+        
         </div>
-
-
-
         <TaskSetting taskId={task?._id} taskTitle={task?.title} taskFollowers={task?.followers} handleEditTask={handleEditTask} />
       </section>
-
       <hr className='mb-6' />
-
       <Row>
         {/* Left Col */}
         <Col span={16} xs={24} md={16} >
-          <section className='me-14'>
+          <section className='md:me-14'>
             <div className="task-description">
               <h2 className='mb-3'>Description</h2>
               <p>

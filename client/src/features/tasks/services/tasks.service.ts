@@ -183,3 +183,44 @@ export async function deleteOneTaskAttachmentApi({
     );
   }
 }
+export async function downloadAllAttachmentsAsZipApi(taskId: string) {
+  try {
+    const response = await api.post(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `tasks/task/downloadAttachments/${taskId}`,
+        { responseType: "blob" } // Set the response type to 'blob'
+    );
+    console.log(response.data);
+
+    const blob = new Blob([response.data], { type: "application/zip" });
+
+    // Create a temporary URL for the blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element and trigger the download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${taskId}.zip`;
+    link.click();
+
+    // Clean up the temporary URL
+    window.URL.revokeObjectURL(url);
+
+    return ;
+  } catch (error: any) {
+    console.log(error);
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+
+// // Helper function to convert a buffer to ArrayBuffer
+// function toArrayBuffer(buffer: Buffer) {
+//   const arrayBuffer = new ArrayBuffer(buffer.length);
+//   const view = new Uint8Array(arrayBuffer);
+//   for (let i = 0; i < buffer.length; ++i) {
+//     view[i] = buffer[i];
+//   }
+//   return arrayBuffer;
+// }

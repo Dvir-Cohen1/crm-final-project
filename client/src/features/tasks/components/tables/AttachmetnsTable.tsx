@@ -21,7 +21,7 @@ const AttachmetnsTable = ({ taskId, attachments }: any) => {
      // files upload - custom hook
      const { handleDeleteOne, handleImageDownload } = useAttachments({ taskId });
      return (
-          <Table size='small' dataSource={attachments} pagination={{
+          <Table size='small' scroll={{ x: 1000 }} dataSource={attachments} pagination={{
                pageSize: 5,
                showSizeChanger: false,
                // You can customize other pagination options as needed

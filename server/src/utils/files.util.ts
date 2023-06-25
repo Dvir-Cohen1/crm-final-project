@@ -91,7 +91,7 @@ export async function uploadfiles(
 }
 
 // Delete all files
-export function deleteAllTaskAttachments(folderId: string) {
+export function deleteAllFiles(folderId: string) {
   try {
     const folderPath = `./public/${folderId}`;
     const files = fs.readdirSync(folderPath);
@@ -111,7 +111,7 @@ export function deleteAllTaskAttachments(folderId: string) {
     return false;
   }
 }
-export function deleteOneTaskAttachment(folderId: string, fileName: string) {
+export function deleteOneFile(folderId: string, fileName: string) {
   try {
     const folderPath = `./public/${folderId}`;
     const files = fs.readdirSync(folderPath);
@@ -134,39 +134,52 @@ export function deleteOneTaskAttachment(folderId: string, fileName: string) {
 }
 
 // // Download all files as .zip
-// export function downloadAllTaskAttachments(folderId: string) {
+// export function downloadAllFilesAsZip(folderId: string) {
 //   try {
 //     const folderPath = `./public/${folderId}`;
-//     const files = fs.readdirSync(folderPath);
-
-//     if (!files || files.length <= 0) {
-//       return null;
-//     }
-
-//     const zipFilePath = `./public/${folderId}.zip`;
-//     const output = fs.createWriteStream(zipFilePath);
-//     const archive = archiver("zip", { zlib: { level: 9 } });
-
-//     output.on("close", () => {
-//       console.log("Zip file created:", zipFilePath);
+//     const date = new Date().getDay().toString();
+//     // Create a new zip archive
+//     const archive = archiver("zip", {
+//       zlib: { level: 9 }, // Set the compression level (optional)
 //     });
 
-//     archive.on("error", (err: any) => {
-//       throw err;
-//     });
+//     // Set the output file name
+//     const zipFileName = `${date}-${folderId}.zip`;
 
-//     archive.pipe(output);
-
-//     files.forEach((file) => {
-//       const filePath = path.join(folderPath, file);
-//       archive.file(filePath, { name: file });
-//     });
-
-//     archive.finalize();
-
-//     return zipFilePath;
+//     // Pipe the response to the archive
+//     archive.pipe(res);
 //   } catch (error) {
 //     console.log(error);
 //     return null;
 //   }
 // }
+
+// const folderPath = `./public/${folderId}`;
+// const files = fs.readdirSync(folderPath);
+
+// if (!files || files.length <= 0) {
+//   return null;
+// }
+
+// const zipFilePath = `./public/${folderId}.zip`;
+// const output = fs.createWriteStream(zipFilePath);
+// const archive = archiver("zip", { zlib: { level: 9 } });
+
+// output.on("close", () => {
+//   console.log("Zip file created:", zipFilePath);
+// });
+
+// archive.on("error", (err: any) => {
+//   throw err;
+// });
+
+// archive.pipe(output);
+
+// files.forEach((file) => {
+//   const filePath = path.join(folderPath, file);
+//   archive.file(filePath, { name: file });
+// });
+
+// archive.finalize();
+
+// return zipFilePath;

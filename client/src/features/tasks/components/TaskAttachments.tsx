@@ -7,6 +7,10 @@ import { convertFileSizeToKB } from '@/utils/general';
 import AttachmetnsTable from './tables/AttachmetnsTable';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/localstorage';
 import { createSubString } from '@/utils/text';
+import { downloadAllAttachmentsAsZip } from '../redux/taskSlice';
+import { useDispatch } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments: [] }) => {
 
@@ -21,10 +25,15 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
   // toggle task list view
   const [isListView, setIsListView] = useState(getLocalStorageItem("isListView") || false)
 
-
   const handleToggleListView = async () => {
     setIsListView(prev => !prev)
     setLocalStorageItem("isListView", !isListView)
+  }
+
+  const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
+
+  const handleDownloadAllAttachmentsAsZip = async () => {
+    await dispatch<any>(downloadAllAttachmentsAsZip(taskId))
   }
 
   // files upload - custom hook
@@ -38,7 +47,7 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
     {
       key: '2',
       label: (
-        <div>
+        <div onClick={() => handleDownloadAllAttachmentsAsZip()}>
           Download all .zip {attachments?.length !== 0 && `(${attachments?.length})`}
         </div>
       ),
@@ -48,7 +57,6 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
       label:
         <div onClick={() => handleDeleteAll()}>
           Delete all
-
         </div>,
     },
   ];
@@ -94,7 +102,7 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
               {visibleAttachments?.map((item: any, indexId: any) => (
                 <div className='relative attachment-card' key={indexId}>
                   <Tooltip placement='bottom' title={item.name}>
-                    <Image className='rounded' width={180} height={100} key={indexId} src={item.path} alt={`task-attachments-${taskId}`} />
+                    <Image className='rounded' width={173} height={100} key={indexId} src={item.path} alt={`task-attachments-${taskId}`} />
                     <div className='attachment-actions-button mt-auto flex absolute gap-2 top-0 right-0 p-2 z-50'>
                       <Popconfirm
                         title={`Delete ${item.name}`}
