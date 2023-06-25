@@ -21,12 +21,12 @@ function SecondaryItems() {
      // handle delete pin item
      const handlePinItem = async (itemId: any) => {
           await dispatch(pinItem(itemId))
-          dispatch(isLoginByToken())
+          await dispatch(isLoginByToken())
      };
 
      const handleRemoveAllPinItems = async () => {
           await removeAllPinItemsApi()
-          dispatch(isLoginByToken())
+          await dispatch(isLoginByToken())
      };
 
      const [current, setCurrent] = useState('mail');

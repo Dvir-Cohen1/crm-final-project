@@ -29,8 +29,12 @@ export function AuthProvider({ children }: AuthContextProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, isRegister, isError } = useSelector((state: RootState) => state.auth);
 
+  const handleIsLoginDispatch = async () => {
+    await dispatch(isLoginByToken())
+  }
+
   useEffect(() => {
-    dispatch(isLoginByToken())
+    handleIsLoginDispatch()
   }, [dispatch])
 
 

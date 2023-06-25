@@ -142,7 +142,7 @@ export type AddTaskRegisterInputs = {
   assignee?: [];
   followers?: [];
   due_date?: string;
-  Attachments?: [];
+  attachments?: [];
 };
 
 export interface TaskState {
@@ -167,13 +167,13 @@ export interface ITaskDataType {
   _id: string;
   key: string;
   title: string;
-  description:string;
+  description: string;
   firstName: string;
   record: any;
   priority: string;
   due_date: string;
   status: {
-    _id:string;
+    _id: string;
     label: string;
     color: string;
   };
@@ -194,4 +194,13 @@ export interface ITaskDataType {
       imgSRC: string;
     }
   ];
+}
+
+// task attachments
+export interface FileUploadHook {
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDeleteAll: () => Promise<void>;
+  handleDeleteOne: (fileName: string) => Promise<void>;
+  handleImageDownload: (imageUrl: string, imageName: string) => Promise<void>;
 }

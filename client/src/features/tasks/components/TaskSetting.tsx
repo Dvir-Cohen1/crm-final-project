@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Dropdown, Image, Space } from 'antd';
-import { EllipsisOutlined, ShareAltOutlined, EyeFilled, PlusOutlined, WhatsAppOutlined, MailOutlined, LinkOutlined, EyeOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, ShareAltOutlined, EyeFilled, PlusOutlined, WhatsAppOutlined, MailOutlined, LinkOutlined, EyeOutlined, PhoneOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import PopConfirm from '@/components/common/PopConfirm';
 import Link from 'next/link';
@@ -79,12 +79,12 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           {
                key: '3',
                label: (
-                    <span onClick={() => { }}>
+                    <div onClick={() => { }}>
                          <Space>
                               <PlusOutlined />
                               Add watchers
                          </Space>
-                    </span>
+                    </div>
                ),
           },
      ];
@@ -101,9 +101,9 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
                key: '2',
                label: (
 
-                    <span onClick={openModal}>
+                    <div onClick={openModal}>
                          Clone
-                    </span>
+                    </div>
                ),
           },
           {
@@ -114,7 +114,7 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
                          description='Are you sure you want to delete this task?'
                          confirm={() => handleDeleteTask()}
                     >
-                         <span>Delete</span>
+                         <div>Delete</div>
 
                     </PopConfirm>
                ),
@@ -136,34 +136,34 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           {
                key: '1',
                label: (
-                    <span onClick={() => shareByEmail(pageUrl)}>
+                    <div onClick={() => shareByEmail(pageUrl)}>
                          <Space>
                               <MailOutlined />
                               Share via Email
                          </Space>
-                    </span>
+                    </div>
                ),
           },
           {
                key: '2',
                label: (
-                    <span onClick={() => shareViaWhatsApp(pageUrl)}>
+                    <div onClick={() => shareViaWhatsApp(pageUrl)}>
                          <Space>
                               <WhatsAppOutlined />
                               Share via Whatsapp
                          </Space>
-                    </span>
+                    </div>
                ),
           },
           {
                key: '3',
                label: (
-                    <span onClick={() => { copyPageUrlToClipboard(pageUrl) }}>
+                    <div onClick={() => { copyPageUrlToClipboard(pageUrl) }}>
                          <Space>
                               <LinkOutlined />
                               Copy Link
                          </Space>
-                    </span>
+                    </div>
                ),
           },
      ];
@@ -171,6 +171,16 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
      return (
           <Space size="middle" className='setting-buttons-container' wrap>
                <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel} />
+
+               <a href="tel:+4733378901">
+                    <Button
+                         size='middle'
+                         type="text"
+                         className='font-semibold'
+                         icon={<PhoneOutlined />}
+                    />
+               </a>
+
                {/* followers dropdown */}
                <Dropdown overlayClassName='followers-items-dropdown' placement="bottomRight" menu={{ items: followersItems }} trigger={['click']}>
                     {taskFollowers?.length >= 1 ?

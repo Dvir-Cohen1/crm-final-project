@@ -7,8 +7,13 @@ import {
   getTasksStatusesApi,
   editTaskApi,
   cloneTaskApi,
+  uploadTaskAttachmentsApi,
+  deleteAllTaskAttachmentsApi,
+  deleteOneTaskAttachmentApi,
+  downloadAllAttachmentsAsZipApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
+import { message } from "antd";
 
 const initialState: ITaskState = {
   isLoading: false,
@@ -61,6 +66,39 @@ export const getTasksStatuses = createAsyncThunk(
   "task/getTasksStatuses",
   async () => {
     const data = await getTasksStatusesApi();
+    return data;
+  }
+);
+
+// Upload Task attachments
+export const uploadAttachments = createAsyncThunk(
+  "task/uploadAttachments",
+  async (values: any) => {
+    const data = await uploadTaskAttachmentsApi(values);
+    return data;
+  }
+);
+// Delete all task attachments
+export const deleteAllTaskAttachments = createAsyncThunk(
+  "task/deleteAllTaskAttachments",
+  async (values: any) => {
+    const data = await deleteAllTaskAttachmentsApi(values);
+    return data;
+  }
+);
+// Delete one task attachment
+export const deleteOneTaskAttachment = createAsyncThunk(
+  "task/deleteOneTaskAttachment",
+  async (values: any) => {
+    const data = await deleteOneTaskAttachmentApi(values);
+    return data;
+  }
+);
+// Download all attachments as zip
+export const downloadAllAttachmentsAsZip = createAsyncThunk(
+  "task/downloadAllAttachmentsAsZip",
+  async (values: any) => {
+    const data = await downloadAllAttachmentsAsZipApi(values);
     return data;
   }
 );
@@ -181,7 +219,73 @@ export const taskSlice = createSlice({
         state.isLoading = false;
         state.isError = null;
         state.taskStatuses = payload.data;
-      });
+      })
+      // Upload task attachments
+      .addCase(uploadAttachments.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadAttachments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(uploadAttachments.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Files uploaded successfully";
+        state.task = payload.data;
+      })
+      // Delete all task attachments
+      .addCase(deleteAllTaskAttachments.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteAllTaskAttachments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(
+        deleteAllTaskAttachments.fulfilled,
+        (state, { payload }: any) => {
+          state.isLoading = false;
+          state.isError = false;
+          state.error = "Done 😃";
+          state.task = payload.data;
+        }
+      )
+      // Delete One task attachments
+      .addCase(deleteOneTaskAttachment.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteOneTaskAttachment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(deleteOneTaskAttachment.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "Done 😃";
+        state.task = payload.data;
+      })
+      // Download all attachments as zip
+      .addCase(downloadAllAttachmentsAsZip.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(downloadAllAttachmentsAsZip.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(
+        downloadAllAttachmentsAsZip.fulfilled,
+        (state, { payload }: any) => {
+          state.isLoading = false;
+          state.isError = null;
+          // state.error = "Done 😃";
+          // state.task = payload.data;
+        }
+      );
   },
 });
 

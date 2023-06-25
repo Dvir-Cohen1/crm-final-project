@@ -6,11 +6,12 @@ import SkeletonLoader from '@/components/common/SkeletonLoader';
 import { LayoutProps } from '@/types/global';
 import { AuthProvider } from '@/context/AuthenticationContext';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
+import Footer from './Footer/Footer';
 
 
 
 const Layout = ({ children }: LayoutProps) => {
-     const isLoading = useLoader(400)
+     const isLoading = useLoader(300)
 
      return (
           <>
@@ -18,9 +19,10 @@ const Layout = ({ children }: LayoutProps) => {
                     <Navbar />
                     <div className='mt-1 flex'>
                          <Sidebar />
-                         <main className="w-full px-4 lg:px-20 lg:py-2  flex flex-col">
+                         <main className="w-full px-4 lg:px-20 lg:py-2 flex flex-col">
                               <Breadcrumbs />
                               {isLoading ? <SkeletonLoader isLoading={isLoading} /> : children}
+                              <Footer />
                          </main>
                     </div>
                </AuthProvider>

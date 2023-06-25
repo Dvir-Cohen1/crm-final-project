@@ -45,6 +45,9 @@ const useEditTask = () => {
         inputValue = e;
         break;
       default:
+        if (task[e.currentTarget?.name] === e.currentTarget?.value) {
+          return
+        }
         inputName = e.currentTarget?.name;
         inputValue = e.currentTarget?.value;
         if (!inputName || !inputValue || String(inputValue).length <= 3) return;

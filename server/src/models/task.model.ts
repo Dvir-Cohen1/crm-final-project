@@ -1,5 +1,35 @@
 import { Schema, model } from "mongoose";
 
+const fileSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    path: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: Number,
+      required: true,
+    },
+    uploadedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  {
+    _id: false, // Disable generating an _id for each file object
+    timestamps: true,
+  }
+);
+
 const taskSchema = new Schema(
   {
     slug: {
@@ -8,12 +38,12 @@ const taskSchema = new Schema(
     },
     title: {
       type: String,
-      require: true,
+      require: [true, "Field title is requierd!"],
     },
     type: {
       type: String,
       enum: ["private", "public"],
-      require: true,
+      require: [true, "Field type is requierd!"],
     },
     status: {
       type: Schema.Types.ObjectId,
@@ -30,7 +60,6 @@ const taskSchema = new Schema(
     },
     priority: {
       type: String,
-      // ref: "Priority",
       unique: false,
     },
     assignee: {
@@ -48,6 +77,11 @@ const taskSchema = new Schema(
     created_by: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      unique: false,
+    },
+    attachments: {
+      type: [fileSchema],
+      default: [],
       unique: false,
     },
   },

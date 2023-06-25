@@ -72,7 +72,7 @@ export async function isLogin(req: Request, res: Response, next: NextFunction) {
   }
 
   const { userId } = verifyAccessToken(token) as JwtPayload;
-  // const { userId } = decodedUserId;
+
   const user = await User.findById(userId)
     .select(SELECTED_USER_FIELDS)
     .populate({
@@ -80,7 +80,7 @@ export async function isLogin(req: Request, res: Response, next: NextFunction) {
       select: SELECTED_PINNED_ITEMS_FIELDS,
     });
 
-  res.status(200).send({ isAuthenticated: true, user: user });
+  res.status(200).send({ isAuthenticated: true, user });
 }
 
 export async function logout(req: Request, res: Response, next: NextFunction) {
