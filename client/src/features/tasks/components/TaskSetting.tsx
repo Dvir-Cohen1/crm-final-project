@@ -1,7 +1,18 @@
 
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Dropdown, Image, Space } from 'antd';
-import { EllipsisOutlined, ShareAltOutlined, EyeFilled, PlusOutlined, WhatsAppOutlined, MailOutlined, LinkOutlined, EyeOutlined, PhoneOutlined } from '@ant-design/icons';
+import {
+     EllipsisOutlined,
+     ShareAltOutlined,
+     EyeFilled,
+     PlusOutlined,
+     WhatsAppOutlined,
+     PushpinOutlined,
+     MailOutlined,
+     LinkOutlined,
+     EyeOutlined,
+     PhoneOutlined
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import PopConfirm from '@/components/common/PopConfirm';
 import Link from 'next/link';
@@ -15,7 +26,8 @@ import useCloneTaskModal from '../hooks/useCloneTaskModal';
 import { copyPageUrlToClipboard, shareByEmail, shareViaWhatsApp } from '../utils/share.util';
 import { AuthState, RootState } from '@/types/global';
 import { isLoggedInUserFollower } from '../utils/task.util';
-
+import MapModal from './MapModal';
+// import { FaMapSigns, FaMapMarked, FaMapMarkedAlt, FaMapPin } from 'react-icons/fa';
 
 const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) => {
      // Get logged in user state from redux slices
@@ -125,9 +137,9 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           {
                key: '4',
                label: (
-                    <span onClick={() => window.print()}>
+                    <div onClick={() => window.print()}>
                          Print
-                    </span>
+                    </div>
                ),
           }
      ];
@@ -168,9 +180,20 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
           },
      ];
 
+     const [isModalOpen, setIsModalOpen] = useState(false);
+
      return (
           <Space size="middle" className='setting-buttons-container' wrap>
                <CloneTaskModal taskId={taskId} taskTitle={taskTitle} isOpen={isOpen} handleCancel={handleCancel} />
+
+
+               <Button
+                    size='middle'
+                    type="text"
+                    className='font-semibold'
+                    icon={<PushpinOutlined className='m-0 p-0 text-sm' />}
+                    onClick={() => setIsModalOpen(!isModalOpen)}
+               />
 
                <a href="tel:+4733378901">
                     <Button
@@ -181,6 +204,7 @@ const TaskSetting = ({ taskId, taskTitle, taskFollowers, handleEditTask }: any) 
                     />
                </a>
 
+               <MapModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                {/* followers dropdown */}
                <Dropdown overlayClassName='followers-items-dropdown' placement="bottomRight" menu={{ items: followersItems }} trigger={['click']}>
                     {taskFollowers?.length >= 1 ?

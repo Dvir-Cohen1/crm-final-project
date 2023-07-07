@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PlusOutlined, EllipsisOutlined, DeleteOutlined, CloudDownloadOutlined } from '@ant-design/icons';
-import { Button, Dropdown, MenuProps, Image, Tooltip, Popconfirm } from 'antd';
+import { Button, Dropdown, MenuProps, Image, Tooltip, Popconfirm, message } from 'antd';
 import { formatDateTimeToString } from '@/utils/date';
 import useAttachments from '../hooks/useAttachments';
 import { convertFileSizeToKB } from '@/utils/general';
@@ -55,12 +55,19 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
     {
       key: '3',
       label:
-        <div onClick={() => handleDeleteAll()}>
+        <Popconfirm
+          title={`Delete all attachment`}
+          description="Are you sure?"
+          onConfirm={() => handleDeleteAll()}
+          onCancel={() => message.info('Canceled')}
+          okText="Yes"
+          cancelText="No"
+        >
           Delete all
-        </div>,
+        </Popconfirm>
+ 
     },
   ];
-
   return (
     <>
       <div className="flex justify-between place-items-center mb-2 attachments-setting-dropdown-container">
