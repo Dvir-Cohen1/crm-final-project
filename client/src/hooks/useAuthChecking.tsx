@@ -24,7 +24,7 @@ const useAuthChecking = () => {
           }
 
 
-     }, [isAuthenticated]);
+     }, [dispatch, isAuthenticated, router]);
 
      return isCheckingAuth;
 };
