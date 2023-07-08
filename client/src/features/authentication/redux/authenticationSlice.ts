@@ -150,5 +150,5 @@ export const authSlice = createSlice({
       });
   },
 });
-export const { cleanStates,resetErrors} = authSlice.actions;
+export const { cleanStates, resetErrors } = authSlice.actions;
 export default authSlice.reducer;

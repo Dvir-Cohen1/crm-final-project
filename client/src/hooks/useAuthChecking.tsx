@@ -14,19 +14,17 @@ const useAuthChecking = () => {
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
      useEffect(() => {
-
-          dispatch(isLoginByToken())
-
           if (isAuthenticated && router.asPath.includes("authentication")) {
-               router.replace('/'); // Redirect to the login page if not authenticated
+               router.push('/'); // Redirect to the login page if not authenticated
+               dispatch(isLoginByToken())
           } else if (!isAuthenticated && !router.asPath.includes("authentication")) {
-               router.replace('/authentication/login'); // Redirect to the login page if not authenticated
+               router.push('/authentication/login'); // Redirect to the login page if not authenticated
           } else {
                setIsCheckingAuth(false);
           }
 
 
-     }, [isAuthenticated]);
+     }, [dispatch, isAuthenticated, router]);
 
      return isCheckingAuth;
 };
