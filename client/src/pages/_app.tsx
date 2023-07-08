@@ -8,20 +8,15 @@ import useLoader from '@/hooks/useLoader';
 import { Provider } from 'react-redux';
 import store from '@/redux/store';
 import { MessageProvider } from '../context/MessageContext';
-
 const Loader = lazy(() => import('@/components/common/Loader'));
 
 
 function App({ Component, pageProps }: AppProps) {
-  const isLoading = useLoader(2000);
+  const isLoading = useLoader(0);
 
   return (
     <Provider store={store}>
-      <MessageProvider>
-        <div>
-          {isLoading ? <Loader /> : <Component {...pageProps} />}
-        </div>
-      </MessageProvider>
+      {isLoading ? <Loader /> : <MessageProvider><Component {...pageProps} /></MessageProvider>}
     </Provider>
   );
 }

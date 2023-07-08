@@ -22,7 +22,7 @@ const useAttachments = ({ taskId }: { taskId: string }) => {
     await dispatch<any>(deleteAllTaskAttachments({ taskId }));
   };
 
-  // Delete all files
+  // Delete one file
   const handleDeleteOne = async (fileName: string) => {
     await dispatch<any>(deleteOneTaskAttachment({ taskId, fileName }));
   };

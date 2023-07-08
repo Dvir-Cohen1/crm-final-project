@@ -28,6 +28,7 @@ export const loginByPayload = createAsyncThunk(
 export const isLoginByToken = createAsyncThunk(
   "auth/isLoginByToken",
   async () => {
+    console.log("first");
     const data = await isLogin();
     return data;
   }
@@ -42,7 +43,7 @@ export const logoutByToken = createAsyncThunk(
 );
 
 const initialState: AuthState = {
-  isAuthenticated: null,
+  isAuthenticated: false,
   isLoading: false,
   isRegister: false,
   isError: null,
@@ -92,14 +93,12 @@ export const authSlice = createSlice({
         state.isError = true;
       })
       .addCase(loginByPayload.fulfilled, (state, { payload }: any) => {
-        setCookie("ac-token", payload.token);
         state.isLoading = false;
         state.isRegister = true;
         state.error = "";
         state.isError = false;
         state.user = payload.data;
         state.isAuthenticated = true;
-        router.push("/")
       })
       // Handle isLogin?
       .addCase(isLoginByToken.pending, (state, action) => {
@@ -113,22 +112,17 @@ export const authSlice = createSlice({
         state.error = action.error.message;
         state.isAuthenticated = false;
         state.user = null;
-        router.push("/authentication/login");
       })
       .addCase(isLoginByToken.fulfilled, (state, { payload }: any) => {
+        state.isAuthenticated = payload.isAuthenticated;
         state.isLoading = false;
         state.isError = null;
-        state.isRegister = true;
         state.error = "";
         state.user = payload.user;
-        state.isAuthenticated = payload.isAuthenticated;
-        
       })
       // Handle logout
       .addCase(logoutByToken.pending, (state, action) => {
         state.isLoading = true;
-        state.isError = null;
-        state.error = "";
       })
       .addCase(logoutByToken.rejected, (state, action) => {
         state.isLoading = false;

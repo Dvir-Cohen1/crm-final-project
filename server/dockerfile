@@ -8,21 +8,22 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install TypeScript
-RUN npm install -g typescript
+RUN npm install typescript
 
-# Install dependencies
+# # Install dependencies
 RUN npm install
 
 # Copy the rest of the server code
 COPY . .
 
+# # Debugging step
+# RUN ls -al /app/dist
 
 # Build the app
-RUN npx tsc
-# RUN npm run build
+RUN npm run build
 
 # Expose port 8080
 EXPOSE 8080
 
 # Start the app
-CMD ["npm", "run", "dev"]
+CMD ["node", "dist/index.js"]

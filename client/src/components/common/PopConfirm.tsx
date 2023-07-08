@@ -1,21 +1,22 @@
 import React, { ReactNode } from 'react';
 import { Button, message, Popconfirm } from 'antd';
+import { TooltipPlacement } from 'antd/lib/tooltip';
 
-const confirm = (e: React.MouseEvent<HTMLElement>) => {
-     console.log(e);
-     message.success('Click on Yes');
-};
+// const confirm = (e: React.MouseEvent<HTMLElement>) => {
+//      console.log(e);
+//      message.success('Click on Yes');
+// };
 
-const cancel = (e: React.MouseEvent<HTMLElement>) => {
-     console.log(e);
-     message.error('Click on No');
-};
+// const cancel = (e: React.MouseEvent<HTMLElement>) => {
+//      console.log(e);
+//      message.error('Click on No');
+// };
 
 type PopConfirmProps = {
      children?: ReactNode,
      title?: string,
      description?: string,
-     placement?: any,
+     placement?: TooltipPlacement,
      okText?: string,
      cancelText?: string,
      confirm?: Function | undefined | any,
@@ -28,6 +29,7 @@ const PopConfirm = ({
      children,
      confirm,
      placement = "topRight",
+     cancel,
      title = "delete",
      description = "Are you sure you want to delete",
      okText = "yes",
@@ -35,7 +37,7 @@ const PopConfirm = ({
      return (
           <Popconfirm
                onConfirm={() => confirm()}
-               onCancel={() => { return }}
+               onCancel={() => message.info("Canceled")}
                title={title}
                placement={placement}
                description={description}

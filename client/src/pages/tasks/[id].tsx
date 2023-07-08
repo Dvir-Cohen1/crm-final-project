@@ -8,15 +8,15 @@ import { isItemPinned } from '@/features/tasks/utils/task.util';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTask } from '@/features/tasks/redux/taskSlice';
 import { pinItem } from '@/features/users/redux/userSlice';
-import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
+// import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 //  Ant Design
 import {
-  StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, PlusOutlined
+  StarOutlined, StarFilled, PaperClipOutlined, ClusterOutlined, ExportOutlined, FilePdfOutlined, PlusOutlined, EllipsisOutlined
 } from '@ant-design/icons';
 
-import { Col, Row, Button } from 'antd';
+import { Col, Row, Button, Dropdown, Space, MenuProps } from 'antd';
 import TaskAttachments from '@/features/tasks/components/TaskAttachments';
 import TaskSetting from '@/features/tasks/components/TaskSetting';
 import { Input } from 'antd';
@@ -24,6 +24,7 @@ import useEditTask from '@/features/tasks/hooks/useEditTask';
 import TypeTags from '@/features/tasks/components/TypeTags';
 import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
 import useFileUpload from '@/features/tasks/hooks/useAttachments';
+import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 
 const Task = () => {
   const router = useRouter();
@@ -61,9 +62,47 @@ const Task = () => {
   const mainTaskActionButtons = [
     { title: 'Link issue', icon: <ClusterOutlined /> },
     { title: 'Reports', icon: <FilePdfOutlined /> },
-    { title: 'Export', icon: <ExportOutlined /> },
   ]
   const { fileInputRef, handleFileChange, handleDeleteAll } = useFileUpload({ taskId: id });
+
+
+
+  const exportItems: MenuProps['items'] = [
+    {
+         key: '1',
+         label: (
+              <div onClick={() => {}}>
+
+                        {/* <PaperClipOutlined /> */}
+                        csv
+
+              </div>
+         ),
+    },
+    {
+         key: '2',
+         label: (
+              <div onClick={() => {}}>
+
+                        {/* <PaperClipOutlined /> */}
+                        xml
+
+              </div>
+         ),
+    },
+    {
+         key: '3',
+         label: (
+              <div onClick={() => {}}>
+
+                        {/* <PaperClipOutlined /> */}
+                        xlsx
+              </div>
+         ),
+    },
+];
+
+
   return (
     <Layout>
       {/* Task title section */}
@@ -94,24 +133,25 @@ const Task = () => {
       {/* Main actions section */}
       <section className='flex justify-between flex-wrap gap-3 mb-3 no-print'>
         <div className='flex flex-wrap gap-3'>
-          <Button 
-          id='upload-attachments' 
-          type='ghost' 
-          className='font-semibold custom-ghost-button' 
-          icon={<PaperClipOutlined />} 
-          onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
+
+          <Button
+            id='upload-attachments'
+            type='ghost'
+            className='font-semibold custom-ghost-button'
+            icon={<PaperClipOutlined />}
+            onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
           >
             Attach
           </Button>
-        <input
-          id="file-upload"
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="*"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
+          <input
+            id="file-upload"
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="*"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
           {
             mainTaskActionButtons.map((item, indexId) => {
               return (
@@ -119,7 +159,16 @@ const Task = () => {
               )
             })
           }
-        
+          <Dropdown overlayClassName='setting-items-dropdown' menu={{ items: exportItems }} placement="bottomLeft" trigger={['click']}>
+            <Button
+              type='ghost'
+              className='font-semibold custom-ghost-button'
+              icon={<ExportOutlined />}
+            // onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
+            >
+              Export
+            </Button>
+          </Dropdown>
         </div>
         <TaskSetting taskId={task?._id} taskTitle={task?.title} taskFollowers={task?.followers} handleEditTask={handleEditTask} />
       </section>
@@ -131,7 +180,7 @@ const Task = () => {
             <div className="task-description">
               <h2 className='mb-3'>Description</h2>
               <p>
-                <Input style={{fontSize:"14px"}} name='description'onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='large'
+                <Input style={{ fontSize: "14px" }} name='description' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='large'
                   className='edit-task-input' defaultValue={task?.description} />
               </p>
             </div>
