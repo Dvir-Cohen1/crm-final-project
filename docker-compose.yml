@@ -2,36 +2,44 @@ version: '3.8'
 
 services:
   client:
+    # Build the client service using the Dockerfile in the ./client directory
     build:
       context: ./client
       dockerfile: dockerfile
+    # Map port 3000 on the host to port 3000 on the container
     ports:
       - "3000:3000"
+    # Load environment variables from the .env file in the ./client directory
     env_file:
       - ./client/.env
+    # Mount the ./client directory as /app in the container
+    # Mount the node_modules directory as a volume to persist dependencies
     volumes:
-      - ./client:/app  
+      - ./client:/app
+      - /app/node_modules
+
   server:
+    # Build the server service using the Dockerfile in the ./server directory
     build:
       context: ./server
       dockerfile: dockerfile
+    # Map port 3010 on the host to port 3010 on the container
     ports:
-      - "8080:8080"
-    depends_on:
-      - db
+      - "3010:3010"
+    # Load environment variables from the .env file in the ./server directory
     env_file:
       - ./server/.env
-    environment:
-      MONGO_URI: "mongodb+srv://dvir906:<password>@cluster0.mh7ufac.mongodb.net/?retryWrites=true&w=majority"
+    # Mount the ./server directory as /app in the container
+    # Mount the node_modules directory as a volume to persist dependencies
     volumes:
       - ./server:/app
-  db:
-    image: mongo
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
+      - /app/node_modules
 
-volumes:
-  mongodb_data:
+#   In case of running mongoDB locally - add depends on "db" in server service 
+#   db:
+#     image: mongo
+#     restart: always
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongodb_data:/data/db

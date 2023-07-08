@@ -4,6 +4,7 @@ import { verifyAccessToken } from "../services/jwt.services.js";
 
 interface CustomRequest extends Request {
   userId?: string;
+  token?:string;
 }
 
 const authJwtTokenVerify = (
@@ -16,7 +17,8 @@ const authJwtTokenVerify = (
       ? req.headers["ac-token"][0]
       : req.headers["ac-token"];
 
-    if (!token) return next(new UnauthorizeError());
+    if (!token)
+      return next(new UnauthorizeError());
     const decodedToken = verifyAccessToken(token);
 
     if (typeof decodedToken === "string") {
@@ -24,7 +26,7 @@ const authJwtTokenVerify = (
     } else {
       req.userId = decodedToken.userId;
     }
-
+    req.token = token
     next();
   } catch (error) {
     next(new UnauthorizeError());

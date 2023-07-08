@@ -16,6 +16,7 @@ import {
   SELECTED_PINNED_ITEMS_FIELDS,
   SELECTED_USER_FIELDS,
 } from "../config/constants/user.constants.js";
+import { ICreateTaskPropsType } from "../types/global.js";
 
 export async function register(
   req: Request,
@@ -65,22 +66,25 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function isLogin(req: Request, res: Response, next: NextFunction) {
-  const { token } = req.body;
-  if (!token) {
-    return next(new UnauthorizeError());
+export async function isLogin(req: any, res: Response, next: NextFunction) {
+  try {
+    const { userId } = verifyAccessToken(req.token) as JwtPayload;
+    const user = await User.findById(userId)
+      .select(SELECTED_USER_FIELDS)
+      .populate({
+        path: "pinned_items",
+        select: SELECTED_PINNED_ITEMS_FIELDS,
+      });
+
+    if (!user) {
+      Promise.reject();
+    }
+
+    res.status(200).send({ isAuthenticated: true, user });
+  } catch (error) {
+    console.log(error);
+    next(new ServerError(String(error)));
   }
-
-  const { userId } = verifyAccessToken(token) as JwtPayload;
-
-  const user = await User.findById(userId)
-    .select(SELECTED_USER_FIELDS)
-    .populate({
-      path: "pinned_items",
-      select: SELECTED_PINNED_ITEMS_FIELDS,
-    });
-
-  res.status(200).send({ isAuthenticated: true, user });
 }
 
 export async function logout(req: Request, res: Response, next: NextFunction) {

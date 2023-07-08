@@ -3,14 +3,18 @@ import { getCookie } from "./cookies";
 
 // create an axios instance with default config
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT ,
+  baseURL: process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT,
   timeout: 5000, // 5 seconds timeout
-  headers: {
-    "Content-Type": "application/json",
-    "ac-token": getCookie("ac-token"),
-  },
 });
 
+api.interceptors.request.use((config) => {
+  config.headers["Content-Type"] = "application/json";
+  const token = getCookie("ac-token");
+  if (token) {
+    config.headers["ac-token"] = token;
+  }
+  return config;
+});
 
 // define types for API response data and error message
 interface ApiResponse<T> {
