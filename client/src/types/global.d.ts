@@ -86,7 +86,6 @@ export type LayoutProps = {
   children?: ReactNode;
   isAuthenticated?: any;
   // getServerSideProps: any;
-  data:any
 };
 
 interface IUser {
