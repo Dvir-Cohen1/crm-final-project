@@ -82,10 +82,10 @@ export type FormLoginInputs = {
   password: string;
 };
 
-type LayoutProps = {
+export type LayoutProps = {
   children?: ReactNode;
   isAuthenticated?: any;
-  getServerSideProps?: any;
+  // getServerSideProps: any;
 };
 
 interface IUser {

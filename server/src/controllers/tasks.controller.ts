@@ -80,7 +80,6 @@ export const createTask = async (
 
     // Creating new slug for easy url's
     const slug = String(title).toLowerCase().replace(/\s+/g, "_");
-
     // Creating the Task
     const newTask = await Task.create({
       slug,
