@@ -6,18 +6,19 @@ import { LayoutProps } from '@/types/global';
 import { useRouter } from 'next/router';
 
 import Link from 'next/link';
+import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 
 const AuthLayout = ({ children }: LayoutProps) => {
 
-     const router = useRouter();
-     const { isAuthenticated } = store.getState().auth
+     // const router = useRouter();
+     // const { isAuthenticated } = store.getState().auth
 
      // Redirect the user to home page if authenticated
-     useEffect(() => {
-          if (isAuthenticated === true) {
-               router.replace('/');
-          }
-     }, [isAuthenticated])
+     // useEffect(() => {
+     //      if (isAuthenticated === true) {
+     //           router.replace('/');
+     //      }
+     // }, [isAuthenticated])
 
 
      return (
@@ -48,5 +49,26 @@ const AuthLayout = ({ children }: LayoutProps) => {
           </section>
      )
 }
+
+
+export const getServerSideProps = async ({ req, res }: any) => {
+     // Check if the user is authenticated
+     await store.dispatch(isLoginByToken());
+
+     const isAuthenticated = store.getState().auth
+     console.log(isAuthenticated)
+     if (isAuthenticated) {
+          res.writeHead(302, { Location: '/' }); // Redirect to the login page
+          res.end();
+          return { props: {} };
+     }
+
+     // Fetch data from your Redux store and dispatch actions if necessary
+
+     // Return the props that will be passed to the page component
+     return {
+          props: {},
+     };
+};
 
 export default AuthLayout;

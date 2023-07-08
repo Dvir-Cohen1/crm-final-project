@@ -8,7 +8,7 @@ import { isItemPinned } from '@/features/tasks/utils/task.util';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTask } from '@/features/tasks/redux/taskSlice';
 import { pinItem } from '@/features/users/redux/userSlice';
-import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
+// import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 //  Ant Design
@@ -33,7 +33,7 @@ const Task = () => {
 
   const handlePinItem = async (itemId: any) => {
     await dispatch(pinItem(itemId))
-    await dispatch(isLoginByToken())
+    // await dispatch(isLoginByToken())
   };
 
   // Get the task state from redux slices

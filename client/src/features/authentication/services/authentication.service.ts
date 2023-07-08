@@ -1,5 +1,5 @@
 import { api } from "@/utils/api";
-import { getCookie } from "@/utils/cookies";
+import { getCookie, setCookie } from "@/utils/cookies";
 
 export async function register(formValue: object) {
   try {
@@ -19,6 +19,7 @@ export async function login(formValue: object) {
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + "auth/login",
       formValue
     );
+    setCookie("ac-token", response.data.token);
     return response.data;
   } catch (error: any) {
     return Promise.reject(
@@ -29,11 +30,7 @@ export async function login(formValue: object) {
 
 export async function isLogin() {
   try {
-    const token = getCookie("ac-token");
-    if (!token) Promise.reject();
-
-    const response = await api.post("auth/isLogin", { token });
-
+    const response = await api.post("auth/isLogin");
     return response.data;
   } catch (error: any) {
     return Promise.reject(
@@ -45,7 +42,8 @@ export async function isLogin() {
 export async function logout(userId: string) {
   try {
     const token = getCookie("ac-token");
-    if (!token) Promise.reject();
+    if (!token) return null;
+    // if (!token) Promise.reject();
     const response = await api.post(`auth/logout/${userId}`, { token });
 
     return response.data;
