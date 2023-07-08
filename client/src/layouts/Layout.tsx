@@ -1,38 +1,37 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Navbar from './Navbar/Navbar'
 import Sidebar from './Sidebar/Sidebar';
 import useLoader from "@/hooks/useLoader";
 import SkeletonLoader from '@/components/common/SkeletonLoader';
-import { AuthState, LayoutProps, RootState } from '@/types/global';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Footer from './Footer/Footer';
-import { useSelector } from 'react-redux';
-import router from 'next/router';
 import useAuthChecking from '@/hooks/useAuthChecking';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/types/global';
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children }: any) => {
      const isLoading = useLoader(300);
-     
-     const isCheckingAuth = useAuthChecking();
 
-     if (isCheckingAuth) {
-       return null; // Render nothing while checking authentication
+     useAuthChecking();
+     const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+
+     if (!isAuthenticated) {
+          return null
      }
 
      return (
-          <>
+          <body>
                <Navbar />
-               <div className='mt-1 flex'>
+               <section className='mt-1 flex'>
                     <Sidebar />
                     <main className="w-full px-4 lg:px-20 lg:py-2 flex flex-col">
                          <Breadcrumbs />
                          {isLoading ? <SkeletonLoader isLoading={isLoading} /> : children}
                          <Footer />
                     </main>
-               </div>
-          </>
+               </section>
+          </body>
      );
 };
-
 
 export default Layout;
