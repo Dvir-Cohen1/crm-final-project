@@ -28,7 +28,6 @@ export const loginByPayload = createAsyncThunk(
 export const isLoginByToken = createAsyncThunk(
   "auth/isLoginByToken",
   async () => {
-    console.log("first");
     const data = await isLogin();
     return data;
   }
@@ -57,12 +56,20 @@ export const authSlice = createSlice({
   reducers: {
     resetErrors: (state) => {
       setTimeout(() => {
-        state.isError = false;
+        state.isError = null;
         state.error = "";
-      }, 6000);
+      }, 4000);
     },
     setIsLogin: (state, { payload }) => {
       state.isAuthenticated = payload.isAuthenticated;
+    },
+    cleanStates: (state) => {
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.isRegister = false;
+      state.isError = null;
+      state.error = "";
+      state.user = null;
     },
   },
   extraReducers: (builder) => {
@@ -143,5 +150,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
+export const { cleanStates,resetErrors} = authSlice.actions;
 export default authSlice.reducer;

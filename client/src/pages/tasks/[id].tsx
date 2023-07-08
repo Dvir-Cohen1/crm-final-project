@@ -25,8 +25,10 @@ import TypeTags from '@/features/tasks/components/TypeTags';
 import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
 import useFileUpload from '@/features/tasks/hooks/useAttachments';
 import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
+import store from '@/redux/store';
 
 const Task = () => {
+
   const router = useRouter();
   const { id }: any = router.query;
 
@@ -69,38 +71,38 @@ const Task = () => {
 
   const exportItems: MenuProps['items'] = [
     {
-         key: '1',
-         label: (
-              <div onClick={() => {}}>
+      key: '1',
+      label: (
+        <div onClick={() => { }}>
 
-                        {/* <PaperClipOutlined /> */}
-                        csv
+          {/* <PaperClipOutlined /> */}
+          csv
 
-              </div>
-         ),
+        </div>
+      ),
     },
     {
-         key: '2',
-         label: (
-              <div onClick={() => {}}>
+      key: '2',
+      label: (
+        <div onClick={() => { }}>
 
-                        {/* <PaperClipOutlined /> */}
-                        xml
+          {/* <PaperClipOutlined /> */}
+          xml
 
-              </div>
-         ),
+        </div>
+      ),
     },
     {
-         key: '3',
-         label: (
-              <div onClick={() => {}}>
+      key: '3',
+      label: (
+        <div onClick={() => { }}>
 
-                        {/* <PaperClipOutlined /> */}
-                        xlsx
-              </div>
-         ),
+          {/* <PaperClipOutlined /> */}
+          xlsx
+        </div>
+      ),
     },
-];
+  ];
 
 
   return (
