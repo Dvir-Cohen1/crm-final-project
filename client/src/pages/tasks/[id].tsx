@@ -24,6 +24,7 @@ import useEditTask from '@/features/tasks/hooks/useEditTask';
 import TypeTags from '@/features/tasks/components/TypeTags';
 import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
 import useFileUpload from '@/features/tasks/hooks/useAttachments';
+import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 
 const Task = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const Task = () => {
 
   const handlePinItem = async (itemId: any) => {
     await dispatch(pinItem(itemId))
-    // await dispatch(isLoginByToken())
+    await dispatch(isLoginByToken())
   };
 
   // Get the task state from redux slices

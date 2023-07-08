@@ -28,6 +28,7 @@ export const loginByPayload = createAsyncThunk(
 export const isLoginByToken = createAsyncThunk(
   "auth/isLoginByToken",
   async () => {
+    console.log("first");
     const data = await isLogin();
     return data;
   }
@@ -111,7 +112,6 @@ export const authSlice = createSlice({
         state.error = action.error.message;
         state.isAuthenticated = false;
         state.user = null;
-        // router.push("/authentication/login");
       })
       .addCase(isLoginByToken.fulfilled, (state, { payload }: any) => {
         state.isAuthenticated = payload.isAuthenticated;
@@ -123,8 +123,6 @@ export const authSlice = createSlice({
       // Handle logout
       .addCase(logoutByToken.pending, (state, action) => {
         state.isLoading = true;
-        state.isError = null;
-        state.error = "";
       })
       .addCase(logoutByToken.rejected, (state, action) => {
         state.isLoading = false;
