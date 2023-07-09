@@ -6,11 +6,19 @@ import {
   ServerError,
   UnauthorizeError,
 } from "./Errors.js";
+import { sendLogger } from "../utils/logger.js";
 function generateCustomErrorResponse(
   res: Response,
   error: any,
   statusCode: number
 ) {
+  // Log error
+  sendLogger("error", error, {
+    statusCode: statusCode,
+    stackTrace: error.stack,
+  });
+
+  // Build the error response object 
   return res.status(Number(statusCode)).json({
     error: true,
     message: error.message,
