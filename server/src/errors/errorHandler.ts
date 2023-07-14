@@ -18,7 +18,7 @@ function generateCustomErrorResponse(
     stackTrace: error.stack,
   });
 
-  // Build the error response object 
+  // Build the error response object
   return res.status(Number(statusCode)).json({
     error: true,
     message: error.message,
@@ -35,21 +35,19 @@ export default function errorHandler(
 ) {
   switch (error.constructor) {
     case NotFoundError:
-      return generateCustomErrorResponse(res, error, 404);
-
+      generateCustomErrorResponse(res, error, 404);
+      break;
     case UnauthorizeError:
-      return generateCustomErrorResponse(res, error, 403);
-
+      generateCustomErrorResponse(res, error, 403);
+      break;
     case BadRequestError:
       generateCustomErrorResponse(res, error, 400);
       break;
-
     case ServerError:
       generateCustomErrorResponse(res, error, 500);
       break;
-
     default:
-      res.status(500).json("Somthing went wrong!");
+      res.status(500).json("Something went wrong!");
       break;
   }
 }

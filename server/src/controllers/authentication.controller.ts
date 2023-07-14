@@ -65,10 +65,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
     user.setJwtTokens(jwt_ac_token, jwt_rf_token);
 
-    sendLogger(
-      "info",
-      `User logged in: email='${user?.email}' id='${user?._id}'`
-    );
+    sendLogger("info", "User logged in", {
+      user: {
+        email: user?.email,
+        userId: user?._id,
+      },
+    });
 
     res.status(200).send({ error: false, data: user, token: jwt_ac_token });
   } catch (error) {
