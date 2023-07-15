@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { sendLogger } from "../utils/logger.js";
+import { logInfo } from "../utils/logger.js";
 import User from "../models/user.model.js";
 import {
   BadRequestError,
@@ -31,10 +31,7 @@ export async function register(
 
   try {
     const user = await User.create({ firstName, lastName, email, password });
-    sendLogger(
-      "info",
-      `User registered: email='${user?.email}' userId='${user?._id}'`
-    );
+    logInfo("User registered", req);
     res.status(201).send({ error: false, data: user });
   } catch (error: any) {
     if (typeof "MongoError") {
@@ -65,12 +62,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
     user.setJwtTokens(jwt_ac_token, jwt_rf_token);
 
-    sendLogger("info", "User logged in", {
-      user: {
-        email: user?.email,
-        userId: user?._id,
-      },
-    });
+    logInfo("User login", req);
 
     res.status(200).send({ error: false, data: user, token: jwt_ac_token });
   } catch (error) {
@@ -112,10 +104,7 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
     const user = await User.findOne({ _id: userId });
     user?.deleteAcToken();
 
-    sendLogger(
-      "info",
-      `User logged out: email='${user?.email}' userId='${user?._id}'`
-    );
+    logInfo("User logout", req);
 
     res.status(200).end();
   } catch (error) {

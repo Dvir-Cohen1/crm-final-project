@@ -1,7 +1,9 @@
 import winston, { createLogger, format, transports } from "winston";
 import { format as dateFormat } from "date-fns";
-import { Request } from "express";
 import crypto from "crypto";
+import { ILogInfo, Request } from "../types/global";
+import { SendLoggerFunction } from "../types/global";
+import bcrypt from "bcrypt";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 const loggerTransports: winston.transport[] = [];
@@ -76,15 +78,15 @@ const generateRequestId = (): string => {
 const logger = createLogger({
   level: isDevelopment ? "silly" : "info",
   format: format.combine(
-    format.colorize(),
+    // format.colorize(),
     format.timestamp(),
     format.printf(({ timestamp, level, message, requestId, ...meta }) => {
       const logObject = {
         timestamp,
-        level,
+        severity: level.toLocaleUpperCase(),
         message,
         requestId,
-        ...meta
+        ...meta,
       };
 
       return JSON.stringify(logObject, null, 2);
@@ -93,15 +95,13 @@ const logger = createLogger({
   transports: loggerTransports,
 });
 
-
-
 // Send log message - use this function to log something
-export const sendLogger = (
-  severity: string = "info",
-  message: string,
-  options: {} | null = null,
-  request: Request | null = null,
-  requestId: string = ""
+export const sendLogger: SendLoggerFunction = (
+  severity = "info",
+  message,
+  options = null,
+  request = null,
+  requestId = ""
 ) => {
   const requestInfo = request
     ? `\n  [method=${request.method}] [url=${request.url}]` +
@@ -119,6 +119,32 @@ export const sendLogger = (
   logger.log(severity, `${message} ${userData}`, {
     ...options,
     requestId: finalRequestId,
+  });
+};
+
+export const logInfo = async (
+  message: string,
+  req: Request,
+  options: {} | null = null
+) => {
+  // delete the password & token in the req.body, if it exists
+  req.body && req.body.password && delete req.body.password;
+  req.body && req.body.token && delete req.body.token;
+
+  return sendLogger("info", message, {
+    userInformation: {
+      userId: req.userId,
+      ipAddress: req.ip,
+      userAgent: req.headers["user-agent"],
+    },
+    requestInformation: {
+      path: req.route.path ? req.route.path : null,
+      originalUrl: req.originalUrl ? req.originalUrl : null,
+      params: req.params ? req.params : null,
+      query: req.query ? req.query : null,
+      payLoad: req.body ? req.body : null,
+    },
+    ...options,
   });
 };
 
