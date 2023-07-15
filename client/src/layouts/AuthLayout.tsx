@@ -1,24 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import AuthNavbar from './AuthNavbar'
 import Image from 'next/image'
-import store from '@/redux/store';
-import { LayoutProps } from '@/types/global';
-import { useRouter } from 'next/router';
-
+import { LayoutProps, RootState } from '@/types/global';
 import Link from 'next/link';
+import useAuthChecking from '@/hooks/useAuthChecking';
+import { AUTH_LAYOUT_FOOTER_LINKS } from '@/features/authentication/constants/links';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const AuthLayout = ({ children }: LayoutProps) => {
 
-     const router = useRouter();
-     const { isAuthenticated } = store.getState().auth
+     useAuthChecking();
+     const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-     // Redirect the user to home page if authenticated
-     useEffect(() => {
-          if (isAuthenticated === true) {
-               router.replace('/');
-          }
-     }, [isAuthenticated])
-
+     if (isAuthenticated) {
+          return null
+     }
 
      return (
           <section >
@@ -26,25 +23,23 @@ const AuthLayout = ({ children }: LayoutProps) => {
                <main className='flex flex-col justify-center min-h-full mx-auto p-5 lg:w-1/4 lg:p-8 '>
                     {children}
                </main>
-               <div className='hidden md:flex justify-between items-end mt-10 h-0  absolute w-full bottom-0 '>
+               <footer className='hidden md:flex justify-between items-end mt-10 h-0  absolute w-full bottom-0 '>
 
-                    <Image className='' width={360} height={360} src="/left.svg" alt='' />
+                    <Image width={360} height={360} src="/left.svg" alt='' />
                     <div className='text-sm my-5 flex gap-4 text-gray-300'>
-                         <Link className='text-gray-500' href={"/"}>
-                              <span className='text-gray-500'>Privacy Policy</span>
-                         </Link>
-                         |
-                         <Link href={"/"}>
-                              <span className='text-gray-500'>Terms Of Use </span>
-                         </Link>
-                         |
-                         <Link href={"/"}>
-                              <span className='text-gray-500'> User Manual </span>
-                         </Link>
+                         {AUTH_LAYOUT_FOOTER_LINKS?.map((item, indexId) => {
+                              return (
+                                   <span key={indexId}>
+                                        <Link className='text-gray-500' href={"/"}>
+                                             <span className='text-gray-500'>{item.label}</span>
+                                        </Link>
+                                        {indexId !== 2 && "|"}
+                                   </span>
+                              )
+                         })}
                     </div>
                     <Image className='hidden md:block' width={360} height={360} src="/right.svg" alt='' />
-
-               </div>
+               </footer>
           </section>
      )
 }

@@ -42,7 +42,7 @@ export const logoutByToken = createAsyncThunk(
 );
 
 const initialState: AuthState = {
-  isAuthenticated: null,
+  isAuthenticated: false,
   isLoading: false,
   isRegister: false,
   isError: null,
@@ -56,12 +56,20 @@ export const authSlice = createSlice({
   reducers: {
     resetErrors: (state) => {
       setTimeout(() => {
-        state.isError = false;
+        state.isError = null;
         state.error = "";
-      }, 6000);
+      }, 4000);
     },
     setIsLogin: (state, { payload }) => {
       state.isAuthenticated = payload.isAuthenticated;
+    },
+    cleanStates: (state) => {
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.isRegister = false;
+      state.isError = null;
+      state.error = "";
+      state.user = null;
     },
   },
   extraReducers: (builder) => {
@@ -92,14 +100,12 @@ export const authSlice = createSlice({
         state.isError = true;
       })
       .addCase(loginByPayload.fulfilled, (state, { payload }: any) => {
-        setCookie("ac-token", payload.token);
         state.isLoading = false;
         state.isRegister = true;
         state.error = "";
         state.isError = false;
         state.user = payload.data;
         state.isAuthenticated = true;
-        router.push("/")
       })
       // Handle isLogin?
       .addCase(isLoginByToken.pending, (state, action) => {
@@ -113,22 +119,17 @@ export const authSlice = createSlice({
         state.error = action.error.message;
         state.isAuthenticated = false;
         state.user = null;
-        router.push("/authentication/login");
       })
       .addCase(isLoginByToken.fulfilled, (state, { payload }: any) => {
+        state.isAuthenticated = payload.isAuthenticated;
         state.isLoading = false;
         state.isError = null;
-        state.isRegister = true;
         state.error = "";
         state.user = payload.user;
-        state.isAuthenticated = payload.isAuthenticated;
-        
       })
       // Handle logout
       .addCase(logoutByToken.pending, (state, action) => {
         state.isLoading = true;
-        state.isError = null;
-        state.error = "";
       })
       .addCase(logoutByToken.rejected, (state, action) => {
         state.isLoading = false;
@@ -149,5 +150,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
+export const { cleanStates, resetErrors } = authSlice.actions;
 export default authSlice.reducer;

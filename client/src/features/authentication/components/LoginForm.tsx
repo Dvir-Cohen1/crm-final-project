@@ -28,12 +28,10 @@ const LoginForm = () => {
 
      const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
 
-     const onSubmitLogin = (data: FormLoginInputs) => {
-          dispatch(loginByPayload(data))
+     const onSubmitLogin = async (data: FormLoginInputs) => {
+          await dispatch(loginByPayload(data))
           // console.log(first)
      }
-
-     
 
      return (
           <form onSubmit={handleSubmit(onSubmitLogin)}>

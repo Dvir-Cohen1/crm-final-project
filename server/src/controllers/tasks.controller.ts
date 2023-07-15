@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import Task from "../models/task.model.js";
 import archiver from "archiver";
 import fs from "fs";
-import { Readable } from "stream";
-
 import {
   BadRequestError,
   NotFoundError,
@@ -82,7 +80,6 @@ export const createTask = async (
 
     // Creating new slug for easy url's
     const slug = String(title).toLowerCase().replace(/\s+/g, "_");
-
     // Creating the Task
     const newTask = await Task.create({
       slug,
@@ -283,7 +280,7 @@ export const uploadAttachments = async (
 
     const task = await getPopulateTask(taskId);
 
-    // Get and filter the files that allready existed in the task
+    // Get and filter the files that already existed in the task
     const existingFileNames = task?.attachments.map((obj: any) => obj.name);
     const filteredFiles = files.filter(
       (file: any) => !existingFileNames?.includes(file.originalname)
