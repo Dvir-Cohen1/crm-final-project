@@ -280,7 +280,7 @@ export const uploadAttachments = async (
 
     const task = await getPopulateTask(taskId);
 
-    // Get and filter the files that allready existed in the task
+    // Get and filter the files that already existed in the task
     const existingFileNames = task?.attachments.map((obj: any) => obj.name);
     const filteredFiles = files.filter(
       (file: any) => !existingFileNames?.includes(file.originalname)

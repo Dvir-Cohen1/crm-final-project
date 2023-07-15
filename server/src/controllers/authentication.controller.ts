@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { logInfo } from "../utils/logger.js";
 import User from "../models/user.model.js";
 import {
   BadRequestError,
@@ -16,7 +17,6 @@ import {
   SELECTED_PINNED_ITEMS_FIELDS,
   SELECTED_USER_FIELDS,
 } from "../config/constants/user.constants.js";
-import { ICreateTaskPropsType } from "../types/global.js";
 
 export async function register(
   req: Request,
@@ -31,6 +31,7 @@ export async function register(
 
   try {
     const user = await User.create({ firstName, lastName, email, password });
+    logInfo("User registered", req);
     res.status(201).send({ error: false, data: user });
   } catch (error: any) {
     if (typeof "MongoError") {
@@ -60,6 +61,9 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const jwt_rf_token = createRefreshToken(user._id);
 
     user.setJwtTokens(jwt_ac_token, jwt_rf_token);
+
+    logInfo("User login", req);
+
     res.status(200).send({ error: false, data: user, token: jwt_ac_token });
   } catch (error) {
     next(new ServerError(String(error)));
@@ -69,6 +73,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 export async function isLogin(req: any, res: Response, next: NextFunction) {
   try {
     const { userId } = verifyAccessToken(req.token) as JwtPayload;
+
     const user = await User.findById(userId)
       .select(SELECTED_USER_FIELDS)
       .populate({
@@ -98,6 +103,9 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await User.findOne({ _id: userId });
     user?.deleteAcToken();
+
+    logInfo("User logout", req);
+
     res.status(200).end();
   } catch (error) {
     next(new ServerError(String(error)));

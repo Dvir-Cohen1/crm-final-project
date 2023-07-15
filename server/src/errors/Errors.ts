@@ -17,6 +17,6 @@ export class BadRequestError extends Error {
 }
 export class ServerError extends Error {
   constructor(message?: string) {
-    super(message || "Somthing went wrong");
+    super(message || "Something went wrong");
   }
 }
