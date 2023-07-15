@@ -31,8 +31,9 @@ export function deleteFile(filename: string) {
   return filename;
 }
 
+
 // Upload Files
-export async function uploadfiles(
+export async function uploadFiles(
   next: NextFunction,
   files: Express.Multer.File | {} | undefined,
   folderId: string

@@ -16,7 +16,7 @@ import { createSlugFromText } from "../utils/text.util.js";
 import {
   deleteAllFiles,
   deleteOneFile,
-  uploadfiles,
+  uploadFiles,
 } from "../utils/files.util.js";
 import {
   getAllPopulateTasks,
@@ -296,7 +296,7 @@ export const uploadAttachments = async (
     }
 
     // Upload the files
-    const uploadedFiles: any = await uploadfiles(next, filteredFiles, taskId);
+    const uploadedFiles: any = await uploadFiles(next, filteredFiles, taskId);
 
     // Push uploaded files to task attachments
     if (uploadedFiles?.isError) {
