@@ -143,7 +143,7 @@ const Task = () => {
             icon={<PaperClipOutlined />}
             onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
           >
-            Attach
+            <div className="hidden md:inline ps-2">Attach</div>
           </Button>
           <input
             id="file-upload"
@@ -157,7 +157,7 @@ const Task = () => {
           {
             mainTaskActionButtons.map((item, indexId) => {
               return (
-                <Button key={indexId} type='ghost' className='font-semibold custom-ghost-button' icon={item.icon}>{item.title} </Button>
+                <Button key={indexId} type='ghost' className='font-semibold custom-ghost-button' icon={item.icon}> <div className="hidden md:inline">{item.title}</div> </Button>
               )
             })
           }
@@ -168,7 +168,8 @@ const Task = () => {
               icon={<ExportOutlined />}
             // onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
             >
-              Export
+              <div className="hidden md:inline ps-2">Export</div>
+              
             </Button>
           </Dropdown>
         </div>
@@ -188,6 +189,36 @@ const Task = () => {
             </div>
             <div className="task-attachments">
               <TaskAttachments taskId={task?._id} attachments={task?.attachments} />
+            </div>
+            <hr className='xs:block sm:block lg:hidden my-6 ' />
+          </section>
+          <section className='md:me-14'>
+            <h2 className='mb-5'>Activity</h2>
+            <div className="flex gap-3 place-items-center">
+              <span>Show:</span>
+              <Button
+                size='small'
+                type='ghost'
+                className='font-semibold custom-ghost-button'
+              >
+                Comments
+              </Button>
+              <Button
+                size='small'
+                type='ghost'
+                className='font-semibold custom-ghost-button'
+              >
+                History
+              </Button>
+            </div>
+            <div className='my-5'>
+
+              {task?.comments.map((item: { _id: string, content: string }) => {
+                return (
+                  <div key={item._id}>{item.content}</div>
+                )
+              })}
+
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>

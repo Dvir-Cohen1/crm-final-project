@@ -1,4 +1,6 @@
 import { Schema, model } from "mongoose";
+import TaskComment from "./taskComments.js";
+
 
 const fileSchema = new Schema(
   {
@@ -81,6 +83,11 @@ const taskSchema = new Schema(
     },
     attachments: {
       type: [fileSchema],
+      default: [],
+      unique: false,
+    },
+    comments: {
+      type: [TaskComment.schema], // Embed an array of task comments within the task
       default: [],
       unique: false,
     },

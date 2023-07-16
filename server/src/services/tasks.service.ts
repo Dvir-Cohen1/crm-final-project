@@ -2,7 +2,7 @@ import {
   TASK_POPULATE_SELECTED_FIELDS,
   TASK_POPULATE_STATUS_SELECTED_FIELDS,
 } from "../config/constants/task.constants.js";
-import Task from "../models/task.model.js";
+import Task from "../models/tasks/task.model.js";
 
 export const getAllPopulateTasks = async () => {
   return Task.find()

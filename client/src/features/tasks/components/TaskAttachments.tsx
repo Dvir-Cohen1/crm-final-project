@@ -142,7 +142,7 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
             </Image.PreviewGroup>
           </div>
           {attachments?.length > 6 && (
-            <div>
+            <div className='mb-5'>
               <Button onClick={handleToggleAttachments}>
                 {showAllAttachments ? 'Hide' : `Show all (${remainingAttachmentsCount})`}
               </Button>

@@ -479,3 +479,25 @@ a {
 .attachment-card:hover .attachment-actions-button {
 	display: flex;
 }
+
+/* width */
+::-webkit-scrollbar {
+	height: 14px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #dcdfe4;
+	border-radius: 4px;
+
+}
+
+/* Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover {
+	background: #dcdfe4;
+} */
