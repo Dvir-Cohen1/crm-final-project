@@ -26,6 +26,7 @@ import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
 import useFileUpload from '@/features/tasks/hooks/useAttachments';
 import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 import store from '@/redux/store';
+import ActivityTabs from '@/features/tasks/components/ActivityTabs';
 
 const Task = () => {
 
@@ -103,7 +104,7 @@ const Task = () => {
       ),
     },
   ];
-
+console.log(task.taskUpdates)
 
   return (
     <Layout>
@@ -192,36 +193,7 @@ const Task = () => {
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>
-          <section className='md:me-14'>
-            <h2 className='mb-5'>Activity</h2>
-            <div className="flex gap-3 place-items-center">
-              <span>Show:</span>
-              <Button
-                size='small'
-                type='ghost'
-                className='font-semibold custom-ghost-button'
-              >
-                Comments
-              </Button>
-              <Button
-                size='small'
-                type='ghost'
-                className='font-semibold custom-ghost-button'
-              >
-                History
-              </Button>
-            </div>
-            <div className='my-5'>
-
-              {task?.comments.map((item: { _id: string, content: string }) => {
-                return (
-                  <div key={item._id}>{item.content}</div>
-                )
-              })}
-
-            </div>
-            <hr className='xs:block sm:block lg:hidden my-6 ' />
-          </section>
+          <ActivityTabs comments={task?.comments}/>
         </Col>
 
         {/* right Col */}

@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import TaskComment from "./taskComments.js";
-
+import { TaskUpdate } from "./taskUpdates.js";
 
 const fileSchema = new Schema(
   {
@@ -96,6 +96,50 @@ const taskSchema = new Schema(
     timestamps: true,
   }
 );
+
+interface Task extends Document {
+  [key: string]: any;
+  taskUpdates: typeof TaskUpdate[];
+}
+
+// taskSchema.pre<Task>("save", async function (next) {
+
+//   try {
+//     // Check if the document is new (insert) or being updated
+//     if (this.isNew) {
+//       // If it's a new Task, no need to create TaskUpdate
+//       return next();
+//     }
+
+//     // Get the original document from the database
+//     const originalTask = (await Task.findById(this._id)) as Task;
+
+//     // Get all modified fields
+//     const modifiedPaths = (await this.modifiedPaths()) as (keyof Task)[];
+
+//     // Create changes array to store all field changes
+//     const changes = modifiedPaths.map((field) => ({
+//       field: field as string,
+//       from: originalTask[field],
+//       to: this[field],
+//     }));
+
+//     // Create a TaskUpdate if there are changes
+//     if (changes.length > 0) {
+//       const userId = (this as any).constructor.userId || null;
+//       await TaskUpdate.create({
+//         taskId: this._id,
+//         userId,
+//         changes: changes,
+//       });
+//     }
+
+//     next();
+//   } catch (err: any) {
+//     console.error("Error:", err);
+//     next(err);
+//   }
+// });
 
 const Task = model("Task", taskSchema);
 
