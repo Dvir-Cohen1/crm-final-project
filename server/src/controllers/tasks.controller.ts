@@ -22,7 +22,6 @@ import {
   getPopulateTask,
 } from "../services/tasks.service.js";
 import TaskComment from "../models/tasks/taskComments.js";
-import { Change } from "../models/tasks/taskUpdates.js";
 
 // Get all
 export const allTasks = async (
@@ -143,40 +142,31 @@ export const editTask = async (
 ) => {
   try {
     const { taskId } = req.params;
-    const existingTask = await Task.findById(taskId);
     const { userId: createdByUserId } = req as ICreateTaskPropsType;
 
+    const existingTask: any = await Task.findById(taskId);
+
     if (!existingTask) {
-      return res.status(404).send({ error: true, message: "Task not found" });
-    } // Create a copy of the existing task data
+      return next(new NotFoundError("Task not found"));
+    }
+
+    // Create a copy of the existing task data
     const previousData: any = existingTask.toObject();
-    const bodyRequest: any = req.body;
 
-   // Update the task with the new data
-   existingTask.set(req.body);
-   const editedTask = await existingTask.save();
+    // Update the task with the new data
+    existingTask.set(req.body);
+    const editedTask = await existingTask.save();
 
-   // Call the createTaskUpdate function to create a TaskUpdate record
-   const changes: Change[] = [];
-   for (const key in req.body) {
-     if (previousData[key] !== req.body[key]) {
-       const from = previousData[key];
-       const to = req.body[key];
+    const keyName = Object.keys(req.body)[0];
 
-       // Convert 'to' to an array if 'from' is an array
-       const toValue = Array.isArray(from) ? [to] : to;
+    await createTaskUpdate(
+      taskId,
+      keyName,
+      previousData[keyName],
+      existingTask[keyName],
+      createdByUserId
+    ); // Assuming req.userId is available through middleware
 
-       changes.push({
-         field: key,
-         from: from,
-         to: toValue,
-       });
-     }
-   }
-
-   if (changes.length > 0) {
-     await createTaskUpdate(taskId, changes, createdByUserId); // Assuming req.userId is available through middleware
-   }
     res.status(200).send({ error: false, data: editedTask });
   } catch (error) {
     console.log(error);

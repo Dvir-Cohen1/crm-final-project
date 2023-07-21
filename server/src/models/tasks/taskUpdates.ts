@@ -1,28 +1,13 @@
-import mongoose, { Schema, Document, model, Model } from "mongoose";
-
-export interface Change {
-     field: string;
-     from: any;
-     to: any;
-   }
-
-   interface TaskUpdate extends Document {
-     taskId: Schema.Types.ObjectId;
-     changes: Change[];
-     updated_by?: Schema.Types.ObjectId;
-     updated_at: Date;
-   }
-
-// interface TaskUpdate extends Document {
-//   taskId: Schema.Types.ObjectId;
-//   changes: Array<{
-//     field: string;
-//     from: any;
-//     to: any;
-//   }>;
-//   updated_by?: Schema.Types.ObjectId;
-//   updated_at: Date;
-// }
+import { Schema, Document, model, Model } from "mongoose";
+interface TaskUpdate extends Document {
+  taskId: Schema.Types.ObjectId;
+  changes: {};
+  fieldName: string;
+  fromValue: string;
+  toValue: string;
+  updated_by?: Schema.Types.ObjectId;
+  updated_at: Date;
+}
 
 const taskUpdateSchema = new Schema<TaskUpdate>(
   {
@@ -36,14 +21,18 @@ const taskUpdateSchema = new Schema<TaskUpdate>(
       ref: "User",
       required: [true, "updated_by field is required"],
     }, // Include userId (updated_by) field with reference to User model
-    updated_at: { type: Date, default: Date.now },
-    changes: [
-      {
-        field: String,
-        from: Schema.Types.Mixed,
-        to: Schema.Types.Mixed,
-      },
-    ],
+    fieldName: {
+      type: String,
+      required: [true, "fieldName field is required"],
+    },
+    fromValue: {
+      type: Schema.Types.Mixed,
+      required: [true, "fromValue field is required"],
+    },
+    toValue: {
+      type: Schema.Types.Mixed,
+      required: [true, "toValue field is required"],
+    },
   },
   {
     timestamps: true, // Include timestamps field

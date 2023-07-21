@@ -40,17 +40,17 @@ const taskSchema = new Schema(
     },
     title: {
       type: String,
-      require: [true, "Field title is requierd!"],
+      require: [true, "Field title is required!"],
     },
     type: {
       type: String,
       enum: ["private", "public"],
-      require: [true, "Field type is requierd!"],
+      require: [true, "Field type is required!"],
     },
     status: {
       type: Schema.Types.ObjectId,
       ref: "TaskStatuses",
-      require: [true, "Field status is requierd!"],
+      require: [true, "Field status is required!"],
     },
     description: {
       type: String,
@@ -99,7 +99,7 @@ const taskSchema = new Schema(
 
 interface Task extends Document {
   [key: string]: any;
-  taskUpdates: typeof TaskUpdate[];
+  taskUpdates: (typeof TaskUpdate)[];
 }
 
 // taskSchema.pre<Task>("save", async function (next) {

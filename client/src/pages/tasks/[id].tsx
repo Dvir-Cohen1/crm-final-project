@@ -104,7 +104,6 @@ const Task = () => {
       ),
     },
   ];
-console.log(task.taskUpdates)
 
   return (
     <Layout>
@@ -170,7 +169,7 @@ console.log(task.taskUpdates)
             // onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
             >
               <div className="hidden md:inline ps-2">Export</div>
-              
+
             </Button>
           </Dropdown>
         </div>
@@ -193,7 +192,7 @@ console.log(task.taskUpdates)
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>
-          <ActivityTabs comments={task?.comments}/>
+          <ActivityTabs comments={task?.comments} />
         </Col>
 
         {/* right Col */}

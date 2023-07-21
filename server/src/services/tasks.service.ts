@@ -28,24 +28,21 @@ export const getAllPopulateTasks = async () => {
     });
 };
 
-// Helper function to populate a single field or an array of fields
-const populateField = async (field: any, schema?: any) => {
-  if (Array.isArray(field)) {
-    // If it's an array, populate each element
-    const populatedArray = await Promise.all(
-      field.map(async (item: any) => {
-        if (item instanceof mongoose.Types.ObjectId && schema) {
-          return await schema.findById(item);
-        }
-        return item;
-      })
-    );
-    return populatedArray;
-  } else if (field instanceof mongoose.Types.ObjectId && schema) {
-    // If it's a single ObjectId, populate it
-    return await schema.findById(field);
+// Helper function to populate a field by its ObjectId value
+const populateField = async (value: any, fieldName: any) => {
+  switch (fieldName) {
+    case "status":
+      return await TaskStatuses.findById(value).lean();
+    case "assignee":
+      return await User.findById(value).lean();
+    case "followers":
+      return await User.findById(value).lean();
+    case "created_by":
+      return await User.findById(value).lean();
+    // Add more cases for other fields if needed
+    default:
+      return value; // Return the original value if no population needed
   }
-  return field;
 };
 
 export const getPopulateTask = async (taskId: string) => {
@@ -69,34 +66,35 @@ export const getPopulateTask = async (taskId: string) => {
     .lean();
 
   // Fetch the related TaskUpdate documents for the Task
-  const taskUpdates = await getPopulateTaskUpdates(taskId);
+  const taskUpdates = await TaskUpdate.find({ taskId });
 
-  console.log(taskUpdates);
-  // Create an array to store the modified taskUpdates
-  // const updatedTaskUpdates = [];
+  // Create an array of promises for populating fromValue and toValue
+  const populatePromises = taskUpdates.map(async (update) => {
+    const { fieldName, fromValue, toValue, updated_by, createdAt }: any =
+      update;
+    const populatedFromValue =
+      fromValue instanceof mongoose.Types.ObjectId
+        ? await populateField(fromValue, fieldName)
+        : fromValue;
+    const populatedToValue =
+      toValue instanceof mongoose.Types.ObjectId
+        ? await populateField(toValue, fieldName)
+        : toValue;
 
-  // for (const update of taskUpdates) {
-  //   const updatedFields = [];
-  //   for (const change of update.changes) {
-  //     // Populate the 'from' and 'to' fields if they are mongoose.Types.ObjectId
-  //     const populatedFrom = await populateField(change.from, <corresponding schema>);
-  //     const populatedTo = await populateField(change.to, <corresponding schema>);
+    return {
+      fieldName,
+      fromValue: populatedFromValue,
+      toValue: populatedToValue,
+      updated_by,
+      createdAt,
+    };
+  });
 
-  //     const updatedField = {
-  //       field: change.field,
-  //       from: populatedFrom,
-  //       to: populatedTo,
-  //       updated_at: update.updated_at,
-  //     };
-  //     updatedFields.push(updatedField);
-  //   }
+  // Execute all population promises
+  const populatedUpdates = await Promise.all(populatePromises);
 
-  //   // Add the updated fields to the taskUpdates array
-  //   updatedTaskUpdates.push(...updatedFields);
-  // }
-
-  // // Assign the updated taskUpdates to the task object
-  task.taskUpdates = taskUpdates;
+  // Add the populated updates to the task object only if populatedUpdates is valid
+  task.history ??= populatedUpdates;
 
   return task;
 };
@@ -104,7 +102,9 @@ export const getPopulateTask = async (taskId: string) => {
 // Function to create TaskUpdate document
 export const createTaskUpdate = async (
   taskId: string,
-  changes: Array<{ field: string; from: string; to: string }>,
+  fieldName: string,
+  fromValue: string,
+  toValue: string,
   updated_by: string
 ) => {
   try {
@@ -112,7 +112,9 @@ export const createTaskUpdate = async (
     const taskUpdate = await TaskUpdate.create({
       taskId,
       updated_by,
-      changes,
+      fieldName,
+      fromValue,
+      toValue,
     });
 
     return taskUpdate;
@@ -120,55 +122,4 @@ export const createTaskUpdate = async (
     console.error(error);
     throw error;
   }
-};
-
-// Get populated task updates for a task
-export const getPopulateTaskUpdates = async (taskId: string) => {
-  // Fetch the related TaskUpdate documents for the Task
-  const taskUpdates = await TaskUpdate.find({ taskId });
-
-  // Create an array to store the modified taskUpdates
-  const updatedTaskUpdates = [];
-
-  for (const update of taskUpdates) {
-    const updatedFields = [];
-    for (const change of update.changes) {
-      // Get the corresponding schema based on the field name
-      let correspondingSchema;
-      switch (change.field) {
-        case "status":
-          correspondingSchema = TaskStatuses; // Replace TaskStatuses with the actual model for task statuses
-          break;
-        case "assignee":
-          correspondingSchema = User;
-        case "followers":
-          correspondingSchema = User; // Replace User with the actual model for users
-          break;
-        // Add more cases as needed for other fields in your schema
-        default:
-          correspondingSchema = null; // Use null or undefined if you don't have a specific schema to populate
-          break;
-      }
-
-      // Populate the 'from' and 'to' fields if they are mongoose.Types.ObjectId
-      const populatedFrom = await populateField(
-        change.from,
-        correspondingSchema
-      );
-      const populatedTo = await populateField(change.to, correspondingSchema);
-
-      const updatedField = {
-        field: change.field,
-        from: populatedFrom,
-        to: populatedTo,
-        updated_at: update.updated_at,
-      };
-      updatedFields.push(updatedField);
-    }
-
-    // Add the updated fields to the taskUpdates array
-    updatedTaskUpdates.push(...updatedFields);
-  }
-
-  return updatedTaskUpdates;
 };
