@@ -132,7 +132,7 @@ const TaskAttachments = ({ taskId, attachments }: { taskId: string; attachments:
                       <div className='font-semibold mb-2'>{createSubString(item.name, 0, 22)}</div>
 
                       <div className='flex justify-between'>
-                        <div className='mt-auto'>{formatDateTimeToString(item.createdAt)}</div>
+                        <div className='mt-auto'>{formatDateTimeToString(item.createdAt,false)}</div>
                         <div className="mt-auto">{convertFileSizeToKB(item.size)}KB</div>
                       </div>
                     </div>

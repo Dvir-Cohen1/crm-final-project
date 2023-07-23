@@ -106,35 +106,6 @@ export const createTask = async (
   }
 };
 
-// Edit
-// export const editTask = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { taskId } = req.params;
-
-//     // Find the Task by its ID
-//     const task = await Task.findById(taskId);
-
-//     if (!task) {
-//       return res.status(404).send({ error: true, message: "Task not found" });
-//     }
-
-//     // Update the Task properties with the request body
-//     Object.assign(task, req.body);
-
-//     // Save the updated Task to trigger the middleware
-//     const editedTask = await task.save();
-
-//     res.status(200).send({ error: false, data: editedTask });
-//   } catch (error) {
-//     console.error(error);
-//     next(new BadRequestError(String(error)));
-//   }
-// };
-
 export const editTask = async (
   req: Request,
   res: Response,
@@ -359,8 +330,8 @@ export const uploadAttachments = async (
         uploadedBy: userId,
       });
     });
-
-    await task?.save();
+    await Task.findOneAndUpdate(task._id, task);
+    // await task?.save();
 
     res.status(200).send({ error: false, data: task });
   } catch (error) {
@@ -382,7 +353,8 @@ export const deleteAllAttachments = async (
 
     if (task !== undefined) {
       task.attachments = [];
-      await task.save();
+      await Task.findOneAndUpdate(task._id, task);
+      // await task.save();
     }
 
     if (isAllDeleted === null) {
@@ -419,7 +391,8 @@ export const deleteOneAttachment = async (
       task.attachments = task.attachments.filter(
         (attachment: { name: string }) => attachment.name !== fileName
       );
-      await task.save();
+      await Task.findOneAndUpdate(task._id, task);
+      // await task.set();
     }
 
     res.status(200).send({ error: !isOneDeleted, data: task });
@@ -521,7 +494,8 @@ export const addTaskComment = async (
 
     // Push the new comment to task & save
     task.comments.push(newTaskComment);
-    await task.save();
+    await Task.findOneAndUpdate(task._id, task);
+    // await task.save();
 
     res.send(task);
   } catch (error) {
@@ -553,7 +527,9 @@ export const deleteTaskComment = async (
     }
 
     // Find the index of the comment in the comments array
-    const commentIndex = task.comments.findIndex(
+    const comments = task.comments.toObject();
+
+    const commentIndex = comments.findIndex(
       (comment: { _id: string }) => comment._id?.toString() === commentId
     );
 
@@ -564,7 +540,8 @@ export const deleteTaskComment = async (
 
     // Remove the comment from the task's comments array
     task.comments.splice(commentIndex, 1);
-    await task.save();
+    await Task.findOneAndUpdate(task._id, task);
+    // await task.save();
 
     res.send(task);
   } catch (error) {

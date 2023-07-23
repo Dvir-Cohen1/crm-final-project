@@ -22,6 +22,7 @@ export async function getTaskApi(taskId: string) {
     const response = await api.get(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${taskId}`
     );
+    console.log(response.data)
     return response.data;
   } catch (error: any) {
     return Promise.reject(

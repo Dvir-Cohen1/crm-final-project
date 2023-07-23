@@ -192,7 +192,7 @@ const Task = () => {
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>
-          <ActivityTabs comments={task?.comments} />
+          <ActivityTabs comments={task?.comments} history={task?.history} />
         </Col>
 
         {/* right Col */}

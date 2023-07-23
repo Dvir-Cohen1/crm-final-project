@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Model, Document } from "mongoose";
 import {
   TASK_POPULATE_SELECTED_FIELDS,
   TASK_POPULATE_STATUS_SELECTED_FIELDS,
@@ -32,13 +33,11 @@ export const getAllPopulateTasks = async () => {
 const populateField = async (value: any, fieldName: any) => {
   switch (fieldName) {
     case "status":
-      return await TaskStatuses.findById(value).lean();
+      return await TaskStatuses.findById(value);
     case "assignee":
-      return await User.findById(value).lean();
+      return await User.findById(value);
     case "followers":
-      return await User.findById(value).lean();
-    case "created_by":
-      return await User.findById(value).lean();
+      return await User.findById(value);
     // Add more cases for other fields if needed
     default:
       return value; // Return the original value if no population needed
@@ -63,10 +62,21 @@ export const getPopulateTask = async (taskId: string) => {
       path: "status",
       select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
     })
+    // convert to plain js object instead of Mongoose object for performance porose
     .lean();
 
   // Fetch the related TaskUpdate documents for the Task
-  const taskUpdates = await TaskUpdate.find({ taskId });
+  const taskUpdates = await getTaskUpdatesWithPopulatedFields(taskId);
+
+  // Add the taskUpdates to the task object only if taskUpdates is valid
+  task.history ??= taskUpdates;
+
+  return task;
+};
+
+const getTaskUpdatesWithPopulatedFields = async (taskId: string) => {
+  // Fetch the related TaskUpdate documents for the Task
+  const taskUpdates = await TaskUpdate.find({ taskId }).sort({ _id: -1 });
 
   // Create an array of promises for populating fromValue and toValue
   const populatePromises = taskUpdates.map(async (update) => {
@@ -83,9 +93,35 @@ export const getPopulateTask = async (taskId: string) => {
 
     return {
       fieldName,
-      fromValue: populatedFromValue,
-      toValue: populatedToValue,
-      updated_by,
+      fromValue:
+        fieldName === "assignee"
+          ? [
+              await User.findById(fromValue).select([
+                "firstName",
+                "lastName",
+                "email",
+                "imgSRC",
+              ]),
+            ]
+          : populatedFromValue,
+      toValue:
+        fieldName === "assignee"
+          ? [
+              await User.findById(toValue).select([
+                "firstName",
+                "lastName",
+                "email",
+                "imgSRC",
+              ]),
+            ]
+          : populatedToValue,
+      updated_by: await User.findById(updated_by).select([
+        "firstName",
+        "lastName",
+        "email",
+        "imgSRC",
+      ]),
+
       createdAt,
     };
   });
@@ -93,10 +129,7 @@ export const getPopulateTask = async (taskId: string) => {
   // Execute all population promises
   const populatedUpdates = await Promise.all(populatePromises);
 
-  // Add the populated updates to the task object only if populatedUpdates is valid
-  task.history ??= populatedUpdates;
-
-  return task;
+  return populatedUpdates;
 };
 
 // Function to create TaskUpdate document
@@ -122,4 +155,37 @@ export const createTaskUpdate = async (
     console.error(error);
     throw error;
   }
+};
+
+export const getTaskWithPopulatedFields = async (
+  Task: Model<Document>,
+  taskId: string
+) => {
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new Error("Task not found");
+  }
+
+  // Get the schema paths
+  const schemaPaths = Task.schema.paths;
+
+  // Array to store field names to populate
+  const fieldsToPopulate = [];
+
+  // Loop through the schema paths and check if the field has a 'ref' option
+  for (const path in schemaPaths) {
+    if (schemaPaths[path].options.ref) {
+      fieldsToPopulate.push(path);
+    }
+  }
+
+  // Populate the fields based on the 'fieldsToPopulate' array
+  await Promise.all(
+    fieldsToPopulate.map(async (field) => {
+      await task.populate(field);
+    })
+  );
+
+  return task;
 };

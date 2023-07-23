@@ -31,15 +31,15 @@ const PriorityTags = ({ priorityTitle }: { priorityTitle: string }) => {
      }
 
      switch (lowerPriorityString) {
-          case "high":
+          case "high" || "High":
                component = <HighPriorityComponent />
                break;
 
-          case "medium":
+          case "medium" || "Medium":
                component = <MediumPriorityComponent />
                break;
 
-          case "low":
+          case "low" || "Low":
                component = <LowPriorityComponent />
                break;
 

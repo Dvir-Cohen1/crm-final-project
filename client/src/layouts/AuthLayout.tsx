@@ -10,11 +10,12 @@ import { useRouter } from 'next/router';
 
 const AuthLayout = ({ children }: LayoutProps) => {
 
-     useAuthChecking();
+     // useAuthChecking();
      const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-
+     const router = useRouter();
      if (isAuthenticated) {
-          return null
+          router.push('/');
+          return
      }
 
      return (

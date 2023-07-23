@@ -1,6 +1,7 @@
-export const formatDateTimeToString = (dateTime: string) => {
+export const formatDateTimeToString = (dateTime: string, showTime = true) => {
   const date = new Date(dateTime);
+  const time = showTime ? `at ${date.getHours()}:${date.getMinutes()}` : "";
   return `${date.toLocaleString("en", {
-    month: "short",
-  })} ${date.getDate()}, ${date.getFullYear()}`;
+    month: "long",
+  })} ${date.getDate()}, ${date.getFullYear()} ${time}`;
 };
