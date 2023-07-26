@@ -25,7 +25,8 @@ import TypeTags from '@/features/tasks/components/TypeTags';
 import TaskDetailsWidget from '@/features/tasks/components/TaskDetailsWidget';
 import useFileUpload from '@/features/tasks/hooks/useAttachments';
 import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
-import store from '@/redux/store';
+// import store, { initializeStore } from '@/redux/store';
+import ActivityTabs from '@/features/tasks/components/activity/ActivityTabs';
 
 const Task = () => {
 
@@ -51,14 +52,14 @@ const Task = () => {
   useEffect(() => {
     fetchTaskData()
     // Listen for changes in the task id - (for query and page change)
-  }, [dispatch, id])
+  }, [id])
 
   useEffect(() => {
     // Listen for any changes in task data and get updated data
   }, [task])
 
 
-  // Performe edit task when clicking enter inside the inputs
+  // Performs edit task when clicking enter inside the inputs
   const { handleEditTask } = useEditTask();
 
   const mainTaskActionButtons = [
@@ -66,7 +67,6 @@ const Task = () => {
     { title: 'Reports', icon: <FilePdfOutlined /> },
   ]
   const { fileInputRef, handleFileChange, handleDeleteAll } = useFileUpload({ taskId: id });
-
 
 
   const exportItems: MenuProps['items'] = [
@@ -104,7 +104,6 @@ const Task = () => {
     },
   ];
 
-
   return (
     <Layout>
       {/* Task title section */}
@@ -128,7 +127,7 @@ const Task = () => {
 
         <h2 className='text-2xl w-full'>
           <Input style={{ color: "#000" }} name='title' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='middle'
-            className='edit-task-input text-xl' defaultValue={task?.title} />
+            className='edit-task-input text-xl' placeholder={task?.title} /* defaultValue={task?.title} */ />
         </h2>
       </section>
 
@@ -143,7 +142,7 @@ const Task = () => {
             icon={<PaperClipOutlined />}
             onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
           >
-            Attach
+            <div className="hidden md:inline ps-2">Attach</div>
           </Button>
           <input
             id="file-upload"
@@ -157,7 +156,7 @@ const Task = () => {
           {
             mainTaskActionButtons.map((item, indexId) => {
               return (
-                <Button key={indexId} type='ghost' className='font-semibold custom-ghost-button' icon={item.icon}>{item.title} </Button>
+                <Button key={indexId} type='ghost' className='font-semibold custom-ghost-button' icon={item.icon}> <div className="hidden md:inline">{item.title}</div> </Button>
               )
             })
           }
@@ -168,7 +167,8 @@ const Task = () => {
               icon={<ExportOutlined />}
             // onClick={() => fileInputRef.current?.click()} // Trigger file input click on button click
             >
-              Export
+              <div className="hidden md:inline ps-2">Export</div>
+
             </Button>
           </Dropdown>
         </div>
@@ -183,7 +183,7 @@ const Task = () => {
               <h2 className='mb-3'>Description</h2>
               <p>
                 <Input style={{ fontSize: "14px" }} name='description' onBlur={(e: any) => handleEditTask(e)} onPressEnter={(e) => handleEditTask(e)} maxLength={40} size='large'
-                  className='edit-task-input' defaultValue={task?.description} />
+                  className='edit-task-input' placeholder={task?.description} /* defaultValue={task?.description} */ />
               </p>
             </div>
             <div className="task-attachments">
@@ -191,6 +191,7 @@ const Task = () => {
             </div>
             <hr className='xs:block sm:block lg:hidden my-6 ' />
           </section>
+          <ActivityTabs comments={task?.comments} history={task?.history} />
         </Col>
 
         {/* right Col */}
@@ -203,3 +204,23 @@ const Task = () => {
 }
 
 export default Task
+
+
+// export async function getServerSideProps(context: any) {
+//   const { id } = context.query;
+
+//   const store = initializeStore(); // Initialize your Redux store
+//   const dispatch = store.dispatch; // Get the dispatch function from the store
+
+//   const task = await dispatch(getTask(id));
+//   console.log(task);
+
+//   // Check if task is undefined and replace it with null if necessary
+//   const serializedTask = task === undefined ? null : null;
+
+//   return {
+//     props: {
+//       task: serializedTask,
+//     },
+//   };
+// }

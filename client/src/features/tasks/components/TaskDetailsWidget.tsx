@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Collapse, Col, Row, Button } from 'antd';
 
@@ -14,6 +14,7 @@ import { SlidersOutlined } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 const TaskDetailsWidget = ({ task, handleEditTask }: { task: any, handleEditTask: Function }) => {
+     const [toggleShowFullTime, setToggleShowFullTime] = useState(true)
 
      const onChange = (key: string | string[]) => {
           console.log(key);
@@ -87,12 +88,12 @@ const TaskDetailsWidget = ({ task, handleEditTask }: { task: any, handleEditTask
                          </Col>
                     </Panel>
                </Collapse>
-               <div className="p-2 flex flex-col gap-2">
-                    <div className='mx-4 mt-4 text-xs tect-[#626f86]'>
-                         Created {formatDateTimeToString(task?.createdAt)}
+               <div className="my-2 p-2 flex flex-col gap-2" onClick={() => setToggleShowFullTime(!toggleShowFullTime)}>
+                    <div className='mx-4 text-xs text-[#626f86]'>
+                         Created {formatDateTimeToString(task?.createdAt, true, toggleShowFullTime)}
                     </div>
-                    <div className='mx-4 md:my-2 mt-2 mb-5 text-xs tect-[#626f86]'>
-                         Updated {formatDateTimeToString(task?.updatedAt)}
+                    <div className='mx-4 my-1 md:my-2 mt-2 mb-5 text-xs text-[#626f86]'>
+                         Updated {formatDateTimeToString(task?.updatedAt, true, toggleShowFullTime)}
                     </div>
                </div>
           </section>

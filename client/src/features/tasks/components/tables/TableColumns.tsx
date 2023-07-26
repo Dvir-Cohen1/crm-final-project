@@ -49,7 +49,7 @@ const getColumns = ({ handlePinItem, handleDelete, setTableKey, user }: { handle
                     return dateA.getTime() - dateB.getTime();
                },
                // sortDirections: ['descend'],
-               render: (_, record) => formatDateTimeToString(record.due_date),
+               render: (_, record) => formatDateTimeToString(record.due_date,false),
           },
           {
                title: 'Status',

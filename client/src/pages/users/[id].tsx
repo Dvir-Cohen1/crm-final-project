@@ -91,7 +91,6 @@ const User = () => {
 
      return (
           <Layout>
-               {console.log(user?.imgSRC)}
                <section className='relative mx-auto text-white w-full lg:w-1/2 mb-5'>
                     <div className={"bg-no-repeat bg-center flex gap-4 flex-col justify-center align-middle text-center place-items-center  bg-contain  bg-slate-400/20 p-5"}>
                          {user?.imgSRC ?

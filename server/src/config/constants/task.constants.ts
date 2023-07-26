@@ -18,5 +18,12 @@ export const TASK_POPULATE_SELECTED_FIELDS = [
   "role",
   "imgSRC",
 ];
+export const USER_POPULATE_SELECTED_COMMENTS_FIELDS = [
+  "firstName",
+  "lastName",
+  "email",
+  "role",
+  "imgSRC",
+];
 
-export const TASK_POPULATE_STATUS_SELECTED_FIELDS = ["_id", "label", "color"];
+export const TASK_POPULATE_SELECTED_STATUS_FIELDS = ["_id", "label", "color"];

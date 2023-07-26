@@ -329,9 +329,9 @@ a {
 }
 
 .custom-ghost-button:active {
-	background-color: #b3b9c4;
+	/* background-color: #b3b9c4; */
+	background-color: #d7dbe1;
 	color: #172b4d;
-
 }
 
 /* collape */
@@ -443,7 +443,7 @@ a {
 }
 
 .attachments-preview-group {
-	gap: 10px;
+	gap: 8px;
 	justify-content: flex-start;
 	/* column-gap: 3px;
 	row-gap: 10px; */
@@ -478,4 +478,64 @@ a {
 
 .attachment-card:hover .attachment-actions-button {
 	display: flex;
+}
+
+/* width */
+::-webkit-scrollbar {
+	height: 14px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #dcdfe4;
+	border-radius: 4px;
+
+}
+
+/* Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover {
+	background: #dcdfe4;
+} */
+
+.active-activity-button {
+	background-color: #E9F2FF;
+	color: #0C66E4;
+}
+
+.active-activity-button:hover {
+	background-color: #E9F2FF;
+	color: #0C66E4;
+}
+
+
+.ant-image-preview-root .ant-image-preview-mask {
+	background-color: #22272B;
+}
+
+/* .ant-image-preview-root .ant-image-preview-mask {
+	background-color: #22272B;
+	background: linear-gradient(rgb(16, 18, 20), rgba(14, 22, 36, 0)) 0px center no-repeat;
+	color: rgb(199, 209, 219);
+ } */
+
+.ant-image-preview-operations-wrapper {
+	/* color: rgb(199, 209, 219); */
+	height: 20%;
+	background: linear-gradient(rgb(16, 18, 20), rgba(14, 22, 36, 0)) 0px center no-repeat;
+}
+
+.ant-image-preview-operations {
+	color: rgb(199, 209, 219);
+	height: 70px;
+	background-color: transparent;
+	/* background: linear-gradient(rgb(16, 18, 20), rgba(14, 22, 36, 0)) 0px center no-repeat; */
+}
+
+.content-container {
+	min-height: calc(100vh - 56px);
 }

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Task from "../models/task.model.js";
+import Task from "../models/tasks/task.model.js";
 import archiver from "archiver";
 import fs from "fs";
 import {
@@ -7,19 +7,21 @@ import {
   NotFoundError,
   ServerError,
 } from "../errors/Errors.js";
-import TaskStatuses from "../models/taskStatus.model.js";
+import TaskStatuses from "../models/tasks/taskStatus.model.js";
 import { ICreateTaskPropsType } from "../types/global.js";
 import { TASK_CLONE_SELECTED_FIELD } from "../config/constants/task.constants.js";
 import { createSlugFromText } from "../utils/text.util.js";
 import {
   deleteAllFiles,
   deleteOneFile,
-  uploadfiles,
+  uploadFiles,
 } from "../utils/files.util.js";
 import {
+  createTaskUpdate,
   getAllPopulateTasks,
   getPopulateTask,
 } from "../services/tasks.service.js";
+import TaskComment from "../models/tasks/taskComments.js";
 
 // Get all
 export const allTasks = async (
@@ -104,7 +106,6 @@ export const createTask = async (
   }
 };
 
-// Edit
 export const editTask = async (
   req: Request,
   res: Response,
@@ -112,11 +113,30 @@ export const editTask = async (
 ) => {
   try {
     const { taskId } = req.params;
-    const editedTask = await Task.findByIdAndUpdate(
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    const existingTask: any = await Task.findById(taskId);
+
+    if (!existingTask) {
+      return next(new NotFoundError("Task not found"));
+    }
+
+    // Create a copy of the existing task data
+    const previousData: any = existingTask.toObject();
+
+    // Update the task with the new data
+    existingTask.set(req.body);
+    const editedTask = await existingTask.save();
+
+    const keyName = Object.keys(req.body)[0];
+
+    await createTaskUpdate(
       taskId,
-      { ...req.body },
-      { new: true }
-    );
+      keyName,
+      previousData[keyName],
+      existingTask[keyName],
+      createdByUserId
+    ); // Assuming req.userId is available through middleware
 
     res.status(200).send({ error: false, data: editedTask });
   } catch (error) {
@@ -138,7 +158,7 @@ export const cloneTask = async (
       TASK_CLONE_SELECTED_FIELD
     );
 
-    // Get the user id who perfome the action
+    // Get the user id who perform the action
     const { userId: createdByUserId } = req as ICreateTaskPropsType;
 
     // Get clone options
@@ -202,7 +222,7 @@ export const deleteTask = async (
 ) => {
   const { taskId } = req.params;
   if (!taskId) {
-    return next(new BadRequestError("Not provided task id"));
+    return next(new BadRequestError("taskId not provided"));
   }
   // return console.log(taskId)
   const deletedTask = await Task.findByIdAndRemove(taskId, { new: true });
@@ -224,7 +244,7 @@ export const getTaskStatus = async (
     const taskStatuses = await TaskStatuses.find();
     res.status(200).send({ error: false, data: taskStatuses });
   } catch (error) {
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
   }
 };
 
@@ -244,7 +264,7 @@ export const createTaskStatus = async (
     });
     res.status(200).send({ error: false, data: newTaskStatus });
   } catch (error) {
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
   }
 };
 
@@ -262,7 +282,7 @@ export const removeTaskStatus = async (
     const removedTaskStatus = await TaskStatuses.findByIdAndDelete(statusId);
     res.status(200).send({ error: false, data: removedTaskStatus });
   } catch (error) {
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
   }
 };
 
@@ -293,11 +313,22 @@ export const uploadAttachments = async (
     }
 
     // Upload the files
-    const uploadedFiles: any = await uploadfiles(next, filteredFiles, taskId);
+    const uploadedFiles: any = await uploadFiles(next, filteredFiles, taskId);
 
     // Push uploaded files to task attachments
     if (uploadedFiles?.isError) {
       return next(new BadRequestError(String(uploadedFiles)));
+    }
+    const uploadedFilesNames: [] = uploadedFiles
+      .map((item: { name: string }) => item.name)
+      .join(" , ");
+
+    const previousAttachmentsLength = task?.attachments.length;
+    let previousAttachments;
+    if (previousAttachmentsLength > 0) {
+      previousAttachments = task?.attachments
+        .map((item: { name: string }) => item.name)
+        .join(" , ");
     }
 
     uploadedFiles?.forEach((item: any) => {
@@ -310,13 +341,24 @@ export const uploadAttachments = async (
         uploadedBy: userId,
       });
     });
+    await Task.findOneAndUpdate(task._id, task, {
+      new: true,
+    });
 
-    await task?.save();
+    // await task?.save();
+    // const taskHasAttachments = task?.attachments.length === 0 && "None";
+    await createTaskUpdate(
+      taskId,
+      "attachments",
+      previousAttachmentsLength === 0 ? "None" : previousAttachments,
+      uploadedFilesNames,
+      userId
+    );
 
     res.status(200).send({ error: false, data: task });
   } catch (error) {
     console.log(error);
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
   }
 };
 
@@ -331,21 +373,47 @@ export const deleteAllAttachments = async (
 
     const task: any = await getPopulateTask(taskId);
 
+    // Get previous tasks attachments to create update
+    const attachmentsLength = task?.attachments.length;
+
+    let previousAttachments;
+    if (attachmentsLength > 0) {
+      previousAttachments = task?.attachments
+        .map((item: { name: string }) => item.name)
+        .join(" , ");
+    }
+
     if (task !== undefined) {
       task.attachments = [];
-      task.save();
+      await Task.findOneAndUpdate(task._id, task);
+      // await task.save();
     }
 
     if (isAllDeleted === null) {
       return next(new BadRequestError("No files to delete"));
     }
 
+    // const uploadedFilesNames: [] = uploadedFiles
+    // .map((item: { name: string }) => item.name)
+    // .join(" , ");
+
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    await createTaskUpdate(
+      taskId,
+      "attachments",
+      attachmentsLength === 0 ? "None" : previousAttachments,
+      "None",
+      createdByUserId
+    );
+
     res.status(200).send({ error: !isAllDeleted, data: task });
   } catch (error) {
     console.log(error);
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
   }
 };
+
 export const deleteOneAttachment = async (
   req: Request,
   res: Response,
@@ -360,23 +428,42 @@ export const deleteOneAttachment = async (
 
     const isOneDeleted: boolean | null = deleteOneFile(taskId, fileName);
 
+    if (isOneDeleted === null) {
+      return next(new BadRequestError("No files to delete"));
+    }
+
     const task: any = await getPopulateTask(taskId);
+    const attachmentsLength: any = task.attachments.length || 0;
+
+    let previousAttachments;
+    if (attachmentsLength > 0) {
+      previousAttachments = task?.attachments
+        .map((item: { name: string }) => item.name)
+        .join(" , ");
+    }
 
     if (task !== undefined) {
       task.attachments = task.attachments.filter(
         (attachment: { name: string }) => attachment.name !== fileName
       );
-      task.save();
+      await Task.findOneAndUpdate(task._id, task);
+      // await task.set();
     }
 
-    if (isOneDeleted === null) {
-      return next(new BadRequestError("No files to delete"));
-    }
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    await createTaskUpdate(
+      taskId,
+      "attachments",
+      attachmentsLength === 0 ? "None" : previousAttachments,
+      fileName,
+      createdByUserId
+    );
 
     res.status(200).send({ error: !isOneDeleted, data: task });
   } catch (error) {
     console.log(error);
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
   }
 };
 
@@ -434,6 +521,96 @@ export const downloadAttachments = async (
     });
   } catch (error) {
     console.log(error);
-    next(new BadRequestError(String(error)));
+    next(new ServerError(String(error)));
+  }
+};
+
+/* Task Comments */
+
+// Add task comment
+export const addTaskComment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { content } = req.body;
+    const { taskId } = req.params;
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    if (!content && !taskId) {
+      return next(new BadRequestError("taskId or content not provided"));
+    }
+
+    const task = await getPopulateTask(taskId);
+
+    // Check if the task exists
+    if (!task) {
+      return next(
+        new NotFoundError("Unable to add comment to task, task not found")
+      );
+    }
+
+    // Create new comment
+    const newTaskComment = await TaskComment.create({
+      content,
+      postedBy: createdByUserId,
+    });
+
+    // Push the new comment to task & save
+    task.comments.push(newTaskComment);
+    await Task.findOneAndUpdate(task._id, task);
+    // await task.save();
+
+    res.send(task);
+  } catch (error) {
+    console.log(error);
+    next(new ServerError(String(error)));
+  }
+};
+
+// Delete task comment
+export const deleteTaskComment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { taskId, commentId } = req.params;
+
+    if (!taskId && !commentId) {
+      return next(new BadRequestError());
+    }
+
+    const task = await getPopulateTask(taskId);
+
+    // Check if the task exists
+    if (!task) {
+      return next(
+        new NotFoundError("Unable to delete comment from task, task not found")
+      );
+    }
+
+    // Find the index of the comment in the comments array
+    const comments = task.comments.toObject();
+
+    const commentIndex = comments.findIndex(
+      (comment: { _id: string }) => comment._id?.toString() === commentId
+    );
+
+    // Check if the comment exists
+    if (commentIndex === -1) {
+      return next(new NotFoundError("Comment not found"));
+    }
+
+    // Remove the comment from the task's comments array
+    task.comments.splice(commentIndex, 1);
+    await Task.findOneAndUpdate(task._id, task);
+    // await task.save();
+
+    res.send(task);
+  } catch (error) {
+    console.log(error);
+    next(new ServerError(String(error)));
   }
 };
