@@ -15,7 +15,7 @@ const AuthLayout = ({ children }: LayoutProps) => {
      const router = useRouter();
      if (isAuthenticated) {
           router.push('/');
-          return
+          return null
      }
 
      return (
