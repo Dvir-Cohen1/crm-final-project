@@ -101,7 +101,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
      return (
           <aside
                className='hidden lg:block border-r border-[#091e4224] transition-all duration-100 relative'
-               style={{ width: isSidebarToggeld ? minSidebarWidth : maxSidebarWidth, height: 'calc(100vh - 64px)' }}
+               style={{ width: isSidebarToggeld ? minSidebarWidth : maxSidebarWidth, height: 'auto' }}
           >
                <button
                     onClick={() => handleToggleSidebar()}

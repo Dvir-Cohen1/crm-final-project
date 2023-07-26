@@ -1,0 +1,1 @@
+export const NUMBER_OF_HISTORY_TO_DISPLAY_PER_TIME = 5;

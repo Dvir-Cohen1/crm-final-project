@@ -8,21 +8,24 @@ import Footer from './Footer/Footer';
 import useAuthChecking from '@/hooks/useAuthChecking';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/types/global';
+import { useRouter } from 'next/router';
 
 const Layout = ({ children }: any) => {
+     // const { isLoading: isLoadingTask } = useSelector((state: RootState) => state.task);
      const isLoading = useLoader(300);
-
-     useAuthChecking();
+     const router = useRouter();
+     // useAuthChecking();
      const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
      if (!isAuthenticated) {
+          router.push('/authentication/login');
           return null
      }
 
      return (
-          <body>
+          <div className='min-h-full'>
                <Navbar />
-               <section className='mt-1 flex'>
+               <section className='flex content-container'>
                     <Sidebar />
                     <main className="w-full px-4 lg:px-20 lg:py-2 flex flex-col">
                          <Breadcrumbs />
@@ -30,7 +33,7 @@ const Layout = ({ children }: any) => {
                          <Footer />
                     </main>
                </section>
-          </body>
+          </div>
      );
 };
 

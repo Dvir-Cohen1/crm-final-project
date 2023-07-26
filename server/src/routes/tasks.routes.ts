@@ -13,6 +13,8 @@ import {
   deleteAllAttachments,
   deleteOneAttachment,
   downloadAttachments,
+  addTaskComment,
+  deleteTaskComment
 } from "../controllers/tasks.controller.js";
 import { upload } from "../config/multerConfig.js";
 
@@ -34,10 +36,17 @@ router.post(
 );
 router.post("/task/downloadAttachments/:taskId", downloadAttachments);
 router.delete("/task/deleteAllAttachments/:taskId", deleteAllAttachments);
-router.delete("/task/deleteOneAttachment/:taskId/:fileName", deleteOneAttachment);
+router.delete(
+  "/task/deleteOneAttachment/:taskId/:fileName",
+  deleteOneAttachment
+);
 
 // Task Statuses
 router.get("/task/statuses", getTaskStatus);
 router.post("/task/statuses", createTaskStatus);
 router.delete("/task/statuses/:statusId", removeTaskStatus);
+
+// Task Comments
+router.post("/task/:taskId/comments", addTaskComment);
+router.delete("/task/:taskId/comments/:commentId", deleteTaskComment);
 export default router;

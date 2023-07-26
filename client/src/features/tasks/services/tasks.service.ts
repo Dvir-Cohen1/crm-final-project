@@ -22,6 +22,8 @@ export async function getTaskApi(taskId: string) {
     const response = await api.get(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${taskId}`
     );
+    console.log(response.data)
+    
     return response.data;
   } catch (error: any) {
     return Promise.reject(
@@ -188,7 +190,7 @@ export async function downloadAllAttachmentsAsZipApi(taskId: string) {
     const response = await api.post(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
         `tasks/task/downloadAttachments/${taskId}`,
-        { responseType: "blob" } // Set the response type to 'blob'
+      { responseType: "blob" } // Set the response type to 'blob'
     );
     console.log(response.data);
 
@@ -206,7 +208,7 @@ export async function downloadAllAttachmentsAsZipApi(taskId: string) {
     // Clean up the temporary URL
     window.URL.revokeObjectURL(url);
 
-    return ;
+    return;
   } catch (error: any) {
     console.log(error);
     return Promise.reject(

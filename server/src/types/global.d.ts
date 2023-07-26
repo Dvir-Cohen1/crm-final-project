@@ -38,6 +38,15 @@ interface ICreateTaskPropsType extends Request {
   userId: string;
 }
 
+export type TTask = {
+  _id: string;
+  key: string;
+  title: string;
+  description: string;
+  attachments?: [];
+  comments?: any;
+};
+
 export type TTaskDataType = {
   _id: string;
   key: string;

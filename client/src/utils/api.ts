@@ -8,7 +8,12 @@ const api: AxiosInstance = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  config.headers["Content-Type"] = "application/json";
+  // Check if the request already has a Content-Type header set
+  if (!config.headers["Content-Type"]) {
+    config.headers["Content-Type"] = "application/json";
+  }
+
+  // Attach token to headers
   const token = getCookie("ac-token");
   if (token) {
     config.headers["ac-token"] = token;

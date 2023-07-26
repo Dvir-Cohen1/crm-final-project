@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { deleteAllTaskAttachments, deleteOneTaskAttachment, uploadAttachments } from '../redux/taskSlice';
+import { deleteAllTaskAttachments, deleteOneTaskAttachment, getTask, uploadAttachments } from '../redux/taskSlice';
 
 const useAttachments = ({ taskId }: { taskId: string }) => {
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
@@ -20,11 +20,13 @@ const useAttachments = ({ taskId }: { taskId: string }) => {
   // Delete all files
   const handleDeleteAll = async () => {
     await dispatch<any>(deleteAllTaskAttachments({ taskId }));
+    await dispatch<any>(getTask(taskId))
   };
 
   // Delete one file
   const handleDeleteOne = async (fileName: string) => {
     await dispatch<any>(deleteOneTaskAttachment({ taskId, fileName }));
+    await dispatch<any>(getTask(taskId))
   };
 
   // Download file
@@ -53,12 +55,13 @@ const useAttachments = ({ taskId }: { taskId: string }) => {
         formData.append('attachments', files[i]);
       }
       await dispatch<any>(uploadAttachments({ taskId: taskId, attachments: formData }));
+      await dispatch<any>(getTask(taskId))
     };
 
     if (files.length > 0) {
       handleUpload();
     }
-  }, [files, dispatch]);
+  }, [files, dispatch, taskId]);
 
   // Expose necessary functions and data
   return {
