@@ -30,6 +30,7 @@ export const allTasks = createAsyncThunk("task/allTasks", async () => {
 });
 export const getTask = createAsyncThunk("task/getTask", async (values: any) => {
   const data = await getTaskApi(values);
+  
   return data;
 });
 

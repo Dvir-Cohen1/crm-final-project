@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import { Model, Document } from "mongoose";
 import {
   TASK_POPULATE_SELECTED_FIELDS,
-  TASK_POPULATE_STATUS_SELECTED_FIELDS,
+  TASK_POPULATE_SELECTED_STATUS_FIELDS,
+  USER_POPULATE_SELECTED_COMMENTS_FIELDS,
 } from "../config/constants/task.constants.js";
 import Task from "../models/tasks/task.model.js";
 import { TaskUpdate } from "../models/tasks/taskUpdates.js";
@@ -25,7 +26,7 @@ export const getAllPopulateTasks = async () => {
     })
     .populate({
       path: "status",
-      select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
+      select: TASK_POPULATE_SELECTED_STATUS_FIELDS,
     });
 };
 
@@ -48,19 +49,26 @@ export const getPopulateTask = async (taskId: string) => {
   const task: any = await Task.findById(taskId)
     .populate({
       path: "created_by",
-      select: TASK_POPULATE_SELECTED_FIELDS,
+      select: USER_POPULATE_SELECTED_COMMENTS_FIELDS,
     })
     .populate({
       path: "assignee",
-      select: TASK_POPULATE_SELECTED_FIELDS,
+      select: USER_POPULATE_SELECTED_COMMENTS_FIELDS,
     })
     .populate({
       path: "followers",
-      select: TASK_POPULATE_SELECTED_FIELDS,
+      select: USER_POPULATE_SELECTED_COMMENTS_FIELDS,
     })
     .populate({
       path: "status",
-      select: TASK_POPULATE_STATUS_SELECTED_FIELDS,
+      select: TASK_POPULATE_SELECTED_STATUS_FIELDS,
+    })
+    .populate({
+      path: "comments",
+      populate: {
+        path: "postedBy",
+        select: USER_POPULATE_SELECTED_COMMENTS_FIELDS,
+      },
     })
     // convert to plain js object instead of Mongoose object for performance porose
     .lean();
@@ -82,6 +90,7 @@ const getTaskUpdatesWithPopulatedFields = async (taskId: string) => {
   const populatePromises = taskUpdates.map(async (update) => {
     const { fieldName, fromValue, toValue, updated_by, createdAt }: any =
       update;
+
     const populatedFromValue =
       fromValue instanceof mongoose.Types.ObjectId
         ? await populateField(fromValue, fieldName)
@@ -94,7 +103,7 @@ const getTaskUpdatesWithPopulatedFields = async (taskId: string) => {
     return {
       fieldName,
       fromValue:
-        fieldName === "assignee"
+        fieldName === "assignee" || fieldName === "followers"
           ? [
               await User.findById(fromValue).select([
                 "firstName",
@@ -105,7 +114,7 @@ const getTaskUpdatesWithPopulatedFields = async (taskId: string) => {
             ]
           : populatedFromValue,
       toValue:
-        fieldName === "assignee"
+        fieldName === "assignee" || fieldName === "followers"
           ? [
               await User.findById(toValue).select([
                 "firstName",
@@ -125,7 +134,6 @@ const getTaskUpdatesWithPopulatedFields = async (taskId: string) => {
       createdAt,
     };
   });
-
   // Execute all population promises
   const populatedUpdates = await Promise.all(populatePromises);
 
@@ -136,8 +144,8 @@ const getTaskUpdatesWithPopulatedFields = async (taskId: string) => {
 export const createTaskUpdate = async (
   taskId: string,
   fieldName: string,
-  fromValue: string,
-  toValue: string,
+  fromValue: string | [] | undefined,
+  toValue: string | [] | undefined,
   updated_by: string
 ) => {
   try {

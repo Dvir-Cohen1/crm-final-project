@@ -11,6 +11,7 @@ import { RootState } from '@/types/global';
 import { useRouter } from 'next/router';
 
 const Layout = ({ children }: any) => {
+     // const { isLoading: isLoadingTask } = useSelector((state: RootState) => state.task);
      const isLoading = useLoader(300);
      const router = useRouter();
      // useAuthChecking();
@@ -18,7 +19,7 @@ const Layout = ({ children }: any) => {
 
      if (!isAuthenticated) {
           router.push('/authentication/login');
-          return
+          return null
      }
 
      return (

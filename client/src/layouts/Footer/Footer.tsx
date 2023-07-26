@@ -5,7 +5,9 @@ const Footer = () => {
      const currentYear = currentDate.getFullYear();
      return (
           <footer className='mt-auto'>
-               <p>&copy; {currentYear} Dvir Cohen - All rights reserved.</p>
+               <div className='mt-14'>
+                    <p>&copy; {currentYear} Dvir Cohen - All rights reserved.</p>
+               </div>
           </footer>
      )
 }

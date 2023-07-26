@@ -319,6 +319,17 @@ export const uploadAttachments = async (
     if (uploadedFiles?.isError) {
       return next(new BadRequestError(String(uploadedFiles)));
     }
+    const uploadedFilesNames: [] = uploadedFiles
+      .map((item: { name: string }) => item.name)
+      .join(" , ");
+
+    const previousAttachmentsLength = task?.attachments.length;
+    let previousAttachments;
+    if (previousAttachmentsLength > 0) {
+      previousAttachments = task?.attachments
+        .map((item: { name: string }) => item.name)
+        .join(" , ");
+    }
 
     uploadedFiles?.forEach((item: any) => {
       const filePath = `${process.env.BASE_ENDPOINT}${taskId}/${item.name}`;
@@ -330,8 +341,19 @@ export const uploadAttachments = async (
         uploadedBy: userId,
       });
     });
-    await Task.findOneAndUpdate(task._id, task);
+    await Task.findOneAndUpdate(task._id, task, {
+      new: true,
+    });
+
     // await task?.save();
+    // const taskHasAttachments = task?.attachments.length === 0 && "None";
+    await createTaskUpdate(
+      taskId,
+      "attachments",
+      previousAttachmentsLength === 0 ? "None" : previousAttachments,
+      uploadedFilesNames,
+      userId
+    );
 
     res.status(200).send({ error: false, data: task });
   } catch (error) {
@@ -351,6 +373,16 @@ export const deleteAllAttachments = async (
 
     const task: any = await getPopulateTask(taskId);
 
+    // Get previous tasks attachments to create update
+    const attachmentsLength = task?.attachments.length;
+
+    let previousAttachments;
+    if (attachmentsLength > 0) {
+      previousAttachments = task?.attachments
+        .map((item: { name: string }) => item.name)
+        .join(" , ");
+    }
+
     if (task !== undefined) {
       task.attachments = [];
       await Task.findOneAndUpdate(task._id, task);
@@ -361,12 +393,27 @@ export const deleteAllAttachments = async (
       return next(new BadRequestError("No files to delete"));
     }
 
+    // const uploadedFilesNames: [] = uploadedFiles
+    // .map((item: { name: string }) => item.name)
+    // .join(" , ");
+
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    await createTaskUpdate(
+      taskId,
+      "attachments",
+      attachmentsLength === 0 ? "None" : previousAttachments,
+      "None",
+      createdByUserId
+    );
+
     res.status(200).send({ error: !isAllDeleted, data: task });
   } catch (error) {
     console.log(error);
     next(new ServerError(String(error)));
   }
 };
+
 export const deleteOneAttachment = async (
   req: Request,
   res: Response,
@@ -386,6 +433,14 @@ export const deleteOneAttachment = async (
     }
 
     const task: any = await getPopulateTask(taskId);
+    const attachmentsLength: any = task.attachments.length || 0;
+
+    let previousAttachments;
+    if (attachmentsLength > 0) {
+      previousAttachments = task?.attachments
+        .map((item: { name: string }) => item.name)
+        .join(" , ");
+    }
 
     if (task !== undefined) {
       task.attachments = task.attachments.filter(
@@ -394,6 +449,16 @@ export const deleteOneAttachment = async (
       await Task.findOneAndUpdate(task._id, task);
       // await task.set();
     }
+
+    const { userId: createdByUserId } = req as ICreateTaskPropsType;
+
+    await createTaskUpdate(
+      taskId,
+      "attachments",
+      attachmentsLength === 0 ? "None" : previousAttachments,
+      fileName,
+      createdByUserId
+    );
 
     res.status(200).send({ error: !isOneDeleted, data: task });
   } catch (error) {

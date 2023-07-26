@@ -28,7 +28,7 @@ function generateCustomErrorResponse(
       userAgent: req.headers["user-agent"],
     },
     requestInformation: {
-      path: req.route.path ? req.route.path : null,
+      path: req.route?.path ? req.route?.path : null,
       originalUrl: req.originalUrl ? req.originalUrl : null,
       params: req.params ? req.params : null,
       query: req.query ? req.query : null,
