@@ -539,3 +539,13 @@ a {
 .content-container {
 	min-height: calc(100vh - 56px);
 }
+
+.default-link {
+	cursor: pointer;
+
+}
+
+.default-link:hover {
+	text-decoration: underline;
+
+}

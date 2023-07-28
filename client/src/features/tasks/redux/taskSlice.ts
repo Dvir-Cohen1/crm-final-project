@@ -11,6 +11,8 @@ import {
   deleteAllTaskAttachmentsApi,
   deleteOneTaskAttachmentApi,
   downloadAllAttachmentsAsZipApi,
+  addTaskCommentApi,
+  deleteTaskCommentApi,
 } from "../services/tasks.service";
 import { ITaskState } from "@/types/global";
 import { message } from "antd";
@@ -30,7 +32,7 @@ export const allTasks = createAsyncThunk("task/allTasks", async () => {
 });
 export const getTask = createAsyncThunk("task/getTask", async (values: any) => {
   const data = await getTaskApi(values);
-  
+
   return data;
 });
 
@@ -100,6 +102,24 @@ export const downloadAllAttachmentsAsZip = createAsyncThunk(
   "task/downloadAllAttachmentsAsZip",
   async (values: any) => {
     const data = await downloadAllAttachmentsAsZipApi(values);
+    return data;
+  }
+);
+
+// Add task comment
+export const addTaskComment = createAsyncThunk(
+  "task/addTaskComment",
+  async (values: any) => {
+    const data = await addTaskCommentApi(values);
+    return data;
+  }
+);
+
+// Delete task comment
+export const deleteTaskComment = createAsyncThunk(
+  "task/deleteTaskComment",
+  async (values: any) => {
+    const data = await deleteTaskCommentApi(values);
     return data;
   }
 );
@@ -286,7 +306,41 @@ export const taskSlice = createSlice({
           // state.error = "Done 😃";
           // state.task = payload.data;
         }
-      );
+      )
+      // Add task comment
+      .addCase(addTaskComment.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(addTaskComment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(addTaskComment.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        // state.error = "Done 😃";
+        state.task = payload.data;
+        message.destroy();
+        message.info("Comment created");
+      })
+      // Delete task comment
+      .addCase(deleteTaskComment.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTaskComment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(deleteTaskComment.fulfilled, (state, { payload }: any) => {
+        state.isLoading = false;
+        state.isError = null;
+        // state.error = "Done 😃";
+        state.task = payload.data;
+        message.destroy();
+        message.info("Comment deleted");
+      });
   },
 });
 

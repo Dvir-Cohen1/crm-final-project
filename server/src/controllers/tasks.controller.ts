@@ -592,7 +592,7 @@ export const deleteTaskComment = async (
     }
 
     // Find the index of the comment in the comments array
-    const comments = task.comments.toObject();
+    const comments = task.comments
 
     const commentIndex = comments.findIndex(
       (comment: { _id: string }) => comment._id?.toString() === commentId

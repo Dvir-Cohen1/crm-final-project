@@ -1,8 +1,8 @@
 import { formatDateTimeToString } from '@/utils/date'
-import React from 'react'
+import React, { useState } from 'react'
 import PriorityTags from '../PriorityTags'
 import { Avatar, Button } from 'antd'
-import { FaAngleDoubleRight } from "react-icons/fa";
+import { FaAngleDoubleRight, FaSortAmountDownAlt, FaSortAmountUpAlt } from "react-icons/fa";
 import { UserOutlined } from "@ant-design/icons";
 
 
@@ -14,6 +14,8 @@ const ToArrowIcon = () => (
 )
 
 const History = ({ history, numberOfItems, handleSetOfNumbers }: any) => {
+
+
      return (
           <div>
                {history?.slice(0, numberOfItems).map((item: any) => {

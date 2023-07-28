@@ -1,12 +1,11 @@
-import { Button } from 'antd'
-
 import React, { useState } from 'react'
+import { Button } from 'antd'
+import { FaSortAmountDownAlt, FaSortAmountUpAlt, FaSortAmountDown } from "react-icons/fa";
 
 import History from './History';
 import Comments from './Comments';
 import { NUMBER_OF_HISTORY_TO_DISPLAY_PER_TIME } from '../../constants/main';
 
-// const NUMBER_TO_DISPLAY = 5
 const ActivityTabs = ({ comments, history }: any) => {
 
      // Handle number of items to display
@@ -39,6 +38,14 @@ const ActivityTabs = ({ comments, history }: any) => {
           setShowHistory(true);
      };
 
+
+     const [isDescending, setIsDescending] = useState(true);
+     // Function to handle the click event and reverse the sorting order
+     const handleReverseOrder = () => {
+          setIsDescending((prevState) => !prevState);
+     };
+     const sortedHistory = history && isDescending ? [...history].reverse() : history;
+
      return (
           <section className='md:me-14 mb-5'>
                <h2 className='mb-5'>Activity</h2>
@@ -70,6 +77,16 @@ const ActivityTabs = ({ comments, history }: any) => {
                     >
                          History
                     </Button>
+                    <Button
+                         style={{ marginLeft: "auto" }}
+                         className='font-semibold flex gap-2 place-items-center'
+                         title={isDescending ? "Newest first" : "Oldest first"}
+                         size='small'
+                         type='text'
+                         onClick={handleReverseOrder}>
+                         {isDescending ? "Newest first" : "Oldest first"}
+                         {isDescending ? <FaSortAmountDown /> : <FaSortAmountUpAlt />}
+                    </Button>
                </div>
 
 
@@ -80,18 +97,20 @@ const ActivityTabs = ({ comments, history }: any) => {
                          {showComments &&
                               // Comments
                               <>
-                                   {showComments && showHistory && <div className='mb-5 font-semibold'>Comments <hr className='mt-5' /></div>}
+                                   {showComments && showHistory && <div className='mb-5 font-semibold'>Comments</div>}
                                    <Comments comments={comments} />
                               </>
                          }
                          {showHistory &&
                               // History
                               <>
-                                   {showComments && showHistory && history?.length > 0 && <div className='mb-5 font-semibold'>History <hr className='mt-5' /></div>}
+                                   {showComments && showHistory && history?.length > 0 && <div className='mb-5 font-semibold'>History</div>}
                                    <History
-                                        history={history}
+                                        history={sortedHistory}
                                         numberOfItems={numberOfItems}
                                         handleSetOfNumbers={handleSetOfNumbers}
+                                        isDescending={isDescending}
+                                        handleReverseOrder={handleReverseOrder}
                                    />
                               </>
                          }

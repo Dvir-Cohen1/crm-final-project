@@ -65,6 +65,7 @@ export const getPopulateTask = async (taskId: string) => {
     })
     .populate({
       path: "comments",
+      options: { sort: { _id: -1 } },
       populate: {
         path: "postedBy",
         select: USER_POPULATE_SELECTED_COMMENTS_FIELDS,
