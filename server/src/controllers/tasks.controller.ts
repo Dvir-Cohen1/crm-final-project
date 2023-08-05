@@ -38,6 +38,7 @@ export const getTask = async (
   res: Response,
   next: NextFunction
 ) => {
+
   const { taskId } = req.params;
   if (!taskId) {
     return next(new BadRequestError("Not provided task id"));

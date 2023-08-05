@@ -31,7 +31,6 @@ const items: MenuItem[] = [
           getItem('Option 94', '94'),
 
      ]),
-     getItem((<NextLink href={"/Departments"}>Setting</NextLink>), 'sub6', <SettingOutlined />),
 ];
 
 

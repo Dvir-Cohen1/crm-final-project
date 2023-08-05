@@ -67,27 +67,27 @@ const User = () => {
           dispatch<any>(deleteProfileImage({ userId: user?._id }))
      }
 
-     useEffect(() => {
+     // useEffect(() => {
 
-          switch (isError) {
-               case true:
-                    message.destroy()
-                    message.error(error);
-                    break;
-               case false:
-                    message.destroy()
-                    message.success(error || "Success");
-                    break;
+     //      switch (isError) {
+     //           case true:
+     //                message.destroy()
+     //                message.error(error);
+     //                break;
+     //           case false:
+     //                message.destroy()
+     //                message.success(error || "Success");
+     //                break;
 
-               default:
-                    break;
-          }
+     //           default:
+     //                break;
+     //      }
 
-          return () => {
-               message.destroy()
-          }
+     //      return () => {
+     //           message.destroy()
+     //      }
 
-     }, [error, isError, isLoading])
+     // }, [error, isError, isLoading])
 
      return (
           <Layout>
@@ -129,3 +129,14 @@ const User = () => {
 }
 
 export default User
+
+
+// This gets called on every request
+// export async function getServerSideProps() {
+//      // Fetch data from external API
+//      const res = await fetch(`https://.../data`)
+//      const data = await res.json()
+    
+//      // Pass data to the page via props
+//      return { props: { data } }
+//    }

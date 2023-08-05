@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Empty, Menu, Popover,MenuProps } from 'antd';
+import { Button, Empty, Menu, Popover, MenuProps } from 'antd';
 import { FaBell, FaQuestionCircle, FaStar, FaUser } from "react-icons/fa";
 import Tooltip from '@/components/common/Tooltip';
 import Link from 'next/link';
@@ -113,7 +113,7 @@ function SecondaryItems() {
                               },
                               {
                                    label: 'Profile Setting',
-                                   key: 'setting',
+                                   key: 'ProfileSetting',
                               },
                          ],
                     },
@@ -122,7 +122,7 @@ function SecondaryItems() {
                          label: "Admin Panel",
                          children: [
                               {
-                                   label: 'Setting',
+                                   label: (<Link href={'/settings'}>Setting</Link>),
                                    key: 'appSetting',
                               },
                               {

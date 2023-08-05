@@ -27,9 +27,8 @@ import useFileUpload from '@/features/tasks/hooks/useAttachments';
 import { isLoginByToken } from '@/features/authentication/redux/authenticationSlice';
 // import store, { initializeStore } from '@/redux/store';
 import ActivityTabs from '@/features/tasks/components/activity/ActivityTabs';
-
+import store from '@/redux/store';
 const Task = () => {
-
   const router = useRouter();
   const { id }: any = router.query;
 
@@ -54,9 +53,9 @@ const Task = () => {
     // Listen for changes in the task id - (for query and page change)
   }, [id])
 
-  useEffect(() => {
-    // Listen for any changes in task data and get updated data
-  }, [task])
+  // useEffect(() => {
+  //   // Listen for any changes in task data and get updated data
+  // }, [task])
 
 
   // Performs edit task when clicking enter inside the inputs
@@ -206,21 +205,21 @@ const Task = () => {
 export default Task
 
 
-// export async function getServerSideProps(context: any) {
-//   const { id } = context.query;
+export async function getServerSideProps(context: any) {
+  const { id } = context.query;
 
-//   const store = initializeStore(); // Initialize your Redux store
-//   const dispatch = store.dispatch; // Get the dispatch function from the store
+  // const store = initializeStore(); // Initialize your Redux store
+  const dispatch = store.dispatch; // Get the dispatch function from the store
 
-//   const task = await dispatch(getTask(id));
-//   console.log(task);
+  // const task = await dispatch(getTask(id));
+  const task = await dispatch(getTask(id));
+  console.log(task)
+  // Check if task is undefined and replace it with null if necessary
+  const serializedTask = task === undefined ? null : null;
 
-//   // Check if task is undefined and replace it with null if necessary
-//   const serializedTask = task === undefined ? null : null;
-
-//   return {
-//     props: {
-//       task: serializedTask,
-//     },
-//   };
-// }
+  return {
+    props: {
+      task: serializedTask,
+    },
+  };
+}
