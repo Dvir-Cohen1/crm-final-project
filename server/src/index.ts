@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import "dotenv/config";
-import appRoutes from "./routes/index.js";
+import appRoutes from "./routes/index.routes.js";
 import initialMongoConnection from "./config/initialConnection.js";
 import errorHandler from "./errors/errorHandler.js";
 const app: Express = express();

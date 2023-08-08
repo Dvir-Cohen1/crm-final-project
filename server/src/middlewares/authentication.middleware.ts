@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizeError } from "../errors/Errors.js";
-import { verifyAccessToken } from "../services/jwt.services.js";
+import { verifyAccessToken } from "../services/jwt.service.js";
 
 interface CustomRequest extends Request {
   userId?: string;

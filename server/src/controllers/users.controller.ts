@@ -9,7 +9,7 @@ import {
   SELECTED_PINNED_ITEMS_FIELDS,
   SELECTED_USER_FIELDS,
 } from "../config/constants/user.constants.js";
-import User from "../models/user.model.js";
+import User from "../models/users/user.model.js";
 import { deleteFile, uploadFile } from "../utils/files.util.js";
 import { IRequestUserId, IUser } from "../types/global";
 import { returnResponseObject } from "../utils/response.util.js";
