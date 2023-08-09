@@ -153,7 +153,7 @@ export const taskSlice = createSlice({
         state.tasks = payload;
       })
       .addCase(getTask.pending, (state, action) => {
-        // state.isLoading = true;
+        state.isLoading = true;
       })
       .addCase(getTask.rejected, (state, action) => {
         state.isLoading = false;

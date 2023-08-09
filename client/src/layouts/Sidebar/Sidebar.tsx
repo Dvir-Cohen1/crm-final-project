@@ -28,7 +28,7 @@ const items: MenuItem[] = [
 
      ]),
      getItem('Customers', 'sub5', <CalendarOutlined />, [
-          getItem('Option 94', '94'),
+          getItem((<NextLink href={"/customers"}>All Users</NextLink>), 'allCustomers'),
 
      ]),
 ];
@@ -115,7 +115,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
                     <Menu
                          className={`mt-8 ${className}`}
                          // onClick={(e) => console.log(e.key)}
-                         style={{  border: 0 }}
+                         style={{ border: 0 }}
                          mode="vertical"
                          triggerSubMenuAction='click'
                          items={items}

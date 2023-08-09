@@ -99,7 +99,7 @@ export interface ILogInfo {
 export interface ICustomer extends mongoose.Document {
   save: any;
   // Basic Information
-  _id:string;
+  _id: string;
   name: string;
   email: string;
   alternativeEmail?: string;
@@ -141,7 +141,6 @@ export interface ICustomer extends mongoose.Document {
 
   // Additional Fields
   active?: boolean;
-
 }
 
 export type TSortOrder = "asc" | "desc";

@@ -8,7 +8,6 @@ import { Button } from '@/components/common/Button'
 import Link from 'next/link'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-
 const Users = () => {
      const [users, setUsers] = useState<IUser[]>([]);
 
@@ -30,7 +29,6 @@ const Users = () => {
           // Listen for changes to the `users` state variable and update the table
           // Note that this will only run when the `users` variable changes
      }, [users]);
-
 
      return (
           <Layout>

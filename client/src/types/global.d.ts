@@ -21,6 +21,7 @@ export interface RootState {
   auth: AuthState;
   user: UserState;
   task: TaskState;
+  customer: CustomerState;
   // showMessage?: Function
   // Other slices of your Redux state...
 }
@@ -204,4 +205,62 @@ export interface FileUploadHook {
   handleDeleteAll: () => Promise<void>;
   handleDeleteOne: (fileName: string) => Promise<void>;
   handleImageDownload: (imageUrl: string, imageName: string) => Promise<void>;
+}
+
+/*
+ ** Customers
+ */
+export interface CustomerState {
+  isLoading: boolean;
+  isError: boolean | null;
+  error: string;
+  customer: {} | undefined;
+  customers: any;
+}
+
+// Define the interface for the Customer schema
+export interface ICustomer extends mongoose.Document {
+  // Basic Information
+  _id: string;
+  name: string;
+  email: string;
+  alternativeEmail?: string;
+  phone?: string;
+  address?: string;
+  privatelyHeldCompany?: number;
+
+  // Additional Contact Information
+  contactPerson?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+
+  // Company Details
+  companyName?: string;
+  companyWebsite?: string;
+  companyLogo?: string;
+
+  // Industry and Business Information
+  industry?: string;
+  companySize?: string;
+
+  // Custom Fields
+  // Add any additional custom fields here as needed
+
+  // References to related entities
+  users: mongoose.Schema.Types.ObjectId[];
+  tasks: mongoose.Schema.Types.ObjectId[];
+  projects: mongoose.Schema.Types.ObjectId[];
+
+  // Linked Customers (for Relationships)
+  linkedCustomers: mongoose.Schema.Types.ObjectId[];
+
+  // Notes or Comments
+  notes?: string;
+
+  // Timestamps
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  // Additional Fields
+  active?: boolean;
 }

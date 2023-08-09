@@ -81,13 +81,15 @@ export const Button = ({ type = "submit", children, className, label = "", onCli
                type={type}
                className={`
           flex 
+          align-center
+          items-center
           justify-center 
           place-items-center 
           mx-auto 
           rounded-md 
-          py-2.5 
           px-2  
           my-2 
+          ${fontSize === 'xs' ? 'py-1' : 'py-2'} 
           ${variant} 
           ${width} 
           ${hoverColor} 

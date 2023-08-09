@@ -16,7 +16,7 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <Provider store={store}>
-      {isLoading ? <Loader /> : <MessageProvider><Component {...pageProps} /></MessageProvider>}
+      {isLoading ? <Loader /> : <Component {...pageProps} />}
     </Provider>
   );
 }
