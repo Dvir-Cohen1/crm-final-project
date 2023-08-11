@@ -264,3 +264,23 @@ export interface ICustomer extends mongoose.Document {
   // Additional Fields
   active?: boolean;
 }
+
+
+
+export interface SorterResultDataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+}
+
+export type CustomerColumn = {
+  title: string;
+  dataIndex: string;
+  key: string;
+  filters: { text: any; value: any }[];
+  filteredValue: FilterValue | null;
+  onFilter: (value: any, record: any) => boolean;
+  sortOrder: SortOrder | undefined;
+  ellipsis: boolean;
+};

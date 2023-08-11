@@ -1,5 +1,3 @@
-import { BadRequestError } from "../errors/Errors.js";
-
 export function sanitizePhoneNumber(phoneNumber: string): string | boolean {
   const phoneNumberRegex = /^0[2-9]\d{7}$/;
   const sanitizedPhoneNumber = phoneNumber.replace(/\D/g, ""); // Remove all non-digit characters
@@ -9,4 +7,13 @@ export function sanitizePhoneNumber(phoneNumber: string): string | boolean {
   }
 
   return sanitizedPhoneNumber;
+}
+
+// Function to dynamically build the $or query
+export function buildSearchQuery(fields: string[], searchQuery: string, isCaseSensitive = false):{} {
+  const options = isCaseSensitive ? "" : "i";
+  const orQuery = fields.map((field) => ({
+    [field]: { $regex: searchQuery, $options: options },
+  }));
+  return { $or: orQuery };
 }

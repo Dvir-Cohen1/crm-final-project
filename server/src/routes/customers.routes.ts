@@ -13,6 +13,7 @@ import {
   getAllCustomers,
   getCustomerById,
   linkCustomers,
+  searchCustomers,
   updateCustomer,
 } from "../controllers/customers.controller.js";
 
@@ -20,17 +21,19 @@ const router = Router();
 
 // GET all customers
 router.get("/", getAllCustomers);
+// Search customers
+router.get("/search", searchCustomers);
 
-// GET a single customer by ID
+// Get a single customer by ID
 router.get("/:customerId", getCustomerById);
 
-// POST create a new customer
+// Create a new customer
 router.post("/", createCustomer);
 
-// PUT update a customer by ID
+// Update a customer by ID
 router.put("/:customerId", updateCustomer);
 
-// DELETE a customer by ID
+// Delete a customer by ID
 router.delete("/:customerId", deleteCustomer);
 
 // Link customers together

@@ -20,4 +20,13 @@ export const SELECT_CUSTOMER_FIELDS = [
   "notes",
 ];
 
+// Define the fields you want to search on
+export const SEARCH_FIELDS = [
+  "name",
+  "companyName",
+  "email",
+  "phone",
+  "alternativeEmail",
+];
+
 export const DEFAULT_SORT_FIELD = "name";

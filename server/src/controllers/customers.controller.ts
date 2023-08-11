@@ -9,12 +9,19 @@ import { Request, Response, NextFunction } from "express";
 import customerJoiSchema from "../validations/customerValidation.js";
 import { validateBody } from "../middlewares/bodyValidation.middleware.js";
 import { ICustomer, TSortOrder } from "../types/global.js";
-import { DEFAULT_SORT_FIELD } from "../config/constants/customer.constant.js";
+import {
+  DEFAULT_SORT_FIELD,
+  SEARCH_FIELDS,
+  SELECT_CUSTOMER_FIELDS,
+} from "../config/constants/customer.constant.js";
 import { QueryOptions } from "mongoose";
 import {
   getPopulatedCustomerById,
   getPopulatedCustomers,
+  getPopulatedCustomersWithOptions,
 } from "../services/customers.service.js";
+import { buildSearchQuery } from "../helpers/customers.helper.js";
+import { SELECTED_USER_FIELDS } from "../config/constants/user.constants.js";
 
 // Get all customers
 export async function getAllCustomers(
@@ -28,7 +35,7 @@ export async function getAllCustomers(
       (req.query.sortField as string) || DEFAULT_SORT_FIELD;
     const sortOrder: TSortOrder =
       req.query.sortOrder === "desc" ? "desc" : "asc";
-    const limit: number = parseInt(req.query.limit as string, 10) || 10;
+    const limit: number = parseInt(req.query.limit as string, 10) || 25;
 
     // Validate the limit value to be a positive integer (if provided)
     if (limit <= 0 || isNaN(limit)) {
@@ -249,6 +256,52 @@ export async function findLinkedCustomers(
     }).lean();
 
     res.status(200).json(linkedCustomers);
+  } catch (error) {
+    next(new ServerError(String(error)));
+  }
+}
+
+// Search customers based on specified fields and case sensitivity
+export async function searchCustomers(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const searchQuery = req.query.q as string; // Get the search query from the query parameter
+    const isCaseSensitive = req.query.caseSensitive === "true"; // Convert string to boolean
+
+    if (!searchQuery) {
+      return next(new BadRequestError("Please provide a query for searching"));
+    }
+
+    // Build the $or query based on the specified fields and case sensitivity
+    const query = buildSearchQuery(SEARCH_FIELDS, searchQuery, isCaseSensitive);
+
+    // Pagination
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
+    const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+    const skip = (pageNumber - 1) * pageSize;
+
+    // Sorting
+    const sortField = (req.query.sortField as string) || DEFAULT_SORT_FIELD;
+    const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
+
+    // Limiting Fields
+    const selectedFields =
+      (req.query.fields as string)?.split(",").map((field) => field.trim()) ||
+      null;
+
+    // Get populated customers using the built query
+    const customers = await getPopulatedCustomersWithOptions(
+      query,
+      { [sortField]: sortOrder },
+      skip,
+      pageSize,
+      selectedFields
+    );
+
+    res.status(200).json(customers);
   } catch (error) {
     next(new ServerError(String(error)));
   }
