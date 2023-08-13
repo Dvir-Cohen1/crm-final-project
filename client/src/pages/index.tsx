@@ -26,12 +26,12 @@ export default function Home(): JSX.Element {
     { title: ' Tasks ', path: '/tasks', description: "Tasks" },
     { title: ' Users ', path: '/users', description: `All Users: ${users?.length || 0}` },
     { title: ' Last Activity ', path: '/', description: "Last Activity" },
+    { title: ' Linked customer', path: '/customers', description: "Linked customer" },
   ]
 
 
   return (
     <Layout>
-
       <section id="Home">
         <h1 className="text-2xl text-center my-10"><span className="font-normal">Welcome Back</span> <span className="underline">{user && `${user.firstName}  ${user.lastName}`}</span></h1>
         <div className="flex flex-wrap justify-center gap-5 mb-10">

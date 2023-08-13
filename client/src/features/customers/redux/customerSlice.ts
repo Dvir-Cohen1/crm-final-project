@@ -1,18 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  FormRegisterInputs,
-  FormLoginInputs,
-  AuthState,
-  CustomerState,
-} from "@/types/global";
+import { CustomerState } from "@/types/global";
 
-import router from "next/router";
-import { getAllCustomersApi } from "../services/customers.service";
+import {
+  getAllCustomersApi,
+  searchCustomersApi,
+} from "../services/customers.service";
 
 export const getAllCustomers = createAsyncThunk(
   "customers/getAllCustomers",
   async () => {
     const data = await getAllCustomersApi();
+    return data;
+  }
+);
+export const searchCustomers = createAsyncThunk(
+  "customers/searchCustomers",
+  async (keywords: string) => {
+    const data = await searchCustomersApi(keywords);
     return data;
   }
 );
@@ -45,7 +49,22 @@ export const customerSlice = createSlice({
         state.error = "";
         state.isError = false;
         state.customers = payload;
-      });
+      })
+      // Handle search customers
+      .addCase(searchCustomers.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(searchCustomers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = String(action.error.message);
+        state.isError = true;
+      })
+      .addCase(searchCustomers.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = "";
+        state.isError = false;
+        state.customers = payload;
+      })
   },
 });
 

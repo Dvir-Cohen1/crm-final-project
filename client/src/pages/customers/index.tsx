@@ -6,6 +6,7 @@ import {
      EllipsisOutlined,
 
 } from '@ant-design/icons';
+import KanbanBoard from '@/features/customers/components/KanbanBoard';
 
 
 
@@ -62,6 +63,7 @@ const Customers = () => {
                     }
                />
                <CustomerTable />
+               {/* <KanbanBoard /> */}
           </Layout>
      )
 }

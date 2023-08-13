@@ -40,6 +40,7 @@ a {
 	color: #0052cc;
 }
 
+
 @keyframes lds-ring {
 	0% {
 		transform: rotate(0deg);
@@ -549,3 +550,69 @@ a {
 	text-decoration: underline;
 
 }
+
+/* customers */
+
+#customer-search-input .ant-input-group-addon {
+	display: none !important;
+}
+
+/* .no-search-icon  * {
+	border-radius: 5px!important;
+} */
+
+/* .no-search-icon .ant-input-suffix,
+.no-search-icon .ant-input-search-button {
+	display: none;
+} */
+
+/* Kanban board container */
+.board-container {
+	display: flex;
+	/* background-color: #f4f5f7; */
+	/* padding: 20px; */
+   }
+   
+   /* Column container */
+   .column-container {
+	flex: 1;
+	background-color: #ebecf0;
+	border-radius: 4px;
+	padding: 20px;
+   }
+   
+   /* Task card */
+   .task-card {
+	background-color: #fff;
+	border: 1px solid #dfe1e6;
+	border-radius: 4px;
+	padding: 10px;
+	margin-bottom: 10px;
+   }
+   
+   /* Apply styles to task card when dragging */
+   .task-card.is-dragging {
+	background-color: #f0f0f0;
+   }
+   
+   /* Task card title */
+   .task-card h4 {
+	margin: 0;
+	font-size: 16px;
+   }
+   
+   /* Task card content */
+   .task-card p {
+	margin: 5px 0;
+	font-size: 14px;
+	color: #333;
+   }
+   
+   /* Column title */
+   .column-title {
+	font-size: 18px;
+	margin-bottom: 10px;
+   }
+   
+   /* Add more styling rules as needed */
+   

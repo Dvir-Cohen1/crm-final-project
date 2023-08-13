@@ -27,6 +27,9 @@ export const SEARCH_FIELDS = [
   "email",
   "phone",
   "alternativeEmail",
+  "industry",
+  "contactEmail",
+  "contactPerson",
 ];
 
 export const DEFAULT_SORT_FIELD = "name";
