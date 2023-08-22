@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/types/global';
 import { useRouter } from 'next/router';
 
-const Layout = ({ children }: any) => {
+const Layout = ({ children, showBreadCrumbs = true }: any) => {
      // const { isLoading: isLoadingTask } = useSelector((state: RootState) => state.task);
      const isLoading = useLoader(300);
      const router = useRouter();
@@ -28,7 +28,7 @@ const Layout = ({ children }: any) => {
                <section className='flex content-container'>
                     <Sidebar />
                     <main className="w-full px-4 lg:px-20 lg:py-2 flex flex-col">
-                         <Breadcrumbs />
+                         {showBreadCrumbs && <Breadcrumbs />}
                          {isLoading ? <SkeletonLoader isLoading={isLoading} /> : children}
                          <Footer />
                     </main>

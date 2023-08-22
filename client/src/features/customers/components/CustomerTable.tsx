@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RootState, SorterResultDataType } from '@/types/global';
-import type { FilterValue, SorterResult } from 'antd/es/table/interface';
+import type { FilterValue, SortOrder, SorterResult } from 'antd/es/table/interface';
 import { Button, Input, Space, Table, TableProps } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCustomers, searchCustomers } from '../redux/customerSlice';
@@ -9,7 +9,8 @@ import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { HiOutlineFunnel } from "react-icons/hi2";
 import ColumnsSizeDropDown from './tables/ColumnsSizeDropDown';
 import SortDropDown from './tables/SortDropDown';
-
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/localstorage';
+import { useRouter } from 'next/router';
 
 const CustomerTable = () => {
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
@@ -17,6 +18,7 @@ const CustomerTable = () => {
   const { customers, isLoading } = useSelector((state: RootState) => state.customer);
   const dispatch = useDispatch();
   const customersKeysArray = Object.keys(customers[0] || {});
+  const nextRouter = useRouter()
 
   useEffect(() => {
     dispatch<any>(getAllCustomers());
@@ -36,10 +38,10 @@ const CustomerTable = () => {
     setSortedInfo({});
   };
 
-  const setAgeSort = () => {
+  const setSort = (order: SortOrder = 'descend', columnKey: string = 'name') => {
     setSortedInfo({
-      order: 'descend',
-      columnKey: 'name',
+      order: order,
+      columnKey: columnKey,
     });
   };
 
@@ -55,15 +57,23 @@ const CustomerTable = () => {
     dispatch<any>(searchCustomers(String(keywords)));
   }
 
-  const [columnsSize, setColumnsSize] = useState<SizeType>('small');
+
+  const [columnsSize, setColumnsSize] = useState<SizeType>(getLocalStorageItem('columnsSize') || 'small');
 
   const handleSetColumnsSize = (size: SizeType = 'small') => {
+    setLocalStorageItem('columnsSize', size)
+
     setColumnsSize(size)
   }
 
   const customerSortButton = [
-    { id: 1, isDropdown: true, component: <SortDropDown title='Filter by' ButtonTitle={'Filter'} icon={<HiOutlineFunnel />} clearAll={clearFilters} />, title: 'Filter', label: 'Filter', icon: '', onClick: () => { } },
-    { id: 2, isDropdown: true, component: <SortDropDown clearAll={clearAll} />, title: 'Sort', label: 'Sort', icon: '', onClick: () => { } },
+    // { id: 1, title: 'sort', label: 'Sort', icon: sortedInfo.order === 'descend' ? <HiOutlineArrowsUpDown /> : <HiBarsArrowUp />, onClick: setAgeSort },
+    // { id: 2, label: 'Clear filters', icon: <HiBars2 />, onClick: clearFilters },
+    // { id: 3, title: 'Clear all', label: 'Clear all', icon: <HiOutlineFunnel />, onClick: clearAll },
+    // { id: 4, label: 'Columns size', icon: <HiBars2 />, onClick: handleSetColumnsSize },
+    // { id: 5, title: 'Change columns size', label: 'Columns size', icon: columnsSize === 'small' ? <HiBars3 /> : <HiBars2 />, onClick: handleSetColumnsSize },
+    { id: 1, isDropdown: true, component: <SortDropDown setSort={setSort} customersKeysArray={[]} title='Filter by' ButtonTitle={'Filter'} icon={<HiOutlineFunnel />} clearAll={clearFilters} />, title: 'Filter', label: 'Filter', icon: '', onClick: () => { } },
+    { id: 2, isDropdown: true, component: <SortDropDown setSort={setSort} customersKeysArray={customersKeysArray} clearAll={clearAll} />, title: 'Sort', label: 'Sort', icon: '', onClick: () => { } },
     { id: 3, isDropdown: true, component: <ColumnsSizeDropDown columnsSize={columnsSize} onClickFunction={handleSetColumnsSize} />, title: 'Change columns size', label: 'Columns size' },
   ]
 
@@ -75,7 +85,12 @@ const CustomerTable = () => {
 
           {customerSortButton?.map(button => {
             if (button.isDropdown === true) {
-              return button.component
+              return (
+
+                <div key={button.id}>
+                  {button.component}
+                </div>
+              )
             }
 
             return <Button
@@ -100,8 +115,17 @@ const CustomerTable = () => {
         bordered={true}
         loading={isLoading}
         columns={generateColumns(customers, customersKeysArray, filteredInfo, sortedInfo)}
-        dataSource={customers}
+        // dataSource={customers}
+        dataSource={customers?.map((customer: any) => ({ ...customer, key: customer._id }))}
+        // rowKey={(record: { id: string }) => record.id}
         onChange={handleChange}
+        onRow={(record: any) => ({
+          onClick: () => {
+            // Use Next.js Link to navigate to the customer details page
+            // Replace 'customerId' with the actual parameter name and record.id with the customer's ID
+            nextRouter.push(`/customers/${record._id}`)
+          },
+        })}
       />
     </>
   );

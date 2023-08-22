@@ -4,7 +4,7 @@ import { INDUSTRY_TYPE_ENUM } from "../config/constants/customer.constant.js";
 // Define the Joi schema for Customer validation
 const customerJoiSchema = Joi.object({
   // Basic Information
-  name: Joi.string().min(3).max(25).required().messages({
+  name: Joi.string().min(3).max(25).messages({
     "any.required": "Name is required.",
     "string.empty": "Name cannot be empty.",
   }),

@@ -13,6 +13,23 @@ type TColumnsSizeDropDown = {
 
 const ColumnsSizeDropDown = ({ title = 'Columns Size', columnsSize = 'small', onClickFunction }: TColumnsSizeDropDown) => {
 
+     // return key based on columnsSize for default selected
+     const generateDefaultSelectedKeys = () => {
+          switch (columnsSize) {
+               case 'small':
+                    return '1'
+
+               case 'middle':
+                    return '2'
+
+               case 'large':
+                    return '3'
+
+               default:
+                    return '1'
+          }
+     }
+
      // Dropdown items
      const ColumnsSizeDropDownItems: MenuProps['items'] = [
           {
@@ -51,7 +68,7 @@ const ColumnsSizeDropDown = ({ title = 'Columns Size', columnsSize = 'small', on
           menu={{
                items: ColumnsSizeDropDownItems,
                selectable: true,
-               defaultSelectedKeys: ['1'],
+               defaultSelectedKeys: [generateDefaultSelectedKeys()],
           }}
      >
           <Button

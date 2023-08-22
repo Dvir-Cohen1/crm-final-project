@@ -570,49 +570,72 @@ a {
 .board-container {
 	display: flex;
 	/* background-color: #f4f5f7; */
-	/* padding: 20px; */
-   }
-   
-   /* Column container */
-   .column-container {
-	flex: 1;
-	background-color: #ebecf0;
-	border-radius: 4px;
 	padding: 20px;
-   }
-   
-   /* Task card */
-   .task-card {
-	background-color: #fff;
-	border: 1px solid #dfe1e6;
+}
+
+/* Column container */
+.column-container {
+	flex: 1;
+	/* background-color: #ebecf0; */
 	border-radius: 4px;
 	padding: 10px;
+}
+
+/* Task card */
+.task-card {
+	/* background-color: #fff; */
+	background-color: #F7F8F9;
+	/* border: 1px solid #dfe1e6; */
+	border-radius: 4px;
+	padding: 20px;
 	margin-bottom: 10px;
-   }
-   
-   /* Apply styles to task card when dragging */
-   .task-card.is-dragging {
+}
+
+/* Apply styles to task card when dragging */
+.task-card.is-dragging {
 	background-color: #f0f0f0;
-   }
-   
-   /* Task card title */
-   .task-card h4 {
+}
+
+/* Task card title */
+.task-card h4 {
 	margin: 0;
 	font-size: 16px;
-   }
-   
-   /* Task card content */
-   .task-card p {
+}
+
+/* Task card content */
+.task-card p {
 	margin: 5px 0;
 	font-size: 14px;
 	color: #333;
-   }
-   
-   /* Column title */
-   .column-title {
+}
+
+/* Column title */
+.column-title {
 	font-size: 18px;
+	border-radius: 4px;
 	margin-bottom: 10px;
-   }
-   
-   /* Add more styling rules as needed */
-   
+	background-color: #F7F8F9;
+	padding: 10px 20px;
+}
+
+
+/* .ant-form-item .ant-form-item-label>label {
+
+	width: -webkit-fill-available;
+} */
+
+/* .create-customer-button-container {
+	position: fixed;
+	background: #e6f1ff;
+	width: 100%;
+	left: 234px;
+	bottom: 0;
+	height: 63px;
+	right: 0;
+	gap: 20px;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+ } */

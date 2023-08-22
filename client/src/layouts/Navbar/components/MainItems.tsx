@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 import { Button } from '@/components/common/Button';
 import { FaCaretDown } from 'react-icons/fa';
 import router from 'next/router';
+import Link from 'next/link';
 
 
 const items: MenuProps['items'] = [
@@ -48,43 +49,49 @@ const items: MenuProps['items'] = [
 
           children: [
                {
-                    type: 'group',
-                    label: 'Tasks',
-                    children: [
-                         {
-                              label: 'New Task',
-                              key: '/1245',
-                         },
-                         {
-                              label: 'New Group Tasks',
-                              key: '/1',
-                         },
-                    ],
+                    key: 1,
+                    label: (<Link href={'/tasks/newTask'}>Task</Link>),
+
                },
                {
-                    type: 'group',
-                    label: 'Projects',
-                    children: [
-                         {
-                              label: 'New Project',
-                              key: '/2',
-                         },
-                         {
-                              label: 'New Group Projects',
-                              key: '/3',
-                         },
-                    ],
+                    key: 2,
+                    label: (<Link href={'/projects/newProject'}>Project</Link>),
+
                },
                {
-                    type: 'group',
-                    label: 'Users',
-                    children: [
-                         {
-                              label: 'New User',
-                              key: '/users/newUser',
-                         },
-                    ],
+                    key: 3,
+                    label: (<Link href={'/customers/newCustomer'}>Customer</Link>),
+
                },
+               {
+                    key: 4,
+                    label: (<Link href={'/users/newUser'}>User</Link>),
+
+               },
+               // {
+               //      type: 'group',
+               //      label: 'Projects',
+               //      children: [
+               //           {
+               //                label: 'New Project',
+               //                key: '/2',
+               //           },
+               //           {
+               //                label: 'New Group Projects',
+               //                key: '/3',
+               //           },
+               //      ],
+               // },
+               // {
+               //      type: 'group',
+               //      label: 'Users',
+               //      children: [
+               //           {
+               //                label: 'New User',
+               //                key: '/users/newUser',
+               //           },
+               //      ],
+               // },
           ],
      },
 
@@ -100,7 +107,7 @@ const MainItems = () => {
           <>
                <AppLogo fontSize='lg' title="CRM" />
                <Menu
-               key={"123"}
+                    key={"123"}
                     className='hidden border-0 bg-transparent app-navbar lg:flex place-items-center flex-auto'
                     style={{ minWidth: 0, flex: "auto" }}
                     onClick={onClick}

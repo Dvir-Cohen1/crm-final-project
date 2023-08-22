@@ -104,7 +104,8 @@ export async function createCustomer(
     if (!req.body) {
       return next(new BadRequestError());
     }
-
+    console.log(req.body.privatelyHeldCompany);
+    // const data = { privatelyHeldCompany: Number(req.body.privatelyHeldCompany), ...req.body };
     // Validate the request body against the Joi schema
     const validatedData = validateBody(req.body, customerJoiSchema, next);
 

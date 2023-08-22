@@ -5,7 +5,7 @@ import { INDUSTRY_TYPE_ENUM } from "../../config/constants/customer.constant.js"
 const customerSchema = new mongoose.Schema(
   {
     // Basic Information
-    name: { type: String, required: [true, "name is required"] },
+    name: { type: String},
     email: { type: String, required: [true, "email is required"], unique: true },
     alternativeEmail: { type: String },
     phone: { type: String },

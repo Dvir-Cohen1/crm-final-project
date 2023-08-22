@@ -63,7 +63,7 @@ const Tasks = () => {
   }, [dispatch, tableKey])
   return (
     <Layout>
-      <PageTitle title='Tasks' />
+      <PageTitle title='Tasks' href='' onClick={showDrawer} />
       <NewTaskDrawer open={open} onClose={onClose} onSubmit={onSubmit} />
       <TasksTable tableKey={tableKey} setTableKey={setTableKey} handleDelete={handleDelete} tasks={tasks} />
     </Layout>

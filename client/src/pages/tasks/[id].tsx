@@ -112,7 +112,15 @@ const Task = () => {
     },
   ];
 
+  // const [rowHeight, setRowHeight] = useState(0);
 
+  // useEffect(() => {
+  //   // Calculate the desired height based on your logic
+  //   const calculatedHeight = window.innerHeight * 0.8; // 80% of the viewport height
+  //   setRowHeight(calculatedHeight);
+  // }, []);
+
+  // console.log(window.screen.height)
   return (
     <Layout>
 
@@ -187,7 +195,7 @@ const Task = () => {
             <TaskSetting taskId={task?._id} taskTitle={task?.title} taskFollowers={task?.followers} handleEditTask={handleEditTask} />
           </div>
           <hr className='mb-6' />
-          <Row>
+          <Row >
             {/* Left Col */}
             <Col span={16} xs={24} md={16} >
               <div className='md:me-14'>

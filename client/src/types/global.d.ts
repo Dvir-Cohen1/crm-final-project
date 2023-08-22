@@ -214,7 +214,7 @@ export interface CustomerState {
   isLoading: boolean;
   isError: boolean | null;
   error: string;
-  customer: {} | undefined;
+  customer: ICustomer;
   customers: any;
 }
 
@@ -264,8 +264,6 @@ export interface ICustomer extends mongoose.Document {
   // Additional Fields
   active?: boolean;
 }
-
-
 
 export interface SorterResultDataType {
   key: string;

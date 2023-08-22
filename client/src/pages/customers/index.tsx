@@ -1,13 +1,12 @@
 import PageTitle from '@/components/common/PageTitle'
 import CustomerTable from '@/features/customers/components/CustomerTable'
 import Layout from '@/layouts/Layout'
-import { Button, Space, Dropdown, MenuProps } from 'antd'
-import {
-     EllipsisOutlined,
-
-} from '@ant-design/icons';
+import { Button, Space, Dropdown, MenuProps, Tooltip } from 'antd'
+import { EllipsisOutlined, } from '@ant-design/icons';
 import KanbanBoard from '@/features/customers/components/KanbanBoard';
-
+import { useState } from 'react';
+import { BsKanban, BsTable } from "react-icons/bs";
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/localstorage';
 
 
 const settingItems: MenuProps['items'] = [
@@ -48,23 +47,38 @@ const settingItems: MenuProps['items'] = [
 ];
 
 const Customers = () => {
+     const [isKanbanView, setIsKanbanView] = useState(getLocalStorageItem('isKanbanView') || false)
+
+     const handleSetIsKanbanView = () => {
+          setLocalStorageItem('isKanbanView', !isKanbanView)
+          setIsKanbanView((prev) => !prev)
+     }
 
      return (
           <Layout>
                <PageTitle title={'Customers'}
-                    showNewButton={false}
+                    showNewButton={true}
+                    href='/customers/newCustomer'
                     actionsButtons={
                          <Space style={{ marginBottom: 16 }}>
                               {/* setting dropdown */}
-                              <Dropdown overlayClassName='setting-items-dropdown' menu={{ items: settingItems }} placement="bottomRight" trigger={['click']}>
-                                   <Button size='middle' type="text" className='font-semibold' icon={<EllipsisOutlined style={{ fontSize: "1.4rem", color: "#172B4D" }} />} />
-                              </Dropdown>
+                              <Tooltip title={'Options'} placement='top'>
+                                   <Dropdown overlayClassName='setting-items-dropdown' menu={{ items: settingItems }} placement="bottomRight" trigger={['click']}>
+                                        <Button size='middle' type="text" className='font-semibold' icon={<EllipsisOutlined style={{ fontSize: "1.2rem", color: "#172B4D" }} />} />
+                                   </Dropdown>
+                              </Tooltip>
+                              <Tooltip title={isKanbanView ? 'Table view' : 'Kanban view'} placement='top'>
+                                   <Button size='middle' type="link" className='font-semibold' onClick={() => handleSetIsKanbanView()}  >
+                                        {isKanbanView ? <BsTable style={{ fontSize: "1.05rem" }} /> : <BsKanban style={{ fontSize: "1.05rem" }} />}
+                                   </Button>
+                              </Tooltip>
                          </Space>
                     }
                />
-               <CustomerTable />
-               {/* <KanbanBoard /> */}
-          </Layout>
+
+               {isKanbanView ? <KanbanBoard /> : <CustomerTable />}
+
+          </Layout >
      )
 }
 
