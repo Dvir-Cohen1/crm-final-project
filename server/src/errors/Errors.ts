@@ -20,3 +20,9 @@ export class ServerError extends Error {
     super(message || "Something went wrong");
   }
 }
+
+export class ConflictError extends Error {
+  constructor(message?: string) {
+    super(message || "Conflict");
+  }
+}

@@ -8,7 +8,7 @@ import { Button } from '@/components/common/Button'
 import Link from 'next/link'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-
+import PageTitle from '@/components/common/PageTitle'
 const Users = () => {
      const [users, setUsers] = useState<IUser[]>([]);
 
@@ -31,13 +31,9 @@ const Users = () => {
           // Note that this will only run when the `users` variable changes
      }, [users]);
 
-
      return (
           <Layout>
-               <div className='flex justify-between place-items-center mb-5'>
-                    <div className='text-3xl font-semibold'>Users</div>
-                    <div><Link href={'/users/newUser'}><Button className='px-5' fontSize='sm' >New</Button></Link></div>
-               </div>
+               <PageTitle title='Members' href='/users/newUser' />
                <CustomTable data={users} dataSource={users} handleDeleteUser={handleDeleteUser} />
           </Layout>
      )

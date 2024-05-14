@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizeError } from "../errors/Errors.js";
-import { verifyAccessToken } from "../services/jwt.services.js";
+import { verifyAccessToken } from "../services/jwt.service.js";
 
 interface CustomRequest extends Request {
   userId?: string;
@@ -14,11 +14,13 @@ const authJwtTokenVerify = (
 ) => {
   try {
     const token = Array.isArray(req.headers["ac-token"])
-      ? req.headers["ac-token"][0]
-      : req.headers["ac-token"];
-
-    if (!token)
+    ? req.headers["ac-token"][0]
+    : req.headers["ac-token"];
+    
+    if (!token){
       return next(new UnauthorizeError());
+    }
+    
     const decodedToken = verifyAccessToken(token);
 
     if (typeof decodedToken === "string") {

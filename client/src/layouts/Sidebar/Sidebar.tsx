@@ -11,27 +11,23 @@ import { json } from 'stream/consumers';
 type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
-     getItem('Projects', 'sub1', <MailOutlined />, [
-          getItem((<NextLink href={"/projects/project"}>All Projects</NextLink>), '1'),
-          // getItem((<Link href={"/projects/project"}>Projects</Link>), null, null, [getItem('Option 3', '3'), getItem('Option 4', '4')], 'group'),
-     ]),
+     getItem((<NextLink href={"/projects/project"}>Projects</NextLink>), 'sub1', <MailOutlined />),
 
-     getItem('Tasks', 'sub2', <AppstoreOutlined />, [
-          getItem((<NextLink href={"/tasks"}>All Tasks</NextLink>), '2'),
-          getItem((<NextLink href={"/tasks/task"}>Kanban</NextLink>), '3'),
-     ]),
+     getItem((<NextLink href={"/tasks"}>Tasks</NextLink>), 'sub2', <AppstoreOutlined />),
 
-     getItem('Users', 'sub4', <UserOutlined />, [
-          getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
-          getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
-          getItem((<NextLink href={"/users/1"}>Departments</NextLink>), '6'),
+     getItem((<NextLink href={"/users"}>Users</NextLink>), 'sub4', <UserOutlined />
+          // [
+          //      getItem((<NextLink href={"/users"}>All Users</NextLink>), '4'),
+          //      getItem((<NextLink href={"/users/newUser"}>New User</NextLink>), '5'),
+          //      getItem((<NextLink href={"/users/1"}>Departments</NextLink>), '6'),
 
-     ]),
-     getItem('Customers', 'sub5', <CalendarOutlined />, [
-          getItem('Option 94', '94'),
-
-     ]),
-     getItem((<NextLink href={"/Departments"}>Setting</NextLink>), 'sub6', <SettingOutlined />),
+          // ]
+     ),
+     getItem((<NextLink href={"/customers"}>Customers</NextLink>), 'sub5', <CalendarOutlined />),
+     // getItem('Customers', 'sub5', <CalendarOutlined />, [
+     //      getItem((<NextLink href={"/customers"}>All Customers</NextLink>), 'allCustomers'),
+     //      getItem((<NextLink href={"/customers/newCustomer"}>New Customer</NextLink>), 'newCustomer'),
+     // ]),
 ];
 
 
@@ -116,7 +112,7 @@ const Sidebar = React.memo(function Sidebar({ className }: SidebarProps) {
                     <Menu
                          className={`mt-8 ${className}`}
                          // onClick={(e) => console.log(e.key)}
-                         style={{  border: 0 }}
+                         style={{ border: 0 }}
                          mode="vertical"
                          triggerSubMenuAction='click'
                          items={items}

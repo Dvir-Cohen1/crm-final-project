@@ -2,5 +2,7 @@
 *.env
 /dist
 *logs
+*tmp
+
 
 /public/*/

@@ -22,7 +22,6 @@ export async function getTaskApi(taskId: string) {
     const response = await api.get(
       process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT + `tasks/${taskId}`
     );
-    console.log(response.data)
     
     return response.data;
   } catch (error: any) {
@@ -216,7 +215,52 @@ export async function downloadAllAttachmentsAsZipApi(taskId: string) {
     );
   }
 }
+//
+// Add task comment
+//
+export async function addTaskCommentApi({
+  taskId,
+  content,
+}: {
+  taskId: string;
+  content: string;
+}) {
+  try {
+    const response = await api.post(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `tasks/task/${taskId}/comments`,
+      { content }
+    );
 
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
+export async function deleteTaskCommentApi({
+  taskId,
+  commentId,
+}: {
+  taskId: string;
+  commentId: string;
+}) {
+  try {
+    const response = await api.delete(
+      process.env.NEXT_PUBLIC_REST_API_URL_ENDPOINT +
+        `tasks/task/${taskId}/comments/${commentId}`
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    return Promise.reject(
+      error.response?.data?.message || error.message || "Server Error"
+    );
+  }
+}
 // // Helper function to convert a buffer to ArrayBuffer
 // function toArrayBuffer(buffer: Buffer) {
 //   const arrayBuffer = new ArrayBuffer(buffer.length);

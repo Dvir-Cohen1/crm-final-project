@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { logInfo } from "../utils/logger.js";
-import User from "../models/user.model.js";
+import User from "../models/users/user.model.js";
 import {
   BadRequestError,
   NotFoundError,
@@ -11,7 +11,7 @@ import {
   createAccessToken,
   createRefreshToken,
   verifyAccessToken,
-} from "../services/jwt.services.js";
+} from "../services/jwt.service.js";
 import { JwtPayload } from "jsonwebtoken";
 import {
   SELECTED_PINNED_ITEMS_FIELDS,

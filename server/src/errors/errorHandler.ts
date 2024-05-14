@@ -5,6 +5,7 @@ import {
   BadRequestError,
   ServerError,
   UnauthorizeError,
+  ConflictError,
 } from "./Errors.js";
 import { sendLogger } from "../utils/logger.js";
 import { ICreateTaskPropsType } from "../types/global.js";
@@ -17,6 +18,7 @@ function generateCustomErrorResponse(
   isServerError: boolean
 ) {
   const { userId } = req as ICreateTaskPropsType;
+  const isProduction = process.env.NODE_ENV === "production" ? true : false;
 
   // Log error
   sendLogger(isServerError ? "error" : "warn", error.message, {
@@ -37,12 +39,16 @@ function generateCustomErrorResponse(
     stackTrace: error.stack,
   });
 
+  if (!isProduction) {
+    console.log(error.message);
+  }
+
   // Build the error response object
   return res.status(Number(statusCode)).json({
     error: true,
     message: error.message,
     stack:
-      process.env.NODE_ENV === "development" && error.stack ? error.stack : {},
+      !isProduction && error.stack ? error.stack : {},
   });
 }
 export default function errorHandler(
@@ -78,8 +84,11 @@ export default function errorHandler(
     case ServerError:
       generateCustomErrorResponse(res, req, error, 500, "ServerError", true);
       break;
+    case ConflictError:
+      generateCustomErrorResponse(res, req, error, 500, "ConflictError", true);
+      break;
     default:
-      res.status(500).json("Something went wrong!");
+      generateCustomErrorResponse(res, req, error, 500, "Error", true);
       break;
   }
 }

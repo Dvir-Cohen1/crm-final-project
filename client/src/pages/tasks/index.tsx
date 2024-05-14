@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import { ITasks } from '@/types/global';
 import Layout from '@/layouts/Layout'
@@ -8,6 +9,7 @@ import TasksTable from '@/features/tasks/components/tables/TasksTable'
 import { allTasks, deleteTask, newTask } from '@/features/tasks/redux/taskSlice';
 import NewTaskDrawer from '@/features/tasks/components/NewTaskDrawer';
 import { Button, message } from 'antd';
+import PageTitle from '@/components/common/PageTitle';
 
 const Tasks = () => {
   const dispatch: ThunkDispatch<{}, {}, AnyAction> = useDispatch();
@@ -59,13 +61,9 @@ const Tasks = () => {
     // Listen for changes to the `tableKey` state variable and update the table
     dispatch<any>(allTasks()).then((res: any) => setTasks(res.payload))
   }, [dispatch, tableKey])
-
   return (
     <Layout>
-      <div className='flex justify-between align-center place-items-center mb-5'>
-        <div className='text-2xl font-semibold'>Tasks</div>
-        <div><Button type='primary' onClick={showDrawer}>New</Button></div>
-      </div>
+      <PageTitle title='Tasks' href='' onClick={showDrawer} />
       <NewTaskDrawer open={open} onClose={onClose} onSubmit={onSubmit} />
       <TasksTable tableKey={tableKey} setTableKey={setTableKey} handleDelete={handleDelete} tasks={tasks} />
     </Layout>

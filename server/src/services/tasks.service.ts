@@ -8,7 +8,7 @@ import {
 import Task from "../models/tasks/task.model.js";
 import { TaskUpdate } from "../models/tasks/taskUpdates.js";
 import TaskStatuses from "../models/tasks/taskStatus.model.js";
-import User from "../models/user.model.js";
+import User from "../models/users/user.model.js";
 
 export const getAllPopulateTasks = async () => {
   return Task.find()
@@ -65,6 +65,7 @@ export const getPopulateTask = async (taskId: string) => {
     })
     .populate({
       path: "comments",
+      options: { sort: { _id: -1 } },
       populate: {
         path: "postedBy",
         select: USER_POPULATE_SELECTED_COMMENTS_FIELDS,

@@ -10,8 +10,8 @@ export const setCookie = (name: string, value: string, options?: object) => {
   );
 };
 
-export const getCookie = (name: string) => {
-  return cookies.get(name);
+export const getCookie = async (name: string) => {
+  return await cookies.get(name);
 };
 
 export const removeCookie = (name: string, options?: object) => {

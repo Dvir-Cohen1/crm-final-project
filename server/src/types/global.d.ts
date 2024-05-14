@@ -34,6 +34,9 @@ export interface IRequestUserId extends Request {
   itemId?: string | null | undefined;
 }
 
+/*
+ ** Tasks
+ */
 interface ICreateTaskPropsType extends Request {
   userId: string;
 }
@@ -87,3 +90,57 @@ export interface ILogInfo {
     request?: Request | null
   ): SendLoggerFunction;
 }
+
+/*
+ ** Customers
+ */
+
+// Define the interface for the Customer schema
+export interface ICustomer extends mongoose.Document {
+  save: any;
+  // Basic Information
+  _id: string;
+  name: string;
+  email: string;
+  alternativeEmail?: string;
+  phone?: string;
+  address?: string;
+  privatelyHeldCompany?: number;
+
+  // Additional Contact Information
+  contactPerson?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+
+  // Company Details
+  companyName?: string;
+  companyWebsite?: string;
+  companyLogo?: string;
+
+  // Industry and Business Information
+  industry?: string;
+  companySize?: string;
+
+  // Custom Fields
+  // Add any additional custom fields here as needed
+
+  // References to related entities
+  users: mongoose.Schema.Types.ObjectId[];
+  tasks: mongoose.Schema.Types.ObjectId[];
+  projects: mongoose.Schema.Types.ObjectId[];
+
+  // Linked Customers (for Relationships)
+  linkedCustomers: mongoose.Schema.Types.ObjectId[];
+
+  // Notes or Comments
+  notes?: string;
+
+  // Timestamps
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  // Additional Fields
+  active?: boolean;
+}
+
+export type TSortOrder = "asc" | "desc";
