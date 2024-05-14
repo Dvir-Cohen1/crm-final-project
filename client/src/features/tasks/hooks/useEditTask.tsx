@@ -15,6 +15,7 @@ const useEditTask = () => {
   const handleEditTask = useCallback(async (e: React.KeyboardEvent<HTMLInputElement>, fieldName?: string) => {
     let inputName: string;
     let inputValue: any;
+    
     switch (fieldName) {
       case 'priority':
         inputName = 'priority';
@@ -63,14 +64,14 @@ const useEditTask = () => {
     // message.destroy()
   }, [dispatch, task, user]);
 
-  useEffect(() => {
-    // Optionally include any additional cleanup or side effects
-    // that you may need for your custom hook
+  // useEffect(() => {
+  //   // Optionally include any additional cleanup or side effects
+  //   // that you may need for your custom hook
 
-    return () => {
-      // Cleanup code (if necessary) when the component unmounts
-    };
-  }, []);
+  //   return () => {
+  //     // Cleanup code (if necessary) when the component unmounts
+  //   };
+  // }, []);
 
   return { handleEditTask };
 };

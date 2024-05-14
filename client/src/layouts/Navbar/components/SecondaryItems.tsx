@@ -183,9 +183,7 @@ function SecondaryItems() {
                     mode="horizontal"
                     items={profileItems}
                     triggerSubMenuAction="click"
-
                />
-
           </div>
      )
 }

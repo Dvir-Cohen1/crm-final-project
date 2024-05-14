@@ -6,7 +6,7 @@ interface Status {
   color: string;
 }
 
-const useNormalizeStatusesArray = (tasksStatuses: any, handleChangeStatus: Function): Status[] => {
+const useNormalizeStatusesArray = (tasksStatuses: [], handleChangeStatus: Function): Status[] => {
   const [statuses, setStatuses] = useState<Status[]>([]);
 
   useEffect(() => {
