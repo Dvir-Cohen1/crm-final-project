@@ -43,7 +43,15 @@ const initialState: CustomerState = {
   isLoading: false,
   isError: null,
   error: "",
-  customer: {},
+  customer: {
+    _id: "",
+    name: "",
+    email: "",
+    users: [],
+    tasks: [],
+    projects: [],
+    linkedCustomers: [],
+  },
   customers: [],
 };
 
