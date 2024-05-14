@@ -53,7 +53,7 @@ const StatusDropDown = ({ status, taskId, getTask, setTableKey }: TStatusDropDow
      }
 
      // Get normelized statuses array for passing to the dropdown component
-     const normalizedStatuses = useNormalizeStatusesArray(taskStatuses, handleChangeStatus);
+     const normalizedStatuses = useNormalizeStatusesArray(taskStatuses || [], handleChangeStatus);
      return (
           <Space className='mx-2' wrap>
                <Dropdown menu={{ items: normalizedStatuses }} placement="bottomLeft" trigger={['click']}>
